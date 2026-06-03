@@ -5,73 +5,208 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Schipper Kozijnen — Intern Portaal</title>
 <style>
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:100vh;color:#1a1a2e}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:100vh;color:#1a1a2e}
+.login-bg{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#B01419,#E31E24)}
+.login-card{background:white;border-radius:20px;padding:48px 40px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,0.2)}
+.login-logo{text-align:center;margin-bottom:32px}
+.login-title{font-size:22px;font-weight:800;color:#1a1a2e;text-align:center;margin-bottom:6px}
+.login-sub{font-size:13px;color:#888;text-align:center;margin-bottom:32px}
+.field{margin-bottom:18px}
+.field label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#888;margin-bottom:6px}
+.field input{width:100%;padding:12px 16px;border:2px solid #eee;border-radius:10px;font-size:14px;outline:none;transition:border 0.2s}
+.field input:focus{border-color:#E31E24}
+.login-btn{width:100%;padding:14px;background:linear-gradient(135deg,#B01419,#E31E24);color:white;border:none;border-radius:10px;font-size:15px;font-weight:800;cursor:pointer;margin-top:8px}
+.login-error{background:#fff0f0;border:1px solid #f5c6c6;color:#c0392b;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:16px;text-align:center;display:none}
+.portaal{display:none;min-height:100vh}
+.topbar{background:linear-gradient(135deg,#B01419,#E31E24);color:white;padding:14px 32px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 4px 20px rgba(227,30,36,0.3)}
+.topbar-left{display:flex;align-items:center;gap:16px}
+.topbar-logo{background:white;border-radius:8px;padding:6px 14px}
+.topbar-naam{font-size:18px;font-weight:900;color:#E31E24}
+.topbar-naam span{color:#1a1a2e}
+.topbar-info{display:flex;flex-direction:column}
+.topbar-title{font-size:16px;font-weight:800}
+.topbar-sub{font-size:11px;opacity:0.75}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.user-badge{background:rgba(255,255,255,0.2);border-radius:20px;padding:6px 14px;font-size:13px;font-weight:600}
+.logout-btn{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:white;padding:7px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600}
+.content{max-width:1100px;margin:0 auto;padding:32px 24px}
+.welkom{background:white;border-radius:16px;padding:28px 32px;margin-bottom:28px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border-left:5px solid #E31E24;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.welkom h2{font-size:22px;font-weight:800;color:#1a1a2e;margin-bottom:4px}
+.welkom p{font-size:14px;color:#888}
+.welkom-datum{font-size:13px;color:#aaa;text-align:right;line-height:1.8}
+.sectie-titel{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#aaa;margin-bottom:14px;margin-top:28px}
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px}
+.tool-card{background:white;border-radius:16px;padding:28px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:2px solid transparent;transition:all 0.2s;cursor:pointer;text-decoration:none;color:inherit;display:block}
+.tool-card:hover{border-color:#E31E24;transform:translateY(-2px);box-shadow:0 8px 24px rgba(227,30,36,0.12)}
+.tool-icon{width:52px;height:52px;background:linear-gradient(135deg,#fff0f0,#ffe0e0);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:16px}
+.tool-naam{font-size:16px;font-weight:800;color:#1a1a2e;margin-bottom:6px}
+.tool-desc{font-size:13px;color:#888;line-height:1.6;margin-bottom:16px}
+.tool-badge{display:inline-block;background:#fff0f0;color:#E31E24;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px}
+.nieuws-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.nieuws-card{background:white;border-radius:12px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,0.06)}
+.nieuws-tag{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:3px 8px;border-radius:12px;margin-bottom:8px}
+.tag-tip{background:#e8f4fd;color:#2980b9}
+.tag-branche{background:#e8f8e8;color:#27ae60}
+.tag-intern{background:#fff0f0;color:#E31E24}
+.nieuws-titel{font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:6px;line-height:1.4}
+.nieuws-tekst{font-size:12px;color:#888;line-height:1.6}
+.links-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+.link-item{background:white;border-radius:10px;padding:14px 18px;box-shadow:0 1px 4px rgba(0,0,0,0.06);display:flex;align-items:center;gap:10px;text-decoration:none;color:#1a1a2e;transition:all 0.15s}
+.link-item:hover{background:#fff0f0;color:#E31E24}
+.link-icon{font-size:18px}
+.link-naam{font-size:13px;font-weight:600}
+.footer{text-align:center;padding:32px;font-size:12px;color:#bbb}
+</style>
+</head>
+<body>
 
-  /* LOGIN */
-  .login-bg{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#B01419,#E31E24)}
-  .login-card{background:white;border-radius:20px;padding:48px 40px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,0.2)}
-  .login-logo{text-align:center;margin-bottom:32px}
-  .login-logo img{height:56px}
-  .login-title{font-size:22px;font-weight:800;color:#1a1a2e;text-align:center;margin-bottom:6px}
-  .login-sub{font-size:13px;color:#888;text-align:center;margin-bottom:32px}
-  .field{margin-bottom:18px}
-  .field label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#888;margin-bottom:6px}
-  .field input{width:100%;padding:12px 16px;border:2px solid #eee;border-radius:10px;font-size:14px;outline:none;transition:border 0.2s}
-  .field input:focus{border-color:#E31E24}
-  .login-btn{width:100%;padding:14px;background:linear-gradient(135deg,#B01419,#E31E24);color:white;border:none;border-radius:10px;font-size:15px;font-weight:800;cursor:pointer;margin-top:8px;letter-spacing:0.02em}
-  .login-btn:hover{opacity:0.92}
-  .login-error{background:#fff0f0;border:1px solid #f5c6c6;color:#c0392b;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:16px;text-align:center;display:none}
+<div class="login-bg" id="loginScherm">
+  <div class="login-card">
+    <div class="login-logo">
+      <div style="font-size:32px;font-weight:900;color:#E31E24;letter-spacing:-1px">S<span style="color:#1a1a2e">chipper</span></div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:0.2em;color:#aaa;text-transform:uppercase;margin-top:2px">Kozijnen — Intern Portaal</div>
+    </div>
+    <div class="login-title">Inloggen</div>
+    <div class="login-sub">Alleen voor Schipper Kozijnen medewerkers</div>
+    <div class="login-error" id="loginError">Onjuiste inloggegevens — probeer opnieuw</div>
+    <div class="field">
+      <label>Gebruikersnaam</label>
+      <input type="text" id="gebruiker" placeholder="jouw naam" onkeydown="if(event.key==='Enter')login()">
+    </div>
+    <div class="field">
+      <label>Wachtwoord</label>
+      <input type="password" id="wachtwoord" placeholder="••••••••" onkeydown="if(event.key==='Enter')login()">
+    </div>
+    <button class="login-btn" onclick="login()">Inloggen →</button>
+  </div>
+</div>
 
-  /* PORTAAL */
-  .portaal{display:none;min-height:100vh}
-  .topbar{background:linear-gradient(135deg,#B01419,#E31E24);color:white;padding:14px 32px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 4px 20px rgba(227,30,36,0.3)}
-  .topbar-left{display:flex;align-items:center;gap:16px}
-  .topbar-logo{background:white;border-radius:8px;padding:4px 10px;display:flex;align-items:center}
-  .topbar-logo img{height:36px}
-  .topbar-title{font-size:16px;font-weight:800}
-  .topbar-sub{font-size:11px;opacity:0.75}
-  .topbar-right{display:flex;align-items:center;gap:16px}
-  .user-badge{background:rgba(255,255,255,0.2);border-radius:20px;padding:6px 14px;font-size:13px;font-weight:600}
-  .logout-btn{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:white;padding:7px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600}
+<div class="portaal" id="portaal">
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-logo">
+        <span class="topbar-naam">S<span>chipper</span></span>
+      </div>
+      <div class="topbar-info">
+        <div class="topbar-title">Intern Portaal</div>
+        <div class="topbar-sub">Schipper Kozijnen</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="user-badge" id="userBadge">👋 Welkom</div>
+      <button class="logout-btn" onclick="logout()">Uitloggen</button>
+    </div>
+  </div>
 
-  .content{max-width:1100px;margin:0 auto;padding:32px 24px}
+  <div class="content">
+    <div class="welkom">
+      <div>
+        <h2 id="welkomNaam">Goedemorgen!</h2>
+        <p>Hier vind je alle tools en informatie voor je werkdag.</p>
+      </div>
+      <div class="welkom-datum" id="welkomDatum"></div>
+    </div>
 
-  /* WELKOM */
-  .welkom{background:white;border-radius:16px;padding:28px 32px;margin-bottom:28px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border-left:5px solid #E31E24;display:flex;align-items:center;justify-content:space-between}
-  .welkom-tekst h2{font-size:22px;font-weight:800;color:#1a1a2e;margin-bottom:4px}
-  .welkom-tekst p{font-size:14px;color:#888}
-  .welkom-datum{font-size:13px;color:#aaa;text-align:right}
+    <div class="sectie-titel">Tools</div>
+    <div class="tools-grid">
+      <a class="tool-card" href="https://dakkapel-offerte.vercel.app" target="_blank">
+        <div class="tool-icon">🏠</div>
+        <div class="tool-naam">Dakkapel Offerte Tool →</div>
+        <div class="tool-desc">Van Hattem offerte automatisch omzetten naar een professionele Schipper Kozijnen offerte. Inclusief prijsberekening, marge en PDF.</div>
+        <span class="tool-badge">Bespaart 1-1,5 uur per offerte</span>
+      </a>
+      <a class="tool-card" href="https://subsidie-adviseur.vercel.app" target="_blank">
+        <div class="tool-icon">💰</div>
+        <div class="tool-naam">Subsidie Adviseur →</div>
+        <div class="tool-desc">Bereken Nij Begun subsidies voor klanten. Automatisch de juiste regelingen en bedragen berekend op basis van de offerte.</div>
+        <span class="tool-badge">Nij Begun 2025</span>
+      </a>
+    </div>
 
-  /* SECTIE TITELS */
-  .sectie-titel{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#aaa;margin-bottom:14px;margin-top:28px}
+    <div class="sectie-titel">Nieuws & Tips</div>
+    <div class="nieuws-grid">
+      <div class="nieuws-card">
+        <span class="nieuws-tag tag-tip">Tip</span>
+        <div class="nieuws-titel">Gebruik versienummers bij offertes</div>
+        <div class="nieuws-tekst">Vergeet niet het versienummer te verhogen als je een aangepaste offerte stuurt. Zo weet de klant altijd welke versie actueel is.</div>
+      </div>
+      <div class="nieuws-card">
+        <span class="nieuws-tag tag-branche">Branche</span>
+        <div class="nieuws-titel">Nij Begun subsidie loopt t/m 2025</div>
+        <div class="nieuws-tekst">Klanten kunnen nog profiteren van de Nij Begun subsidie voor isolatie. Gebruik de Subsidie Adviseur om snel te berekenen wat ze kunnen krijgen.</div>
+      </div>
+      <div class="nieuws-card">
+        <span class="nieuws-tag tag-intern">Intern</span>
+        <div class="nieuws-titel">Dakkapel tool bespaart 1,5 uur</div>
+        <div class="nieuws-tekst">De dakkapel offerte converter is live! Collega's zijn enthousiast — gemiddeld 1 tot 1,5 uur besparing per offerte.</div>
+      </div>
+      <div class="nieuws-card">
+        <span class="nieuws-tag tag-tip">Tip</span>
+        <div class="nieuws-titel">Asbestinventarisatie checkbox</div>
+        <div class="nieuws-tekst">Bij oudere woningen (voor 1994) altijd vragen naar asbest. In de offerte tool staat een aparte checkbox voor asbestinventarisatie à €495.</div>
+      </div>
+    </div>
 
-  /* TOOLS */
-  .tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px}
-  .tool-card{background:white;border-radius:16px;padding:28px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:2px solid transparent;transition:all 0.2s;cursor:pointer;text-decoration:none;color:inherit;display:block}
-  .tool-card:hover{border-color:#E31E24;transform:translateY(-2px);box-shadow:0 8px 24px rgba(227,30,36,0.12)}
-  .tool-icon{width:52px;height:52px;background:linear-gradient(135deg,#fff0f0,#ffe0e0);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:16px}
-  .tool-naam{font-size:16px;font-weight:800;color:#1a1a2e;margin-bottom:6px}
-  .tool-desc{font-size:13px;color:#888;line-height:1.6;margin-bottom:16px}
-  .tool-badge{display:inline-block;background:#fff0f0;color:#E31E24;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px}
-  .tool-arrow{float:right;color:#E31E24;font-size:18px;font-weight:800;margin-top:-2px}
+    <div class="sectie-titel">Handige links</div>
+    <div class="links-grid">
+      <a class="link-item" href="https://webkozijn.nl" target="_blank"><span class="link-icon">🪟</span><span class="link-naam">Webkozijn</span></a>
+      <a class="link-item" href="https://www.schipperkozijnen.nl" target="_blank"><span class="link-icon">🌐</span><span class="link-naam">Schipper website</span></a>
+      <a class="link-item" href="https://subsidie-adviseur.vercel.app" target="_blank"><span class="link-icon">📋</span><span class="link-naam">Nij Begun API</span></a>
+      <a class="link-item" href="https://www.vlok-erkend.nl" target="_blank"><span class="link-icon">✅</span><span class="link-naam">VLOK Keurmerk</span></a>
+      <a class="link-item" href="https://www.kkfh.nl" target="_blank"><span class="link-icon">🏆</span><span class="link-naam">KKFH</span></a>
+      <a class="link-item" href="mailto:Thijs.Hager@schipperkozijnen.nl"><span class="link-icon">📧</span><span class="link-naam">Mail Thijs</span></a>
+    </div>
+  </div>
+  <div class="footer">Schipper Kozijnen Intern Portaal — Alleen voor medewerkers</div>
+</div>
 
-  /* NIEUWS */
-  .nieuws-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
-  .nieuws-card{background:white;border-radius:12px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,0.06)}
-  .nieuws-tag{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:3px 8px;border-radius:12px;margin-bottom:8px}
-  .tag-tip{background:#e8f4fd;color:#2980b9}
-  .tag-branche{background:#e8f8e8;color:#27ae60}
-  .tag-intern{background:#fff0f0;color:#E31E24}
-  .nieuws-titel{font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:6px;line-height:1.4}
-  .nieuws-tekst{font-size:12px;color:#888;line-height:1.6}
+<script>
+const GEBRUIKERS = {
+  "thijs": { wachtwoord: "Schipper2025!", naam: "Thijs Hager" },
+  "art": { wachtwoord: "Schipper2025!", naam: "Art Weering" },
+  "admin": { wachtwoord: "SchipperAdmin!", naam: "Admin" }
+};
 
-  /* LINKS */
-  .links-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
-  .link-item{background:white;border-radius:10px;padding:14px 18px;box-shadow:0 1px 4px rgba(0,0,0,0.06);display:flex;align-items:center;gap:10px;text-decoration:none;color:#1a1a2e;transition:all 0.15s}
-  .link-item:hover{background:#fff0f0;color:#E31E24}
-  .link-icon{font-size:18px}
-  .link-naam{font-size:13px;font-weight:600}
+function login() {
+  const user = document.getElementById("gebruiker").value.toLowerCase().trim();
+  const pass = document.getElementById("wachtwoord").value;
+  const err = document.getElementById("loginError");
+  if (GEBRUIKERS[user] && GEBRUIKERS[user].wachtwoord === pass) {
+    err.style.display = "none";
+    sessionStorage.setItem("sk_user", user);
+    toonPortaal(user);
+  } else {
+    err.style.display = "block";
+    document.getElementById("wachtwoord").value = "";
+  }
+}
 
-  /* FOOTER */
-  .footer{text-align:center;padding:32px;font-size:12px;color
+function toonPortaal(user) {
+  const u = GEBRUIKERS[user];
+  const nu = new Date();
+  const uur = nu.getHours();
+  const groet = uur < 12 ? "Goedemorgen" : uur < 18 ? "Goedemiddag" : "Goedenavond";
+  const dagen = ["zondag","maandag","dinsdag","woensdag","donderdag","vrijdag","zaterdag"];
+  const maanden = ["januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december"];
+  const datumStr = dagen[nu.getDay()] + " " + nu.getDate() + " " + maanden[nu.getMonth()] + " " + nu.getFullYear();
+  document.getElementById("loginScherm").style.display = "none";
+  document.getElementById("portaal").style.display = "block";
+  document.getElementById("welkomNaam").textContent = groet + ", " + u.naam.split(" ")[0] + "!";
+  document.getElementById("userBadge").textContent = "👋 " + u.naam;
+  document.getElementById("welkomDatum").innerHTML = datumStr + "<br><span style='font-size:11px;color:#bbb'>" + nu.toLocaleTimeString("nl-NL",{hour:"2-digit",minute:"2-digit"}) + "</span>";
+}
+
+function logout() {
+  sessionStorage.removeItem("sk_user");
+  document.getElementById("portaal").style.display = "none";
+  document.getElementById("loginScherm").style.display = "flex";
+  document.getElementById("gebruiker").value = "";
+  document.getElementById("wachtwoord").value = "";
+}
+
+const bestaandeUser = sessionStorage.getItem("sk_user");
+if (bestaandeUser && GEBRUIKERS[bestaandeUser]) toonPortaal(bestaandeUser);
+</script>
+</body>
+</html>
