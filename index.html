@@ -10,26 +10,28 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
 .login-bg{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#B01419,#E31E24)}
 .login-card{background:white;border-radius:20px;padding:48px 40px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,0.2)}
 .login-logo{text-align:center;margin-bottom:32px}
+.login-logo img{height:56px;object-fit:contain}
 .login-title{font-size:22px;font-weight:800;color:#1a1a2e;text-align:center;margin-bottom:6px}
 .login-sub{font-size:13px;color:#888;text-align:center;margin-bottom:32px}
 .field{margin-bottom:18px}
 .field label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#888;margin-bottom:6px}
 .field input{width:100%;padding:12px 16px;border:2px solid #eee;border-radius:10px;font-size:14px;outline:none;transition:border 0.2s}
 .field input:focus{border-color:#E31E24}
-.login-btn{width:100%;padding:14px;background:linear-gradient(135deg,#B01419,#E31E24);color:white;border:none;border-radius:10px;font-size:15px;font-weight:800;cursor:pointer;margin-top:8px}
+.login-btn{width:100%;padding:14px;background:linear-gradient(135deg,#B01419,#E31E24);color:white;border:none;border-radius:10px;font-size:15px;font-weight:800;cursor:pointer;margin-top:8px;letter-spacing:0.02em}
+.login-btn:hover{opacity:0.9}
 .login-error{background:#fff0f0;border:1px solid #f5c6c6;color:#c0392b;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:16px;text-align:center;display:none}
 .portaal{display:none;min-height:100vh}
 .topbar{background:linear-gradient(135deg,#B01419,#E31E24);color:white;padding:14px 32px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 4px 20px rgba(227,30,36,0.3)}
 .topbar-left{display:flex;align-items:center;gap:16px}
-.topbar-logo{background:white;border-radius:8px;padding:6px 14px}
-.topbar-naam{font-size:18px;font-weight:900;color:#E31E24}
-.topbar-naam span{color:#1a1a2e}
+.topbar-logo{background:white;border-radius:8px;padding:4px 10px;display:flex;align-items:center}
+.topbar-logo img{height:36px;object-fit:contain}
 .topbar-info{display:flex;flex-direction:column}
 .topbar-title{font-size:16px;font-weight:800}
 .topbar-sub{font-size:11px;opacity:0.75}
-.topbar-right{display:flex;align-items:center;gap:12px}
+.topbar-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .user-badge{background:rgba(255,255,255,0.2);border-radius:20px;padding:6px 14px;font-size:13px;font-weight:600}
-.logout-btn{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:white;padding:7px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600}
+.topbar-btn{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:white;padding:7px 14px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600}
+.topbar-btn:hover{background:rgba(255,255,255,0.25)}
 .content{max-width:1100px;margin:0 auto;padding:32px 24px}
 .welkom{background:white;border-radius:16px;padding:28px 32px;margin-bottom:28px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border-left:5px solid #E31E24;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
 .welkom h2{font-size:22px;font-weight:800;color:#1a1a2e;margin-bottom:4px}
@@ -37,7 +39,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
 .welkom-datum{font-size:13px;color:#aaa;text-align:right;line-height:1.8}
 .sectie-titel{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#aaa;margin-bottom:14px;margin-top:28px}
 .tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px}
-.tool-card{background:white;border-radius:16px;padding:28px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:2px solid transparent;transition:all 0.2s;cursor:pointer;text-decoration:none;color:inherit;display:block}
+.tool-card{background:white;border-radius:16px;padding:28px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:2px solid transparent;transition:all 0.2s;text-decoration:none;color:inherit;display:block}
 .tool-card:hover{border-color:#E31E24;transform:translateY(-2px);box-shadow:0 8px 24px rgba(227,30,36,0.12)}
 .tool-icon{width:52px;height:52px;background:linear-gradient(135deg,#fff0f0,#ffe0e0);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:16px}
 .tool-naam{font-size:16px;font-weight:800;color:#1a1a2e;margin-bottom:6px}
@@ -56,6 +58,21 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
 .link-item:hover{background:#fff0f0;color:#E31E24}
 .link-icon{font-size:18px}
 .link-naam{font-size:13px;font-weight:600}
+.modal-bg{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:100;align-items:center;justify-content:center}
+.modal-bg.open{display:flex}
+.modal{background:white;border-radius:16px;padding:32px;width:100%;max-width:480px;box-shadow:0 20px 60px rgba(0,0,0,0.2)}
+.modal h3{font-size:18px;font-weight:800;margin-bottom:6px}
+.modal-desc{font-size:13px;color:#888;margin-bottom:24px}
+.modal-field{margin-bottom:14px}
+.modal-field label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#888;margin-bottom:5px}
+.modal-field input{width:100%;padding:10px 14px;border:2px solid #eee;border-radius:8px;font-size:13px;outline:none;transition:border 0.2s}
+.modal-field input:focus{border-color:#E31E24}
+.modal-btns{display:flex;gap:10px;margin-top:20px}
+.modal-save{flex:1;padding:11px;background:#E31E24;color:white;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer}
+.modal-save:hover{opacity:0.9}
+.modal-cancel{padding:11px 20px;background:#f5f5f5;color:#888;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer}
+.modal-success{background:#f0fff4;border:1px solid #a8e6c0;color:#2D6A4F;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:14px;display:none}
+.modal-error{color:#c0392b;font-size:13px;margin-top:8px;display:none}
 .footer{text-align:center;padding:32px;font-size:12px;color:#bbb}
 </style>
 </head>
@@ -64,10 +81,10 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
 <div class="login-bg" id="loginScherm">
   <div class="login-card">
     <div class="login-logo">
-      <div style="font-size:32px;font-weight:900;color:#E31E24;letter-spacing:-1px">S<span style="color:#1a1a2e">chipper</span></div>
-      <div style="font-size:11px;font-weight:700;letter-spacing:0.2em;color:#aaa;text-transform:uppercase;margin-top:2px">Kozijnen — Intern Portaal</div>
+      <img src="images.png" alt="Schipper Kozijnen"
+        onerror="this.outerHTML='<div style=\'text-align:center\'><div style=\'font-size:32px;font-weight:900;color:#E31E24\'>S<span style=\'color:#1a1a2e\'>chipper</span></div><div style=\'font-size:11px;font-weight:700;letter-spacing:0.2em;color:#aaa;text-transform:uppercase;margin-top:4px\'>Kozijnen</div></div>'">
     </div>
-    <div class="login-title">Inloggen</div>
+    <div class="login-title">Intern Portaal</div>
     <div class="login-sub">Alleen voor Schipper Kozijnen medewerkers</div>
     <div class="login-error" id="loginError">Onjuiste inloggegevens — probeer opnieuw</div>
     <div class="field">
@@ -86,7 +103,8 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
   <div class="topbar">
     <div class="topbar-left">
       <div class="topbar-logo">
-        <span class="topbar-naam">S<span>chipper</span></span>
+        <img src="images.png" alt="Schipper Kozijnen" height="36"
+          onerror="this.outerHTML='<span style=\'font-size:16px;font-weight:900;color:#E31E24\'>S<span style=\'color:#1a1a2e\'>chipper</span></span>'">
       </div>
       <div class="topbar-info">
         <div class="topbar-title">Intern Portaal</div>
@@ -95,7 +113,8 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
     </div>
     <div class="topbar-right">
       <div class="user-badge" id="userBadge">👋 Welkom</div>
-      <button class="logout-btn" onclick="logout()">Uitloggen</button>
+      <button class="topbar-btn" onclick="openInstellingen()">⚙️ Instellingen</button>
+      <button class="topbar-btn" onclick="logout()">Uitloggen</button>
     </div>
   </div>
 
@@ -113,14 +132,14 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
       <a class="tool-card" href="https://dakkapel-offerte.vercel.app" target="_blank">
         <div class="tool-icon">🏠</div>
         <div class="tool-naam">Dakkapel Offerte Tool →</div>
-        <div class="tool-desc">Van Hattem offerte automatisch omzetten naar een professionele Schipper Kozijnen offerte. Inclusief prijsberekening, marge en PDF.</div>
+        <div class="tool-desc">Van Hattem offerte automatisch omzetten naar een professionele Schipper Kozijnen offerte. Inclusief prijsberekening, marge instellen en PDF genereren.</div>
         <span class="tool-badge">Bespaart 1-1,5 uur per offerte</span>
       </a>
       <a class="tool-card" href="https://subsidie-adviseur.vercel.app" target="_blank">
         <div class="tool-icon">💰</div>
         <div class="tool-naam">Subsidie Adviseur →</div>
-        <div class="tool-desc">Bereken Nij Begun subsidies voor klanten. Automatisch de juiste regelingen en bedragen berekend op basis van de offerte.</div>
-        <span class="tool-badge">Nij Begun 2025</span>
+        <div class="tool-desc">Bereken Nij Begun subsidies voor klanten. Automatisch de juiste regelingen en bedragen berekend. Genereer een officiële subsidie PDF.</div>
+        <span class="tool-badge">Nij Begun t/m 2035</span>
       </a>
     </div>
 
@@ -128,23 +147,33 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
     <div class="nieuws-grid">
       <div class="nieuws-card">
         <span class="nieuws-tag tag-tip">Tip</span>
-        <div class="nieuws-titel">Gebruik versienummers bij offertes</div>
-        <div class="nieuws-tekst">Vergeet niet het versienummer te verhogen als je een aangepaste offerte stuurt. Zo weet de klant altijd welke versie actueel is.</div>
+        <div class="nieuws-titel">Versienummer verhogen bij wijzigingen</div>
+        <div class="nieuws-tekst">Stuur je een aangepaste offerte? Verhoog altijd het versienummer. De klant ziet dan meteen welke versie de meest recente is.</div>
       </div>
       <div class="nieuws-card">
         <span class="nieuws-tag tag-branche">Branche</span>
-        <div class="nieuws-titel">Nij Begun subsidie loopt t/m 2025</div>
-        <div class="nieuws-tekst">Klanten kunnen nog profiteren van de Nij Begun subsidie voor isolatie. Gebruik de Subsidie Adviseur om snel te berekenen wat ze kunnen krijgen.</div>
+        <div class="nieuws-titel">Nij Begun subsidie loopt t/m 2035</div>
+        <div class="nieuws-tekst">Klanten kunnen tot 2035 profiteren van de Nij Begun subsidie voor isolatie en kozijnen. Combineer met triple glas voor maximaal voordeel.</div>
       </div>
       <div class="nieuws-card">
         <span class="nieuws-tag tag-intern">Intern</span>
         <div class="nieuws-titel">Dakkapel tool bespaart 1,5 uur</div>
-        <div class="nieuws-tekst">De dakkapel offerte converter is live! Collega's zijn enthousiast — gemiddeld 1 tot 1,5 uur besparing per offerte.</div>
+        <div class="nieuws-tekst">De dakkapel offerte converter is live en in gebruik. Gemiddeld 1 tot 1,5 uur besparing per offerte — collega's zijn enthousiast!</div>
       </div>
       <div class="nieuws-card">
         <span class="nieuws-tag tag-tip">Tip</span>
-        <div class="nieuws-titel">Asbestinventarisatie checkbox</div>
-        <div class="nieuws-tekst">Bij oudere woningen (voor 1994) altijd vragen naar asbest. In de offerte tool staat een aparte checkbox voor asbestinventarisatie à €495.</div>
+        <div class="nieuws-titel">Asbest checken bij oudere woningen</div>
+        <div class="nieuws-tekst">Bij woningen van voor 1994 altijd navragen of er asbest aanwezig is. In de offerte tool staat een aparte checkbox voor asbestinventarisatie à €495.</div>
+      </div>
+      <div class="nieuws-card">
+        <span class="nieuws-tag tag-tip">Tip</span>
+        <div class="nieuws-titel">Orderbevestiging na akkoord klant</div>
+        <div class="nieuws-tekst">Na akkoord van de klant selecteer je in de offerte tool het documenttype "Orderbevestiging". Zelfde PDF maar met officieel stempel.</div>
+      </div>
+      <div class="nieuws-card">
+        <span class="nieuws-tag tag-branche">Branche</span>
+        <div class="nieuws-titel">Triple glas steeds populairder</div>
+        <div class="nieuws-tekst">Klanten kiezen steeds vaker voor triple glas HR+++. Combinatie met Nij Begun subsidie maakt dit financieel erg aantrekkelijk voor de klant.</div>
       </div>
     </div>
 
@@ -152,27 +181,62 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
     <div class="links-grid">
       <a class="link-item" href="https://webkozijn.nl" target="_blank"><span class="link-icon">🪟</span><span class="link-naam">Webkozijn</span></a>
       <a class="link-item" href="https://www.schipperkozijnen.nl" target="_blank"><span class="link-icon">🌐</span><span class="link-naam">Schipper website</span></a>
-      <a class="link-item" href="https://subsidie-adviseur.vercel.app" target="_blank"><span class="link-icon">📋</span><span class="link-naam">Nij Begun API</span></a>
-      <a class="link-item" href="https://www.vlok-erkend.nl" target="_blank"><span class="link-icon">✅</span><span class="link-naam">VLOK Keurmerk</span></a>
-      <a class="link-item" href="https://www.kkfh.nl" target="_blank"><span class="link-icon">🏆</span><span class="link-naam">KKFH</span></a>
+      <a class="link-item" href="https://www.somfy.com" target="_blank"><span class="link-icon">🔧</span><span class="link-naam">Somfy</span></a>
+      <a class="link-item" href="https://www.mawipex.com" target="_blank"><span class="link-icon">🏗️</span><span class="link-naam">Mawipex</span></a>
       <a class="link-item" href="mailto:Thijs.Hager@schipperkozijnen.nl"><span class="link-icon">📧</span><span class="link-naam">Mail Thijs</span></a>
     </div>
   </div>
   <div class="footer">Schipper Kozijnen Intern Portaal — Alleen voor medewerkers</div>
 </div>
 
+<div class="modal-bg" id="instellingenModal">
+  <div class="modal">
+    <h3>⚙️ Instellingen</h3>
+    <div class="modal-desc">Wijzig het wachtwoord van een gebruiker. Wordt lokaal opgeslagen in je browser.</div>
+    <div class="modal-success" id="modalSuccess">✓ Wachtwoord succesvol gewijzigd!</div>
+    <div class="modal-field">
+      <label>Gebruikersnaam</label>
+      <input type="text" id="instGebruiker" placeholder="gebruikersnaam">
+    </div>
+    <div class="modal-field">
+      <label>Nieuw wachtwoord</label>
+      <input type="password" id="instNieuwWw" placeholder="minimaal 6 tekens">
+    </div>
+    <div class="modal-field">
+      <label>Herhaal wachtwoord</label>
+      <input type="password" id="instHerhaalWw" placeholder="herhaal wachtwoord">
+    </div>
+    <div class="modal-error" id="modalError"></div>
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="sluitInstellingen()">Annuleren</button>
+      <button class="modal-save" onclick="slaInstellingenOp()">Opslaan</button>
+    </div>
+  </div>
+</div>
+
 <script>
-const GEBRUIKERS = {
-  "thijs": { wachtwoord: "Schipper2025!", naam: "Thijs Hager" },
-  "art": { wachtwoord: "Schipper2025!", naam: "Art Weering" },
-  "admin": { wachtwoord: "SchipperAdmin!", naam: "Admin" }
+const STANDAARD = {
+  "thijs":   { wachtwoord: "Schipper2025!", naam: "Thijs Hager" },
+  "art":     { wachtwoord: "Schipper2025!", naam: "Art Weering" },
+  "ismael":  { wachtwoord: "Schipper2025!", naam: "Ismael Marijanan" },
+  "michiel": { wachtwoord: "Schipper2025!", naam: "Michiel Hessels" },
+  "admin":   { wachtwoord: "SchipperAdmin!", naam: "Admin" }
 };
+
+function getGebruikers() {
+  try {
+    const opgeslagen = localStorage.getItem("sk_gebruikers");
+    if (opgeslagen) return { ...STANDAARD, ...JSON.parse(opgeslagen) };
+  } catch(e) {}
+  return STANDAARD;
+}
 
 function login() {
   const user = document.getElementById("gebruiker").value.toLowerCase().trim();
   const pass = document.getElementById("wachtwoord").value;
   const err = document.getElementById("loginError");
-  if (GEBRUIKERS[user] && GEBRUIKERS[user].wachtwoord === pass) {
+  const gebruikers = getGebruikers();
+  if (gebruikers[user] && gebruikers[user].wachtwoord === pass) {
     err.style.display = "none";
     sessionStorage.setItem("sk_user", user);
     toonPortaal(user);
@@ -183,18 +247,19 @@ function login() {
 }
 
 function toonPortaal(user) {
-  const u = GEBRUIKERS[user];
+  const gebruikers = getGebruikers();
+  const u = gebruikers[user];
   const nu = new Date();
   const uur = nu.getHours();
   const groet = uur < 12 ? "Goedemorgen" : uur < 18 ? "Goedemiddag" : "Goedenavond";
   const dagen = ["zondag","maandag","dinsdag","woensdag","donderdag","vrijdag","zaterdag"];
   const maanden = ["januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december"];
-  const datumStr = dagen[nu.getDay()] + " " + nu.getDate() + " " + maanden[nu.getMonth()] + " " + nu.getFullYear();
+  const datum = dagen[nu.getDay()] + " " + nu.getDate() + " " + maanden[nu.getMonth()] + " " + nu.getFullYear();
   document.getElementById("loginScherm").style.display = "none";
   document.getElementById("portaal").style.display = "block";
   document.getElementById("welkomNaam").textContent = groet + ", " + u.naam.split(" ")[0] + "!";
   document.getElementById("userBadge").textContent = "👋 " + u.naam;
-  document.getElementById("welkomDatum").innerHTML = datumStr + "<br><span style='font-size:11px;color:#bbb'>" + nu.toLocaleTimeString("nl-NL",{hour:"2-digit",minute:"2-digit"}) + "</span>";
+  document.getElementById("welkomDatum").innerHTML = datum + "<br><span style='font-size:11px;color:#ccc'>" + nu.toLocaleTimeString("nl-NL",{hour:"2-digit",minute:"2-digit"}) + "</span>";
 }
 
 function logout() {
@@ -205,8 +270,44 @@ function logout() {
   document.getElementById("wachtwoord").value = "";
 }
 
+function openInstellingen() {
+  const user = sessionStorage.getItem("sk_user");
+  document.getElementById("instGebruiker").value = user || "";
+  document.getElementById("instNieuwWw").value = "";
+  document.getElementById("instHerhaalWw").value = "";
+  document.getElementById("modalSuccess").style.display = "none";
+  document.getElementById("modalError").style.display = "none";
+  document.getElementById("instellingenModal").classList.add("open");
+}
+
+function sluitInstellingen() {
+  document.getElementById("instellingenModal").classList.remove("open");
+}
+
+function slaInstellingenOp() {
+  const gebruiker = document.getElementById("instGebruiker").value.toLowerCase().trim();
+  const nieuw = document.getElementById("instNieuwWw").value;
+  const herhaal = document.getElementById("instHerhaalWw").value;
+  const err = document.getElementById("modalError");
+  const succ = document.getElementById("modalSuccess");
+  err.style.display = "none";
+  succ.style.display = "none";
+  const gebruikers = getGebruikers();
+  if (!gebruikers[gebruiker]) { err.textContent = "Gebruiker niet gevonden"; err.style.display = "block"; return; }
+  if (nieuw.length < 6) { err.textContent = "Wachtwoord moet minimaal 6 tekens zijn"; err.style.display = "block"; return; }
+  if (nieuw !== herhaal) { err.textContent = "Wachtwoorden komen niet overeen"; err.style.display = "block"; return; }
+  const opgeslagen = {};
+  try { Object.assign(opgeslagen, JSON.parse(localStorage.getItem("sk_gebruikers") || "{}")); } catch(e) {}
+  opgeslagen[gebruiker] = { ...gebruikers[gebruiker], wachtwoord: nieuw };
+  localStorage.setItem("sk_gebruikers", JSON.stringify(opgeslagen));
+  succ.style.display = "block";
+  document.getElementById("instNieuwWw").value = "";
+  document.getElementById("instHerhaalWw").value = "";
+  setTimeout(() => sluitInstellingen(), 1500);
+}
+
 const bestaandeUser = sessionStorage.getItem("sk_user");
-if (bestaandeUser && GEBRUIKERS[bestaandeUser]) toonPortaal(bestaandeUser);
+if (bestaandeUser && getGebruikers()[bestaandeUser]) toonPortaal(bestaandeUser);
 </script>
 </body>
 </html>
