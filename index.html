@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Schipper Kozijnen — Intern Portaal</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:100vh;color:#1a1a2e}
+
+  /* LOGIN */
+  .login-bg{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#B01419,#E31E24)}
+  .login-card{background:white;border-radius:20px;padding:48px 40px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,0.2)}
+  .login-logo{text-align:center;margin-bottom:32px}
+  .login-logo img{height:56px}
+  .login-title{font-size:22px;font-weight:800;color:#1a1a2e;text-align:center;margin-bottom:6px}
+  .login-sub{font-size:13px;color:#888;text-align:center;margin-bottom:32px}
+  .field{margin-bottom:18px}
+  .field label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#888;margin-bottom:6px}
+  .field input{width:100%;padding:12px 16px;border:2px solid #eee;border-radius:10px;font-size:14px;outline:none;transition:border 0.2s}
+  .field input:focus{border-color:#E31E24}
+  .login-btn{width:100%;padding:14px;background:linear-gradient(135deg,#B01419,#E31E24);color:white;border:none;border-radius:10px;font-size:15px;font-weight:800;cursor:pointer;margin-top:8px;letter-spacing:0.02em}
+  .login-btn:hover{opacity:0.92}
+  .login-error{background:#fff0f0;border:1px solid #f5c6c6;color:#c0392b;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:16px;text-align:center;display:none}
+
+  /* PORTAAL */
+  .portaal{display:none;min-height:100vh}
+  .topbar{background:linear-gradient(135deg,#B01419,#E31E24);color:white;padding:14px 32px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 4px 20px rgba(227,30,36,0.3)}
+  .topbar-left{display:flex;align-items:center;gap:16px}
+  .topbar-logo{background:white;border-radius:8px;padding:4px 10px;display:flex;align-items:center}
+  .topbar-logo img{height:36px}
+  .topbar-title{font-size:16px;font-weight:800}
+  .topbar-sub{font-size:11px;opacity:0.75}
+  .topbar-right{display:flex;align-items:center;gap:16px}
+  .user-badge{background:rgba(255,255,255,0.2);border-radius:20px;padding:6px 14px;font-size:13px;font-weight:600}
+  .logout-btn{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:white;padding:7px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600}
+
+  .content{max-width:1100px;margin:0 auto;padding:32px 24px}
+
+  /* WELKOM */
+  .welkom{background:white;border-radius:16px;padding:28px 32px;margin-bottom:28px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border-left:5px solid #E31E24;display:flex;align-items:center;justify-content:space-between}
+  .welkom-tekst h2{font-size:22px;font-weight:800;color:#1a1a2e;margin-bottom:4px}
+  .welkom-tekst p{font-size:14px;color:#888}
+  .welkom-datum{font-size:13px;color:#aaa;text-align:right}
+
+  /* SECTIE TITELS */
+  .sectie-titel{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#aaa;margin-bottom:14px;margin-top:28px}
+
+  /* TOOLS */
+  .tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px}
+  .tool-card{background:white;border-radius:16px;padding:28px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:2px solid transparent;transition:all 0.2s;cursor:pointer;text-decoration:none;color:inherit;display:block}
+  .tool-card:hover{border-color:#E31E24;transform:translateY(-2px);box-shadow:0 8px 24px rgba(227,30,36,0.12)}
+  .tool-icon{width:52px;height:52px;background:linear-gradient(135deg,#fff0f0,#ffe0e0);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:16px}
+  .tool-naam{font-size:16px;font-weight:800;color:#1a1a2e;margin-bottom:6px}
+  .tool-desc{font-size:13px;color:#888;line-height:1.6;margin-bottom:16px}
+  .tool-badge{display:inline-block;background:#fff0f0;color:#E31E24;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px}
+  .tool-arrow{float:right;color:#E31E24;font-size:18px;font-weight:800;margin-top:-2px}
+
+  /* NIEUWS */
+  .nieuws-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+  .nieuws-card{background:white;border-radius:12px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,0.06)}
+  .nieuws-tag{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:3px 8px;border-radius:12px;margin-bottom:8px}
+  .tag-tip{background:#e8f4fd;color:#2980b9}
+  .tag-branche{background:#e8f8e8;color:#27ae60}
+  .tag-intern{background:#fff0f0;color:#E31E24}
+  .nieuws-titel{font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:6px;line-height:1.4}
+  .nieuws-tekst{font-size:12px;color:#888;line-height:1.6}
+
+  /* LINKS */
+  .links-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
+  .link-item{background:white;border-radius:10px;padding:14px 18px;box-shadow:0 1px 4px rgba(0,0,0,0.06);display:flex;align-items:center;gap:10px;text-decoration:none;color:#1a1a2e;transition:all 0.15s}
+  .link-item:hover{background:#fff0f0;color:#E31E24}
+  .link-icon{font-size:18px}
+  .link-naam{font-size:13px;font-weight:600}
+
+  /* FOOTER */
+  .footer{text-align:center;padding:32px;font-size:12px;color
