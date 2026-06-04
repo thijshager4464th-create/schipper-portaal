@@ -70,21 +70,23 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
 .tip-card{background:linear-gradient(135deg,#fff8e8,#fff0cc);border-radius:12px;padding:16px;margin-bottom:12px}
 .tip-dag{font-size:10px;font-weight:700;color:#f39c12;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px}
 .tip-tekst{font-size:13px;color:#1a1a2e;line-height:1.6;font-weight:500}
-.mededeling{background:#fff5f5;border-left:4px solid #E31E24;border-radius:0 10px 10px 0;padding:12px 16px;margin-bottom:10px;position:relative}
+.mededeling{background:#fff5f5;border-left:4px solid #E31E24;border-radius:0 10px 10px 0;padding:12px 16px;margin-bottom:10px;position:relative;overflow:hidden}
 .mededeling-auteur{font-size:10px;font-weight:700;color:#E31E24;text-transform:uppercase;margin-bottom:4px}
 .mededeling-tekst{font-size:13px;color:#1a1a2e;line-height:1.5}
 .mededeling-datum{font-size:10px;color:#bbb;margin-top:4px}
+.mededeling-delete{position:absolute;top:10px;right:10px;background:none;border:none;color:#ddd;cursor:pointer;font-size:16px;font-weight:700;padding:0;line-height:1}
+.mededeling-delete:hover{color:#E31E24}
 .geen-items{font-size:13px;color:#bbb;text-align:center;padding:20px}
-.prikbord-bericht{background:#fffbe8;border:1px solid #f0e0a0;border-radius:10px;padding:12px 14px;margin-bottom:10px}
+.prikbord-bericht{background:#fffbe8;border:1px solid #f0e0a0;border-radius:10px;padding:12px 14px;margin-bottom:10px;position:relative}
 .prikbord-auteur{font-size:10px;font-weight:700;color:#e67e22;text-transform:uppercase;margin-bottom:4px}
 .prikbord-tekst{font-size:13px;color:#1a1a2e;line-height:1.5}
 .prikbord-datum{font-size:10px;color:#bbb;margin-top:4px}
+.prikbord-delete{position:absolute;top:10px;right:10px;background:none;border:none;color:#ddd;cursor:pointer;font-size:16px;font-weight:700;padding:0;line-height:1}
+.prikbord-delete:hover{color:#E31E24}
 .bericht-input{width:100%;padding:10px 14px;border:2px solid #eee;border-radius:8px;font-size:13px;outline:none;margin-bottom:8px;resize:vertical;min-height:70px;font-family:inherit}
 .bericht-input:focus{border-color:#E31E24}
 .post-btn{padding:9px 18px;background:#E31E24;color:white;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer}
 .post-btn:hover{opacity:0.9}
-.delete-btn{float:right;background:none;border:none;color:#ddd;cursor:pointer;font-size:14px;padding:0}
-.delete-btn:hover{color:#E31E24}
 .barometer-wrapper{display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap}
 .barometer-container{display:flex;flex-direction:column;align-items:center;flex-shrink:0}
 .barometer-outer{width:80px;height:400px;background:#f0f0f0;border-radius:40px;overflow:hidden;position:relative;box-shadow:inset 0 4px 12px rgba(0,0,0,0.1)}
@@ -187,6 +189,10 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
     </div>
     <div class="topbar-right">
       <div class="user-badge" id="userBadge">Welkom</div>
+      <div id="adminKnoppen" style="display:none;display:flex;gap:10px;flex-wrap:wrap">
+        <button class="topbar-btn" onclick="openWerknemer()">Werknemer maand</button>
+        <button class="topbar-btn" onclick="openMededeling()">Mededeling</button>
+      </div>
       <button class="topbar-btn" onclick="openInstellingen()">Instellingen</button>
       <button class="topbar-btn" onclick="logout()">Uitloggen</button>
     </div>
@@ -207,7 +213,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px">
         <div>
           <div style="font-size:18px;font-weight:800;color:#1a1a2e">Week 19 t/m 26 — 2026</div>
-          <div style="font-size:13px;color:#888;margin-top:2px">Doelstelling: <strong style="color:#E31E24">€ 640.000</strong> incl. BTW</div>
+          <div style="font-size:13px;color:#888;margin-top:2px">Doelstelling: <strong style="color:#E31E24">640.000</strong> incl. BTW</div>
         </div>
         <div id="kpiAdminBtn" style="display:none">
           <button style="padding:9px 18px;background:#E31E24;color:white;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer" onclick="openKPI()">Week invullen</button>
@@ -225,7 +231,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
         </div>
         <div class="barometer-info">
           <div class="kpi-totaal">
-            <div class="kpi-totaal-val" id="kpiTotaalBedrag">€ 0</div>
+            <div class="kpi-totaal-val" id="kpiTotaalBedrag">0</div>
             <div class="kpi-totaal-label">Totaal bereikt incl. BTW</div>
           </div>
           <div style="margin-top:16px">
@@ -485,35 +491,29 @@ function getGebruikers() {
       const parsed = JSON.parse(op);
       const result = {};
       const keys = Object.keys(STANDAARD);
-      for (let i = 0; i < keys.length; i++) {
-        result[keys[i]] = STANDAARD[keys[i]];
-      }
+      for (var i = 0; i < keys.length; i++) { result[keys[i]] = STANDAARD[keys[i]]; }
       const pkeys = Object.keys(parsed);
-      for (let i = 0; i < pkeys.length; i++) {
-        result[pkeys[i]] = parsed[pkeys[i]];
-      }
+      for (var j = 0; j < pkeys.length; j++) { result[pkeys[j]] = parsed[pkeys[j]]; }
       return result;
     }
   } catch(e) {}
   const result = {};
   const keys = Object.keys(STANDAARD);
-  for (let i = 0; i < keys.length; i++) {
-    result[keys[i]] = STANDAARD[keys[i]];
-  }
+  for (var k = 0; k < keys.length; k++) { result[keys[k]] = STANDAARD[keys[k]]; }
   return result;
 }
 
-let huidigUser = null;
-let isAdmin = false;
+var huidigUser = null;
+var isAdmin = false;
 
 function login() {
-  const userEl = document.getElementById("gebruiker");
-  const passEl = document.getElementById("wachtwoord");
-  const errEl = document.getElementById("loginError");
+  var userEl = document.getElementById("gebruiker");
+  var passEl = document.getElementById("wachtwoord");
+  var errEl = document.getElementById("loginError");
   if (!userEl || !passEl) return;
-  const user = userEl.value.toLowerCase().trim();
-  const pass = passEl.value;
-  const gebruikers = getGebruikers();
+  var user = userEl.value.toLowerCase().trim();
+  var pass = passEl.value;
+  var gebruikers = getGebruikers();
   if (gebruikers[user] && gebruikers[user].wachtwoord === pass) {
     errEl.style.display = "none";
     sessionStorage.setItem("sk_user", user);
@@ -529,35 +529,23 @@ function login() {
 function toonPortaal(user) {
   huidigUser = user;
   isAdmin = (user === "admin" || user === "thijs");
-  const gebruikers = getGebruikers();
-  const u = gebruikers[user];
-  const nu = new Date();
-  const uur = nu.getHours();
-  const groet = uur < 12 ? "Goedemorgen" : uur < 18 ? "Goedemiddag" : "Goedenavond";
-  const dagen = ["zondag","maandag","dinsdag","woensdag","donderdag","vrijdag","zaterdag"];
-  const maanden = ["januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december"];
-  const datum = dagen[nu.getDay()] + " " + nu.getDate() + " " + maanden[nu.getMonth()] + " " + nu.getFullYear();
+  var gebruikers = getGebruikers();
+  var u = gebruikers[user];
+  var nu = new Date();
+  var uur = nu.getHours();
+  var groet = uur < 12 ? "Goedemorgen" : uur < 18 ? "Goedemiddag" : "Goedenavond";
+  var dagen = ["zondag","maandag","dinsdag","woensdag","donderdag","vrijdag","zaterdag"];
+  var maanden = ["januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december"];
+  var datum = dagen[nu.getDay()] + " " + nu.getDate() + " " + maanden[nu.getMonth()] + " " + nu.getFullYear();
   document.getElementById("loginScherm").style.display = "none";
   document.getElementById("portaal").style.display = "block";
   document.getElementById("welkomNaam").textContent = groet + ", " + u.naam.split(" ")[0] + "!";
   document.getElementById("userBadge").textContent = u.naam;
   document.getElementById("welkomDatum").innerHTML = datum + "<br><span style='font-size:11px;color:#ccc'>" + nu.toLocaleTimeString("nl-NL",{hour:"2-digit",minute:"2-digit"}) + "</span>";
-
   if (isAdmin) {
-    const topbarRight = document.querySelector(".topbar-right");
-    const wnBtn = document.createElement("button");
-    wnBtn.className = "topbar-btn";
-    wnBtn.textContent = "Werknemer maand";
-    wnBtn.onclick = openWerknemer;
-    topbarRight.insertBefore(wnBtn, topbarRight.firstChild);
-    const medBtn = document.createElement("button");
-    medBtn.className = "topbar-btn";
-    medBtn.textContent = "Mededeling";
-    medBtn.onclick = openMededeling;
-    topbarRight.insertBefore(medBtn, topbarRight.firstChild);
+    document.getElementById("adminKnoppen").style.display = "flex";
     document.getElementById("kpiAdminBtn").style.display = "block";
   }
-
   laadWeer();
   laadTipVanDeDag();
   laadPrikbord();
@@ -576,25 +564,26 @@ function logout() {
   document.getElementById("wachtwoord").value = "";
 }
 
-async function laadWerknemer() {
-  const res = await sb.from("werknemer_week").select("*").order("datum",{ascending:false}).limit(1);
-  const el = document.getElementById("werknemerBlok");
-  if (res.error || !res.data || res.data.length === 0) {
-    el.innerHTML = "<div style='background:white;border-radius:16px;padding:32px;text-align:center;color:#bbb;font-size:13px'>Nog geen werknemer van de maand ingesteld</div>";
-    return;
-  }
-  const w = res.data[0];
-  const fotoHTML = w.foto_url ? "<img src='" + w.foto_url + "' class='werknemer-foto'>" : "<div class='werknemer-foto-placeholder'>👤</div>";
-  const adminHTML = isAdmin ? "<div style='margin-top:16px;display:flex;gap:8px'><button onclick='openWerknemer()' style='padding:8px 16px;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);color:white;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600'>Wijzigen</button></div>" : "";
-  el.innerHTML = "<div class='werknemer-card'>" + fotoHTML + "<div><div class='werknemer-badge'>Werknemer van de maand</div><div class='werknemer-naam'>" + w.naam + "</div><div class='werknemer-functie'>" + (w.functie || "") + "</div><div class='werknemer-reden'>\"" + (w.reden || "") + "\"</div>" + adminHTML + "</div></div>";
+function laadWerknemer() {
+  sb.from("werknemer_week").select("*").order("datum",{ascending:false}).limit(1).then(function(res) {
+    var el = document.getElementById("werknemerBlok");
+    if (res.error || !res.data || res.data.length === 0) {
+      el.innerHTML = "<div style='background:white;border-radius:16px;padding:32px;text-align:center;color:#bbb;font-size:13px'>Nog geen werknemer van de maand ingesteld</div>";
+      return;
+    }
+    var w = res.data[0];
+    var fotoHTML = w.foto_url ? "<img src='" + w.foto_url + "' class='werknemer-foto'>" : "<div class='werknemer-foto-placeholder'>👤</div>";
+    var adminHTML = isAdmin ? "<div style='margin-top:16px'><button onclick='openWerknemer()' style='padding:8px 16px;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);color:white;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600'>Wijzigen</button></div>" : "";
+    el.innerHTML = "<div class='werknemer-card'>" + fotoHTML + "<div><div class='werknemer-badge'>Werknemer van de maand</div><div class='werknemer-naam'>" + w.naam + "</div><div class='werknemer-functie'>" + (w.functie||"") + "</div><div class='werknemer-reden'>\"" + (w.reden||"") + "\"</div>" + adminHTML + "</div></div>";
+  });
 }
 
 function previewFoto(input) {
-  const file = input.files[0];
+  var file = input.files[0];
   if (!file) return;
-  const reader = new FileReader();
+  var reader = new FileReader();
   reader.onload = function(e) {
-    const preview = document.getElementById("wnFotoPreview");
+    var preview = document.getElementById("wnFotoPreview");
     preview.src = e.target.result;
     preview.style.display = "block";
     document.getElementById("wnFotoTekst").textContent = "Foto geselecteerd";
@@ -616,76 +605,88 @@ function sluitWerknemer() {
   document.getElementById("werknemerModal").classList.remove("open");
 }
 
-async function slaWerknemerOp() {
-  const naam = document.getElementById("wnNaam").value.trim();
-  const functie = document.getElementById("wnFunctie").value.trim();
-  const reden = document.getElementById("wnReden").value.trim();
-  const fotoInput = document.getElementById("wnFotoInput");
+function slaWerknemerOp() {
+  var naam = document.getElementById("wnNaam").value.trim();
+  var functie = document.getElementById("wnFunctie").value.trim();
+  var reden = document.getElementById("wnReden").value.trim();
+  var fotoInput = document.getElementById("wnFotoInput");
   if (!naam) return;
-  let foto_url = null;
+  var foto_url = null;
+
+  function doInsert(url) {
+    sb.from("werknemer_week").delete().neq("id", 0).then(function() {
+      sb.from("werknemer_week").insert({naam:naam, functie:functie, reden:reden, foto_url:url}).then(function() {
+        sluitWerknemer();
+        laadWerknemer();
+      });
+    });
+  }
+
   if (fotoInput.files[0]) {
-    const file = fotoInput.files[0];
-    const bestandsnaam = Date.now() + "_" + file.name.replace(/\s/g,"_");
-    const uploadRes = await sb.storage.from("fotos").upload(bestandsnaam, file, {cacheControl:"3600",upsert:false});
-    if (!uploadRes.error) {
-      foto_url = sb.storage.from("fotos").getPublicUrl(bestandsnaam).data.publicUrl;
-    }
+    var file = fotoInput.files[0];
+    var bestandsnaam = Date.now() + "_" + file.name.replace(/\s/g,"_");
+    sb.storage.from("fotos").upload(bestandsnaam, file, {cacheControl:"3600",upsert:false}).then(function(uploadRes) {
+      if (!uploadRes.error) {
+        foto_url = sb.storage.from("fotos").getPublicUrl(bestandsnaam).data.publicUrl;
+      }
+      doInsert(foto_url);
+    });
+  } else {
+    doInsert(foto_url);
   }
-  await sb.from("werknemer_week").delete().neq("id", 0);
-  await sb.from("werknemer_week").insert({naam, functie, reden, foto_url});
-  sluitWerknemer();
-  laadWerknemer();
 }
-  async function laadBarometer() {
-  const res = await sb.from("kpi_weken").select("*").order("week_nr",{ascending:true});
-  const weekData = {};
-  if (res.data) {
-    for (let i = 0; i < res.data.length; i++) {
-      weekData[res.data[i].week_nr] = parseFloat(res.data[i].bedrag) || 0;
+
+function laadBarometer() {
+  sb.from("kpi_weken").select("*").order("week_nr",{ascending:true}).then(function(res) {
+    var weekData = {};
+    if (res.data) {
+      for (var i = 0; i < res.data.length; i++) {
+        weekData[res.data[i].week_nr] = parseFloat(res.data[i].bedrag) || 0;
+      }
     }
-  }
-  let totaal = 0;
-  for (let i = 0; i < WEKEN.length; i++) { totaal += weekData[WEKEN[i]] || 0; }
-  const pct = Math.min(100, (totaal / DOELSTELLING) * 100);
-  document.getElementById("kpiTotaalBedrag").textContent = "€ " + Math.round(totaal).toLocaleString("nl-NL");
-  document.getElementById("barometerPct").textContent = Math.round(pct) + "%";
-  const fill = document.getElementById("barometerFill");
-  fill.innerHTML = "";
-  for (let i = 0; i < WEKEN.length; i++) {
-    const w = WEKEN[i];
-    const bedrag = weekData[w] || 0;
-    if (bedrag > 0) {
-      const seg = document.createElement("div");
-      seg.className = "barometer-week-segment";
-      seg.style.height = ((bedrag / DOELSTELLING) * 100) + "%";
-      seg.style.background = WEEK_KLEUREN[w];
-      fill.appendChild(seg);
+    var totaal = 0;
+    for (var i = 0; i < WEKEN.length; i++) { totaal += weekData[WEKEN[i]] || 0; }
+    var pct = Math.min(100, (totaal / DOELSTELLING) * 100);
+    document.getElementById("kpiTotaalBedrag").textContent = "€ " + Math.round(totaal).toLocaleString("nl-NL");
+    document.getElementById("barometerPct").textContent = Math.round(pct) + "%";
+    var fill = document.getElementById("barometerFill");
+    fill.innerHTML = "";
+    for (var j = 0; j < WEKEN.length; j++) {
+      var w = WEKEN[j];
+      var bedrag = weekData[w] || 0;
+      if (bedrag > 0) {
+        var seg = document.createElement("div");
+        seg.className = "barometer-week-segment";
+        seg.style.height = ((bedrag / DOELSTELLING) * 100) + "%";
+        seg.style.background = WEEK_KLEUREN[w];
+        fill.appendChild(seg);
+      }
     }
-  }
-  setTimeout(function() { fill.style.height = pct + "%"; }, 100);
-  let lijstHTML = "";
-  for (let i = 0; i < WEKEN.length; i++) {
-    const w = WEKEN[i];
-    const bedrag = weekData[w] || 0;
-    const weekPct = bedrag > 0 ? Math.round((bedrag / DOELSTELLING) * 100) : 0;
-    const isHuidig = w === 22;
-    lijstHTML += "<div class='week-item' style='background:" + (bedrag > 0 ? WEEK_KLEUREN[w] + "22" : "#f8f8f8") + ";border:" + (isHuidig ? "2px solid " + WEEK_KLEUREN[w] : "1px solid transparent") + "'>";
-    lijstHTML += "<div class='week-kleur' style='background:" + (bedrag > 0 ? WEEK_KLEUREN[w] : "#ddd") + "'></div>";
-    lijstHTML += "<div class='week-naam'>Week " + w + (isHuidig ? " nu" : "") + "</div>";
-    lijstHTML += "<div class='week-bedrag'>" + (bedrag > 0 ? "€ " + Math.round(bedrag).toLocaleString("nl-NL") : "nog in te vullen") + "</div>";
-    lijstHTML += "<div class='week-pct' style='color:" + (bedrag > 0 ? WEEK_KLEUREN[w] : "#ddd") + "'>" + (bedrag > 0 ? weekPct + "%" : "") + "</div>";
-    lijstHTML += "</div>";
-  }
-  document.getElementById("weekLijst").innerHTML = lijstHTML;
-  if (pct >= 100) setTimeout(startConfetti, 500);
+    setTimeout(function() { fill.style.height = pct + "%"; }, 100);
+    var lijstHTML = "";
+    for (var k = 0; k < WEKEN.length; k++) {
+      var wk = WEKEN[k];
+      var bed = weekData[wk] || 0;
+      var weekPct = bed > 0 ? Math.round((bed / DOELSTELLING) * 100) : 0;
+      var isHuidig = wk === 22;
+      lijstHTML += "<div class='week-item' style='background:" + (bed > 0 ? WEEK_KLEUREN[wk] + "22" : "#f8f8f8") + ";border:" + (isHuidig ? "2px solid " + WEEK_KLEUREN[wk] : "1px solid transparent") + "'>";
+      lijstHTML += "<div class='week-kleur' style='background:" + (bed > 0 ? WEEK_KLEUREN[wk] : "#ddd") + "'></div>";
+      lijstHTML += "<div class='week-naam'>Week " + wk + (isHuidig ? " (nu)" : "") + "</div>";
+      lijstHTML += "<div class='week-bedrag'>" + (bed > 0 ? "€ " + Math.round(bed).toLocaleString("nl-NL") : "nog in te vullen") + "</div>";
+      lijstHTML += "<div class='week-pct' style='color:" + (bed > 0 ? WEEK_KLEUREN[wk] : "#ddd") + "'>" + (bed > 0 ? weekPct + "%" : "") + "</div>";
+      lijstHTML += "</div>";
+    }
+    document.getElementById("weekLijst").innerHTML = lijstHTML;
+    if (pct >= 100) setTimeout(startConfetti, 500);
+  });
 }
 
 function startConfetti() {
-  const container = document.getElementById("confettiContainer");
+  var container = document.getElementById("confettiContainer");
   container.style.display = "block";
-  const kleuren = ["#E31E24","#f39c12","#2ecc71","#3498db","#9b59b6","#1abc9c"];
-  for (let i = 0; i < 150; i++) {
-    const c = document.createElement("div");
+  var kleuren = ["#E31E24","#f39c12","#2ecc71","#3498db","#9b59b6","#1abc9c"];
+  for (var i = 0; i < 150; i++) {
+    var c = document.createElement("div");
     c.style.cssText = "position:absolute;width:" + (Math.random()*10+5) + "px;height:" + (Math.random()*10+5) + "px;background:" + kleuren[Math.floor(Math.random()*kleuren.length)] + ";left:" + (Math.random()*100) + "%;top:-20px;border-radius:" + (Math.random()>0.5?"50%":"0") + ";animation:confetti-fall " + (Math.random()*3+2) + "s linear " + (Math.random()*3) + "s forwards;";
     container.appendChild(c);
   }
@@ -695,38 +696,43 @@ function startConfetti() {
 function openKPI() { document.getElementById("kpiModal").classList.add("open"); }
 function sluitKPI() { document.getElementById("kpiModal").classList.remove("open"); }
 
-async function slaKPIOp() {
-  const week = parseInt(document.getElementById("kpiModalWeek").value);
-  const bedrag = parseFloat(document.getElementById("kpiModalBedrag").value);
+function slaKPIOp() {
+  var week = parseInt(document.getElementById("kpiModalWeek").value);
+  var bedrag = parseFloat(document.getElementById("kpiModalBedrag").value);
   if (!week || week < 19 || week > 26 || !bedrag) return;
-  const res = await sb.from("kpi_weken").select("*").eq("week_nr", week);
-  if (res.data && res.data.length > 0) {
-    await sb.from("kpi_weken").update({bedrag: bedrag}).eq("week_nr", week);
-  } else {
-    await sb.from("kpi_weken").insert({week_nr: week, bedrag: bedrag});
-  }
-  sluitKPI();
-  laadBarometer();
+  sb.from("kpi_weken").select("*").eq("week_nr", week).then(function(res) {
+    if (res.data && res.data.length > 0) {
+      sb.from("kpi_weken").update({bedrag:bedrag}).eq("week_nr", week).then(function() {
+        sluitKPI();
+        laadBarometer();
+      });
+    } else {
+      sb.from("kpi_weken").insert({week_nr:week, bedrag:bedrag}).then(function() {
+        sluitKPI();
+        laadBarometer();
+      });
+    }
+  });
 }
-
-async function laadWeer() {
-  try {
-    const r = await fetch("https://api.open-meteo.com/v1/forecast?latitude=53.2194&longitude=6.5665&current=temperature_2m,weathercode&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=Europe/Amsterdam&forecast_days=5");
-    const d = await r.json();
-    const temp = Math.round(d.current.temperature_2m);
+  function laadWeer() {
+  fetch("https://api.open-meteo.com/v1/forecast?latitude=53.2194&longitude=6.5665&current=temperature_2m,weathercode&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=Europe/Amsterdam&forecast_days=5")
+  .then(function(r) { return r.json(); })
+  .then(function(d) {
+    var temp = Math.round(d.current.temperature_2m);
     document.getElementById("weerVandaag").innerHTML = "<div class='weer-icon'>" + weerIcon(d.current.weathercode) + "</div><div><div class='weer-temp'>" + temp + "°C</div><div class='weer-desc'>" + weerDesc(d.current.weathercode) + "</div></div>";
-    const weekDagen = ["Zo","Ma","Di","Wo","Do","Vr","Za"];
-    let weekHTML = "";
-    for (let i = 0; i < 5; i++) {
-      const dag = weekDagen[new Date(d.daily.time[i]).getDay()];
-      const max = Math.round(d.daily.temperature_2m_max[i]);
-      const min = Math.round(d.daily.temperature_2m_min[i]);
+    var weekDagen = ["Zo","Ma","Di","Wo","Do","Vr","Za"];
+    var weekHTML = "";
+    for (var i = 0; i < 5; i++) {
+      var dag = weekDagen[new Date(d.daily.time[i]).getDay()];
+      var max = Math.round(d.daily.temperature_2m_max[i]);
+      var min = Math.round(d.daily.temperature_2m_min[i]);
       weekHTML += "<div class='weer-dag'><div class='weer-dag-naam'>" + dag + "</div><div class='weer-dag-icon'>" + weerIcon(d.daily.weathercode[i]) + "</div><div class='weer-dag-temp'>" + max + "°<span style='color:#bbb;font-weight:400'>/" + min + "°</span></div></div>";
     }
     document.getElementById("weerWeek").innerHTML = weekHTML;
-  } catch(e) {
+  })
+  .catch(function() {
     document.getElementById("weerVandaag").innerHTML = "<div style='color:#bbb;font-size:13px'>Weer niet beschikbaar</div>";
-  }
+  });
 }
 
 function weerIcon(c) {
@@ -742,30 +748,30 @@ function weerDesc(c) {
 }
 
 function laadTipVanDeDag() {
-  const nu = new Date();
-  const dagNr = Math.floor((nu - new Date(nu.getFullYear(), 0, 0)) / 86400000);
-  const tipIdx = dagNr % TIPS.length;
-  const dagen = ["Zondag","Maandag","Dinsdag","Woensdag","Donderdag","Vrijdag","Zaterdag"];
+  var nu = new Date();
+  var dagNr = Math.floor((nu - new Date(nu.getFullYear(), 0, 0)) / 86400000);
+  var tipIdx = dagNr % TIPS.length;
+  var dagen = ["Zondag","Maandag","Dinsdag","Woensdag","Donderdag","Vrijdag","Zaterdag"];
   document.getElementById("tipDag").textContent = dagen[nu.getDay()] + " " + nu.getDate() + "/" + (nu.getMonth()+1);
   document.getElementById("tipTekst").textContent = TIPS[tipIdx];
-  let overigeHTML = "";
-  for (let i = 1; i <= 3; i++) {
-    const idx = (tipIdx + i) % TIPS.length;
+  var overigeHTML = "";
+  for (var i = 1; i <= 3; i++) {
+    var idx = (tipIdx + i) % TIPS.length;
     overigeHTML += "<div style='padding:6px 0;border-bottom:1px solid #f0f0f0;color:#888'>" + TIPS[idx].substring(0,70) + "...</div>";
   }
   document.getElementById("overigeTips").innerHTML = overigeHTML;
 }
 
 function checkSubsidie() {
-  const pc = document.getElementById("subsidiePostcode").value.trim().toUpperCase();
-  const el = document.getElementById("subsidieResult");
+  var pc = document.getElementById("subsidiePostcode").value.trim().toUpperCase();
+  var el = document.getElementById("subsidieResult");
   if (!pc || pc.length < 4) {
     el.className = "subsidie-result rood";
     el.style.display = "block";
     el.innerHTML = "Voer een geldige postcode in";
     return;
   }
-  const cijfers = parseInt(pc.substring(0,4));
+  var cijfers = parseInt(pc.substring(0,4));
   el.style.display = "block";
   if (cijfers >= 9600 && cijfers <= 9999) {
     el.className = "subsidie-result";
@@ -776,61 +782,67 @@ function checkSubsidie() {
   }
 }
 
-async function laadPrikbord() {
-  const res = await sb.from("berichten").select("*").eq("type","prikbord").order("datum",{ascending:false}).limit(10);
-  const el = document.getElementById("prikbordLijst");
-  if (res.error || !res.data || res.data.length === 0) {
-    el.innerHTML = "<div class='geen-items'>Nog geen berichten — schrijf het eerste!</div>";
-    return;
-  }
-  let html = "";
-  for (let i = 0; i < res.data.length; i++) {
-    const b = res.data[i];
-    const dt = new Date(b.datum).toLocaleString("nl-NL",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"});
-    const kanVerwijderen = huidigUser === b.auteur.toLowerCase() || huidigUser === "admin";
-    html += "<div class='prikbord-bericht'>";
-    if (kanVerwijderen) html += "<button class='delete-btn' onclick='verwijderBericht(" + b.id + ")'>✕</button>";
-    html += "<div class='prikbord-auteur'>" + b.auteur + "</div><div class='prikbord-tekst'>" + b.tekst + "</div><div class='prikbord-datum'>" + dt + "</div></div>";
-  }
-  el.innerHTML = html;
+function laadPrikbord() {
+  sb.from("berichten").select("*").eq("type","prikbord").order("datum",{ascending:false}).limit(10).then(function(res) {
+    var el = document.getElementById("prikbordLijst");
+    if (res.error || !res.data || res.data.length === 0) {
+      el.innerHTML = "<div class='geen-items'>Nog geen berichten — schrijf het eerste!</div>";
+      return;
+    }
+    var html = "";
+    for (var i = 0; i < res.data.length; i++) {
+      var b = res.data[i];
+      var dt = new Date(b.datum).toLocaleString("nl-NL",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"});
+      var auteurLower = b.auteur ? b.auteur.toLowerCase() : "";
+      var kanVerwijderen = (huidigUser && auteurLower.indexOf(huidigUser) >= 0) || huidigUser === "admin";
+      html += "<div class='prikbord-bericht'>";
+      if (kanVerwijderen) html += "<button class='prikbord-delete' onclick='verwijderBericht(" + b.id + ")'>x</button>";
+      html += "<div class='prikbord-auteur'>" + b.auteur + "</div><div class='prikbord-tekst'>" + b.tekst + "</div><div class='prikbord-datum'>" + dt + "</div></div>";
+    }
+    el.innerHTML = html;
+  });
 }
 
-async function postBericht() {
-  const tekst = document.getElementById("prikbordInput").value.trim();
+function postBericht() {
+  var tekst = document.getElementById("prikbordInput").value.trim();
   if (!tekst || !huidigUser) return;
-  const gebruikers = getGebruikers();
-  const naam = gebruikers[huidigUser] ? gebruikers[huidigUser].naam : huidigUser;
-  await sb.from("berichten").insert({type:"prikbord", auteur: naam, tekst: tekst});
-  document.getElementById("prikbordInput").value = "";
-  laadPrikbord();
+  var gebruikers = getGebruikers();
+  var naam = gebruikers[huidigUser] ? gebruikers[huidigUser].naam : huidigUser;
+  sb.from("berichten").insert({type:"prikbord", auteur:naam, tekst:tekst}).then(function() {
+    document.getElementById("prikbordInput").value = "";
+    laadPrikbord();
+  });
 }
 
-async function verwijderBericht(id) {
-  await sb.from("berichten").delete().eq("id", id);
-  laadPrikbord();
+function verwijderBericht(id) {
+  sb.from("berichten").delete().eq("id", id).then(function() {
+    laadPrikbord();
+  });
 }
 
-async function laadMededelingen() {
-  const res = await sb.from("berichten").select("*").eq("type","mededeling").order("datum",{ascending:false}).limit(5);
-  if (res.error || !res.data || res.data.length === 0) {
-    document.getElementById("mededelingenBlok").style.display = "none";
-    return;
-  }
-  document.getElementById("mededelingenBlok").style.display = "block";
-  let html = "";
-  for (let i = 0; i < res.data.length; i++) {
-    const b = res.data[i];
-    const dt = new Date(b.datum).toLocaleString("nl-NL",{day:"numeric",month:"long",hour:"2-digit",minute:"2-digit"});
-    html += "<div class='mededeling'>";
-    if (isAdmin) html += "<button class='delete-btn' onclick='verwijderMededeling(" + b.id + ")'>✕</button>";
-    html += "<div class='mededeling-auteur'>" + b.auteur + "</div><div class='mededeling-tekst'>" + b.tekst + "</div><div class='mededeling-datum'>" + dt + "</div></div>";
-  }
-  document.getElementById("mededelingenLijst").innerHTML = html;
+function laadMededelingen() {
+  sb.from("berichten").select("*").eq("type","mededeling").order("datum",{ascending:false}).limit(5).then(function(res) {
+    if (res.error || !res.data || res.data.length === 0) {
+      document.getElementById("mededelingenBlok").style.display = "none";
+      return;
+    }
+    document.getElementById("mededelingenBlok").style.display = "block";
+    var html = "";
+    for (var i = 0; i < res.data.length; i++) {
+      var b = res.data[i];
+      var dt = new Date(b.datum).toLocaleString("nl-NL",{day:"numeric",month:"long",hour:"2-digit",minute:"2-digit"});
+      html += "<div class='mededeling'>";
+      if (isAdmin) html += "<button class='mededeling-delete' onclick='verwijderMededeling(" + b.id + ")'>x</button>";
+      html += "<div class='mededeling-auteur'>" + b.auteur + "</div><div class='mededeling-tekst'>" + b.tekst + "</div><div class='mededeling-datum'>" + dt + "</div></div>";
+    }
+    document.getElementById("mededelingenLijst").innerHTML = html;
+  });
 }
 
-async function verwijderMededeling(id) {
-  await sb.from("berichten").delete().eq("id", id);
-  laadMededelingen();
+function verwijderMededeling(id) {
+  sb.from("berichten").delete().eq("id", id).then(function() {
+    laadMededelingen();
+  });
 }
 
 function openMededeling() {
@@ -842,14 +854,15 @@ function sluitMededeling() {
   document.getElementById("mededelingModal").classList.remove("open");
 }
 
-async function plaatsMededeling() {
-  const tekst = document.getElementById("mededelingTekst").value.trim();
+function plaatsMededeling() {
+  var tekst = document.getElementById("mededelingTekst").value.trim();
   if (!tekst) return;
-  const gebruikers = getGebruikers();
-  const naam = gebruikers[huidigUser] ? gebruikers[huidigUser].naam : huidigUser;
-  await sb.from("berichten").insert({type:"mededeling", auteur: naam, tekst: tekst});
-  sluitMededeling();
-  laadMededelingen();
+  var gebruikers = getGebruikers();
+  var naam = gebruikers[huidigUser] ? gebruikers[huidigUser].naam : huidigUser;
+  sb.from("berichten").insert({type:"mededeling", auteur:naam, tekst:tekst}).then(function() {
+    sluitMededeling();
+    laadMededelingen();
+  });
 }
 
 function openInstellingen() {
@@ -866,45 +879,29 @@ function sluitInstellingen() {
 }
 
 function slaInstellingenOp() {
-  const gebruiker = document.getElementById("instGebruiker").value.toLowerCase().trim();
-  const nieuw = document.getElementById("instNieuwWw").value;
-  const herhaal = document.getElementById("instHerhaalWw").value;
-  const err = document.getElementById("modalError");
-  const succ = document.getElementById("modalSuccess");
+  var gebruiker = document.getElementById("instGebruiker").value.toLowerCase().trim();
+  var nieuw = document.getElementById("instNieuwWw").value;
+  var herhaal = document.getElementById("instHerhaalWw").value;
+  var err = document.getElementById("modalError");
+  var succ = document.getElementById("modalSuccess");
   err.style.display = "none";
   succ.style.display = "none";
-  const gebruikers = getGebruikers();
-  if (!gebruikers[gebruiker]) {
-    err.textContent = "Gebruiker niet gevonden";
-    err.style.display = "block";
-    return;
-  }
-  if (nieuw.length < 6) {
-    err.textContent = "Wachtwoord minimaal 6 tekens";
-    err.style.display = "block";
-    return;
-  }
-  if (nieuw !== herhaal) {
-    err.textContent = "Wachtwoorden komen niet overeen";
-    err.style.display = "block";
-    return;
-  }
-  const opgeslagen = {};
+  var gebruikers = getGebruikers();
+  if (!gebruikers[gebruiker]) { err.textContent = "Gebruiker niet gevonden"; err.style.display = "block"; return; }
+  if (nieuw.length < 6) { err.textContent = "Wachtwoord minimaal 6 tekens"; err.style.display = "block"; return; }
+  if (nieuw !== herhaal) { err.textContent = "Wachtwoorden komen niet overeen"; err.style.display = "block"; return; }
+  var opgeslagen = {};
   try {
-    const bestaand = localStorage.getItem("sk_gebruikers");
+    var bestaand = localStorage.getItem("sk_gebruikers");
     if (bestaand) {
-      const parsed = JSON.parse(bestaand);
-      const keys = Object.keys(parsed);
-      for (let i = 0; i < keys.length; i++) {
-        opgeslagen[keys[i]] = parsed[keys[i]];
-      }
+      var parsed = JSON.parse(bestaand);
+      var keys = Object.keys(parsed);
+      for (var i = 0; i < keys.length; i++) { opgeslagen[keys[i]] = parsed[keys[i]]; }
     }
   } catch(e) {}
   opgeslagen[gebruiker] = {};
-  const gkeys = Object.keys(gebruikers[gebruiker]);
-  for (let i = 0; i < gkeys.length; i++) {
-    opgeslagen[gebruiker][gkeys[i]] = gebruikers[gebruiker][gkeys[i]];
-  }
+  var gkeys = Object.keys(gebruikers[gebruiker]);
+  for (var j = 0; j < gkeys.length; j++) { opgeslagen[gebruiker][gkeys[j]] = gebruikers[gebruiker][gkeys[j]]; }
   opgeslagen[gebruiker].wachtwoord = nieuw;
   localStorage.setItem("sk_gebruikers", JSON.stringify(opgeslagen));
   succ.style.display = "block";
@@ -914,9 +911,9 @@ function slaInstellingenOp() {
 }
 
 (function init() {
-  const bestaandeUser = sessionStorage.getItem("sk_user");
+  var bestaandeUser = sessionStorage.getItem("sk_user");
   if (bestaandeUser) {
-    const gebruikers = getGebruikers();
+    var gebruikers = getGebruikers();
     if (gebruikers[bestaandeUser]) {
       toonPortaal(bestaandeUser);
       return;
