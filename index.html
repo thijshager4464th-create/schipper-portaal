@@ -70,18 +70,18 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
 .tip-card{background:linear-gradient(135deg,#fff8e8,#fff0cc);border-radius:12px;padding:16px;margin-bottom:12px}
 .tip-dag{font-size:10px;font-weight:700;color:#f39c12;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px}
 .tip-tekst{font-size:13px;color:#1a1a2e;line-height:1.6;font-weight:500}
-.mededeling{background:#fff5f5;border-left:4px solid #E31E24;border-radius:0 10px 10px 0;padding:12px 16px;margin-bottom:10px;position:relative;overflow:hidden}
+.mededeling{background:#fff5f5;border-left:4px solid #E31E24;border-radius:0 10px 10px 0;padding:12px 16px;margin-bottom:10px;position:relative}
 .mededeling-auteur{font-size:10px;font-weight:700;color:#E31E24;text-transform:uppercase;margin-bottom:4px}
 .mededeling-tekst{font-size:13px;color:#1a1a2e;line-height:1.5}
 .mededeling-datum{font-size:10px;color:#bbb;margin-top:4px}
-.mededeling-delete{position:absolute;top:10px;right:10px;background:none;border:none;color:#ddd;cursor:pointer;font-size:16px;font-weight:700;padding:0;line-height:1}
+.mededeling-delete{position:absolute;top:10px;right:10px;background:none;border:none;color:#ddd;cursor:pointer;font-size:16px;font-weight:700;line-height:1}
 .mededeling-delete:hover{color:#E31E24}
 .geen-items{font-size:13px;color:#bbb;text-align:center;padding:20px}
 .prikbord-bericht{background:#fffbe8;border:1px solid #f0e0a0;border-radius:10px;padding:12px 14px;margin-bottom:10px;position:relative}
 .prikbord-auteur{font-size:10px;font-weight:700;color:#e67e22;text-transform:uppercase;margin-bottom:4px}
 .prikbord-tekst{font-size:13px;color:#1a1a2e;line-height:1.5}
 .prikbord-datum{font-size:10px;color:#bbb;margin-top:4px}
-.prikbord-delete{position:absolute;top:10px;right:10px;background:none;border:none;color:#ddd;cursor:pointer;font-size:16px;font-weight:700;padding:0;line-height:1}
+.prikbord-delete{position:absolute;top:10px;right:10px;background:none;border:none;color:#ddd;cursor:pointer;font-size:16px;font-weight:700;line-height:1}
 .prikbord-delete:hover{color:#E31E24}
 .bericht-input{width:100%;padding:10px 14px;border:2px solid #eee;border-radius:8px;font-size:13px;outline:none;margin-bottom:8px;resize:vertical;min-height:70px;font-family:inherit}
 .bericht-input:focus{border-color:#E31E24}
@@ -189,10 +189,8 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
     </div>
     <div class="topbar-right">
       <div class="user-badge" id="userBadge">Welkom</div>
-      <div id="adminKnoppen" style="display:none;display:flex;gap:10px;flex-wrap:wrap">
-        <button class="topbar-btn" onclick="openWerknemer()">Werknemer maand</button>
-        <button class="topbar-btn" onclick="openMededeling()">Mededeling</button>
-      </div>
+      <button id="btnWerknemer" style="display:none" class="topbar-btn" onclick="openWerknemer()">Werknemer maand</button>
+      <button id="btnMededeling" style="display:none" class="topbar-btn" onclick="openMededeling()">Mededeling</button>
       <button class="topbar-btn" onclick="openInstellingen()">Instellingen</button>
       <button class="topbar-btn" onclick="logout()">Uitloggen</button>
     </div>
@@ -207,7 +205,6 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
       <div class="welkom-datum" id="welkomDatum"></div>
     </div>
 
-    <!-- 1. OMZET BAROMETER -->
     <div class="sectie-titel">Omzet doelstelling</div>
     <div class="card">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px">
@@ -215,9 +212,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
           <div style="font-size:18px;font-weight:800;color:#1a1a2e">Week 19 t/m 26 — 2026</div>
           <div style="font-size:13px;color:#888;margin-top:2px">Doelstelling: <strong style="color:#E31E24">640.000</strong> incl. BTW</div>
         </div>
-        <div id="kpiAdminBtn" style="display:none">
-          <button style="padding:9px 18px;background:#E31E24;color:white;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer" onclick="openKPI()">Week invullen</button>
-        </div>
+        <button id="btnKPI" style="display:none;padding:9px 18px;background:#E31E24;color:white;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer" onclick="openKPI()">Week invullen</button>
       </div>
       <div class="barometer-wrapper">
         <div class="barometer-container">
@@ -242,19 +237,16 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
       </div>
     </div>
 
-    <!-- 2. WERKNEMER VAN DE MAAND -->
     <div class="sectie-titel">Werknemer van de maand</div>
     <div id="werknemerBlok">
       <div class="geen-items" style="background:white;border-radius:16px;padding:32px">Laden...</div>
     </div>
 
-    <!-- 3. MEDEDELINGEN -->
     <div id="mededelingenBlok" style="display:none">
       <div class="sectie-titel">Mededelingen</div>
       <div id="mededelingenLijst"></div>
     </div>
 
-    <!-- 4. TOOLS -->
     <div class="sectie-titel">Tools</div>
     <div class="tools-grid">
       <a class="tool-card" href="https://dakkapel-offerte.vercel.app" target="_blank">
@@ -271,7 +263,6 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
       </a>
     </div>
 
-    <!-- 5. WEER + SUBSIDIE -->
     <div class="sectie-titel">Weer en Subsidie Check</div>
     <div class="two-col">
       <div class="card">
@@ -301,7 +292,6 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
       </div>
     </div>
 
-    <!-- 6. TIP + PRIKBORD -->
     <div class="sectie-titel">Tip van de dag en Prikbord</div>
     <div class="two-col">
       <div class="card">
@@ -323,7 +313,6 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
       </div>
     </div>
 
-    <!-- 7. NIJ BEGUN + EXTERNE TOOLS -->
     <div class="sectie-titel">Nij Begun en Externe tools</div>
     <div class="three-col">
       <div class="card">
@@ -355,7 +344,6 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
       </div>
     </div>
 
-    <!-- 8. NIEUWS -->
     <div class="sectie-titel">Nieuws en Info</div>
     <div class="nieuws-grid">
       <div class="nieuws-card"><span class="nieuws-tag tag-tip">Tip</span><div class="nieuws-titel">Versienummer verhogen bij wijzigingen</div><div class="nieuws-tekst">Stuur je een aangepaste offerte? Verhoog altijd het versienummer.</div></div>
@@ -486,25 +474,32 @@ const TIPS = [
 
 function getGebruikers() {
   try {
-    const op = localStorage.getItem("sk_gebruikers");
+    var op = localStorage.getItem("sk_gebruikers");
     if (op) {
-      const parsed = JSON.parse(op);
-      const result = {};
-      const keys = Object.keys(STANDAARD);
+      var parsed = JSON.parse(op);
+      var result = {};
+      var keys = Object.keys(STANDAARD);
       for (var i = 0; i < keys.length; i++) { result[keys[i]] = STANDAARD[keys[i]]; }
-      const pkeys = Object.keys(parsed);
+      var pkeys = Object.keys(parsed);
       for (var j = 0; j < pkeys.length; j++) { result[pkeys[j]] = parsed[pkeys[j]]; }
       return result;
     }
   } catch(e) {}
-  const result = {};
-  const keys = Object.keys(STANDAARD);
+  var result = {};
+  var keys = Object.keys(STANDAARD);
   for (var k = 0; k < keys.length; k++) { result[keys[k]] = STANDAARD[keys[k]]; }
   return result;
 }
 
 var huidigUser = null;
 var isAdmin = false;
+
+function setAdminUI(admin) {
+  var show = admin ? "inline-block" : "none";
+  document.getElementById("btnWerknemer").style.display = show;
+  document.getElementById("btnMededeling").style.display = show;
+  document.getElementById("btnKPI").style.display = show;
+}
 
 function login() {
   var userEl = document.getElementById("gebruiker");
@@ -542,10 +537,7 @@ function toonPortaal(user) {
   document.getElementById("welkomNaam").textContent = groet + ", " + u.naam.split(" ")[0] + "!";
   document.getElementById("userBadge").textContent = u.naam;
   document.getElementById("welkomDatum").innerHTML = datum + "<br><span style='font-size:11px;color:#ccc'>" + nu.toLocaleTimeString("nl-NL",{hour:"2-digit",minute:"2-digit"}) + "</span>";
-  if (isAdmin) {
-    document.getElementById("adminKnoppen").style.display = "flex";
-    document.getElementById("kpiAdminBtn").style.display = "block";
-  }
+  setAdminUI(isAdmin);
   laadWeer();
   laadTipVanDeDag();
   laadPrikbord();
@@ -592,6 +584,7 @@ function previewFoto(input) {
 }
 
 function openWerknemer() {
+  if (!isAdmin) return;
   document.getElementById("wnNaam").value = "";
   document.getElementById("wnFunctie").value = "";
   document.getElementById("wnReden").value = "";
@@ -606,6 +599,7 @@ function sluitWerknemer() {
 }
 
 function slaWerknemerOp() {
+  if (!isAdmin) return;
   var naam = document.getElementById("wnNaam").value.trim();
   var functie = document.getElementById("wnFunctie").value.trim();
   var reden = document.getElementById("wnReden").value.trim();
@@ -669,11 +663,11 @@ function laadBarometer() {
       var bed = weekData[wk] || 0;
       var weekPct = bed > 0 ? Math.round((bed / DOELSTELLING) * 100) : 0;
       var isHuidig = wk === 22;
-      lijstHTML += "<div class='week-item' style='background:" + (bed > 0 ? WEEK_KLEUREN[wk] + "22" : "#f8f8f8") + ";border:" + (isHuidig ? "2px solid " + WEEK_KLEUREN[wk] : "1px solid transparent") + "'>";
-      lijstHTML += "<div class='week-kleur' style='background:" + (bed > 0 ? WEEK_KLEUREN[wk] : "#ddd") + "'></div>";
-      lijstHTML += "<div class='week-naam'>Week " + wk + (isHuidig ? " (nu)" : "") + "</div>";
-      lijstHTML += "<div class='week-bedrag'>" + (bed > 0 ? "€ " + Math.round(bed).toLocaleString("nl-NL") : "nog in te vullen") + "</div>";
-      lijstHTML += "<div class='week-pct' style='color:" + (bed > 0 ? WEEK_KLEUREN[wk] : "#ddd") + "'>" + (bed > 0 ? weekPct + "%" : "") + "</div>";
+      lijstHTML += "<div class='week-item' style='background:" + (bed>0?WEEK_KLEUREN[wk]+"22":"#f8f8f8") + ";border:" + (isHuidig?"2px solid "+WEEK_KLEUREN[wk]:"1px solid transparent") + "'>";
+      lijstHTML += "<div class='week-kleur' style='background:" + (bed>0?WEEK_KLEUREN[wk]:"#ddd") + "'></div>";
+      lijstHTML += "<div class='week-naam'>Week " + wk + (isHuidig?" (nu)":"") + "</div>";
+      lijstHTML += "<div class='week-bedrag'>" + (bed>0?"€ "+Math.round(bed).toLocaleString("nl-NL"):"nog in te vullen") + "</div>";
+      lijstHTML += "<div class='week-pct' style='color:" + (bed>0?WEEK_KLEUREN[wk]:"#ddd") + "'>" + (bed>0?weekPct+"%":"") + "</div>";
       lijstHTML += "</div>";
     }
     document.getElementById("weekLijst").innerHTML = lijstHTML;
@@ -690,27 +684,22 @@ function startConfetti() {
     c.style.cssText = "position:absolute;width:" + (Math.random()*10+5) + "px;height:" + (Math.random()*10+5) + "px;background:" + kleuren[Math.floor(Math.random()*kleuren.length)] + ";left:" + (Math.random()*100) + "%;top:-20px;border-radius:" + (Math.random()>0.5?"50%":"0") + ";animation:confetti-fall " + (Math.random()*3+2) + "s linear " + (Math.random()*3) + "s forwards;";
     container.appendChild(c);
   }
-  setTimeout(function() { container.style.display = "none"; container.innerHTML = ""; }, 6000);
+  setTimeout(function() { container.style.display="none"; container.innerHTML=""; }, 6000);
 }
 
-function openKPI() { document.getElementById("kpiModal").classList.add("open"); }
+function openKPI() { if (!isAdmin) return; document.getElementById("kpiModal").classList.add("open"); }
 function sluitKPI() { document.getElementById("kpiModal").classList.remove("open"); }
 
 function slaKPIOp() {
+  if (!isAdmin) return;
   var week = parseInt(document.getElementById("kpiModalWeek").value);
   var bedrag = parseFloat(document.getElementById("kpiModalBedrag").value);
   if (!week || week < 19 || week > 26 || !bedrag) return;
   sb.from("kpi_weken").select("*").eq("week_nr", week).then(function(res) {
     if (res.data && res.data.length > 0) {
-      sb.from("kpi_weken").update({bedrag:bedrag}).eq("week_nr", week).then(function() {
-        sluitKPI();
-        laadBarometer();
-      });
+      sb.from("kpi_weken").update({bedrag:bedrag}).eq("week_nr",week).then(function() { sluitKPI(); laadBarometer(); });
     } else {
-      sb.from("kpi_weken").insert({week_nr:week, bedrag:bedrag}).then(function() {
-        sluitKPI();
-        laadBarometer();
-      });
+      sb.from("kpi_weken").insert({week_nr:week, bedrag:bedrag}).then(function() { sluitKPI(); laadBarometer(); });
     }
   });
 }
@@ -793,8 +782,9 @@ function laadPrikbord() {
     for (var i = 0; i < res.data.length; i++) {
       var b = res.data[i];
       var dt = new Date(b.datum).toLocaleString("nl-NL",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"});
-      var auteurLower = b.auteur ? b.auteur.toLowerCase() : "";
-      var kanVerwijderen = (huidigUser && auteurLower.indexOf(huidigUser) >= 0) || huidigUser === "admin";
+      var auteurNaam = b.auteur ? b.auteur.toLowerCase() : "";
+      var huidigNaam = huidigUser ? getGebruikers()[huidigUser].naam.toLowerCase() : "";
+      var kanVerwijderen = auteurNaam === huidigNaam || huidigUser === "admin";
       html += "<div class='prikbord-bericht'>";
       if (kanVerwijderen) html += "<button class='prikbord-delete' onclick='verwijderBericht(" + b.id + ")'>x</button>";
       html += "<div class='prikbord-auteur'>" + b.auteur + "</div><div class='prikbord-tekst'>" + b.tekst + "</div><div class='prikbord-datum'>" + dt + "</div></div>";
@@ -815,9 +805,7 @@ function postBericht() {
 }
 
 function verwijderBericht(id) {
-  sb.from("berichten").delete().eq("id", id).then(function() {
-    laadPrikbord();
-  });
+  sb.from("berichten").delete().eq("id", id).then(function() { laadPrikbord(); });
 }
 
 function laadMededelingen() {
@@ -840,12 +828,12 @@ function laadMededelingen() {
 }
 
 function verwijderMededeling(id) {
-  sb.from("berichten").delete().eq("id", id).then(function() {
-    laadMededelingen();
-  });
+  if (!isAdmin) return;
+  sb.from("berichten").delete().eq("id", id).then(function() { laadMededelingen(); });
 }
 
 function openMededeling() {
+  if (!isAdmin) return;
   document.getElementById("mededelingTekst").value = "";
   document.getElementById("mededelingModal").classList.add("open");
 }
@@ -855,6 +843,7 @@ function sluitMededeling() {
 }
 
 function plaatsMededeling() {
+  if (!isAdmin) return;
   var tekst = document.getElementById("mededelingTekst").value.trim();
   if (!tekst) return;
   var gebruikers = getGebruikers();
