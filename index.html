@@ -70,7 +70,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
 .tip-card{background:linear-gradient(135deg,#fff8e8,#fff0cc);border-radius:12px;padding:16px;margin-bottom:12px}
 .tip-dag{font-size:10px;font-weight:700;color:#f39c12;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px}
 .tip-tekst{font-size:13px;color:#1a1a2e;line-height:1.6;font-weight:500}
-.mededeling{background:#fff5f5;border-left:4px solid #E31E24;border-radius:0 10px 10px 0;padding:12px 16px;margin-bottom:10px}
+.mededeling{background:#fff5f5;border-left:4px solid #E31E24;border-radius:0 10px 10px 0;padding:12px 16px;margin-bottom:10px;position:relative}
 .mededeling-auteur{font-size:10px;font-weight:700;color:#E31E24;text-transform:uppercase;margin-bottom:4px}
 .mededeling-tekst{font-size:13px;color:#1a1a2e;line-height:1.5}
 .mededeling-datum{font-size:10px;color:#bbb;margin-top:4px}
@@ -102,7 +102,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
 .kpi-totaal{background:linear-gradient(135deg,#fff0f0,#ffe0e0);border-radius:12px;padding:16px;text-align:center}
 .kpi-totaal-val{font-size:28px;font-weight:800;color:#E31E24}
 .kpi-totaal-label{font-size:12px;color:#888;margin-top:2px}
-.werknemer-card{background:linear-gradient(135deg,#1a1a2e,#2d2d4e);border-radius:16px;padding:28px;color:white;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.werknemer-card{background:linear-gradient(135deg,#1a1a2e,#2d2d4e);border-radius:16px;padding:28px;color:white;display:flex;align-items:center;gap:24px;flex-wrap:wrap;position:relative}
 .werknemer-foto{width:100px;height:100px;border-radius:50%;object-fit:cover;border:4px solid #E31E24;flex-shrink:0}
 .werknemer-foto-placeholder{width:100px;height:100px;border-radius:50%;background:rgba(227,30,36,0.2);border:4px solid #E31E24;display:flex;align-items:center;justify-content:center;font-size:36px;flex-shrink:0}
 .werknemer-naam{font-size:24px;font-weight:800;margin-bottom:4px}
@@ -170,7 +170,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
       <label>Wachtwoord</label>
       <input type="password" id="wachtwoord" placeholder="••••••••" onkeydown="if(event.key==='Enter')login()">
     </div>
-    <button class="login-btn" onclick="login()">Inloggen →</button>
+    <button class="login-btn" onclick="login()">Inloggen</button>
   </div>
 </div>
 
@@ -186,8 +186,8 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
       </div>
     </div>
     <div class="topbar-right">
-      <div class="user-badge" id="userBadge">👋 Welkom</div>
-      <button class="topbar-btn" onclick="openInstellingen()">⚙️ Instellingen</button>
+      <div class="user-badge" id="userBadge">Welkom</div>
+      <button class="topbar-btn" onclick="openInstellingen()">Instellingen</button>
       <button class="topbar-btn" onclick="logout()">Uitloggen</button>
     </div>
   </div>
@@ -201,34 +201,25 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
       <div class="welkom-datum" id="welkomDatum"></div>
     </div>
 
-    <div id="mededelingenBlok" style="display:none">
-      <div class="sectie-titel">📢 Mededelingen</div>
-      <div id="mededelingenLijst"></div>
-    </div>
-
-    <div class="sectie-titel">⭐ Werknemer van de week</div>
-    <div id="werknemerBlok">
-      <div class="geen-items" style="background:white;border-radius:16px;padding:32px">Laden...</div>
-    </div>
-
-    <div class="sectie-titel">🎯 Doelstelling Week 19 — Week 26</div>
+    <!-- 1. OMZET BAROMETER -->
+    <div class="sectie-titel">Omzet doelstelling</div>
     <div class="card">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px">
         <div>
-          <div style="font-size:18px;font-weight:800;color:#1a1a2e">Omzet doelstelling 2026</div>
-          <div style="font-size:13px;color:#888;margin-top:2px">Week 19 t/m 26 — Doelstelling: <strong style="color:#E31E24">€ 640.000</strong> incl. BTW</div>
+          <div style="font-size:18px;font-weight:800;color:#1a1a2e">Week 19 t/m 26 — 2026</div>
+          <div style="font-size:13px;color:#888;margin-top:2px">Doelstelling: <strong style="color:#E31E24">€ 640.000</strong> incl. BTW</div>
         </div>
         <div id="kpiAdminBtn" style="display:none">
-          <button style="padding:9px 18px;background:#E31E24;color:white;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer" onclick="openKPI()">✏️ Week invullen</button>
+          <button style="padding:9px 18px;background:#E31E24;color:white;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer" onclick="openKPI()">Week invullen</button>
         </div>
       </div>
       <div class="barometer-wrapper">
         <div class="barometer-container">
-          <div style="font-size:11px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px">€640k</div>
+          <div style="font-size:11px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px">640k</div>
           <div class="barometer-outer">
             <div class="barometer-fill" id="barometerFill"></div>
           </div>
-          <div style="font-size:11px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:0.08em;margin-top:8px">€0</div>
+          <div style="font-size:11px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:0.08em;margin-top:8px">0</div>
           <div class="barometer-pct" id="barometerPct">0%</div>
           <div class="barometer-label">van doelstelling</div>
         </div>
@@ -245,6 +236,19 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
       </div>
     </div>
 
+    <!-- 2. WERKNEMER VAN DE MAAND -->
+    <div class="sectie-titel">Werknemer van de maand</div>
+    <div id="werknemerBlok">
+      <div class="geen-items" style="background:white;border-radius:16px;padding:32px">Laden...</div>
+    </div>
+
+    <!-- 3. MEDEDELINGEN -->
+    <div id="mededelingenBlok" style="display:none">
+      <div class="sectie-titel">Mededelingen</div>
+      <div id="mededelingenLijst"></div>
+    </div>
+
+    <!-- 4. TOOLS -->
     <div class="sectie-titel">Tools</div>
     <div class="tools-grid">
       <a class="tool-card" href="https://dakkapel-offerte.vercel.app" target="_blank">
@@ -261,10 +265,11 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
       </a>
     </div>
 
-    <div class="sectie-titel">Weer & Subsidie Check</div>
+    <!-- 5. WEER + SUBSIDIE -->
+    <div class="sectie-titel">Weer en Subsidie Check</div>
     <div class="two-col">
       <div class="card">
-        <div class="card-titel">🌤️ Weer Groningen</div>
+        <div class="card-titel">Weer Groningen</div>
         <div id="weerVandaag" class="weer-vandaag">
           <div class="weer-icon">⏳</div>
           <div><div class="weer-temp">--°C</div><div class="weer-desc">Laden...</div></div>
@@ -272,7 +277,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
         <div class="weer-week" id="weerWeek"></div>
       </div>
       <div class="card">
-        <div class="card-titel">💡 Snelle Subsidie Check</div>
+        <div class="card-titel">Snelle Subsidie Check</div>
         <p style="font-size:13px;color:#888;margin-bottom:12px">Voer postcode in om te zien of een klant in aanmerking komt voor Nij Begun subsidie.</p>
         <div class="subsidie-input">
           <input type="text" id="subsidiePostcode" placeholder="bijv. 9407PA" maxlength="7" onkeydown="if(event.key==='Enter')checkSubsidie()">
@@ -290,10 +295,11 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
       </div>
     </div>
 
-    <div class="sectie-titel">Tip van de dag & Prikbord</div>
+    <!-- 6. TIP + PRIKBORD -->
+    <div class="sectie-titel">Tip van de dag en Prikbord</div>
     <div class="two-col">
       <div class="card">
-        <div class="card-titel">🎯 Tip van de dag</div>
+        <div class="card-titel">Tip van de dag</div>
         <div class="tip-card">
           <div class="tip-dag" id="tipDag">Dag --</div>
           <div class="tip-tekst" id="tipTekst">Laden...</div>
@@ -304,51 +310,53 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
         </div>
       </div>
       <div class="card">
-        <div class="card-titel">📌 Prikbord</div>
+        <div class="card-titel">Prikbord</div>
         <textarea class="bericht-input" id="prikbordInput" placeholder="Schrijf een bericht voor je collega's..."></textarea>
-        <button class="post-btn" onclick="postBericht()">Plaatsen →</button>
+        <button class="post-btn" onclick="postBericht()">Plaatsen</button>
         <div style="margin-top:16px" id="prikbordLijst"><div class="geen-items">Laden...</div></div>
       </div>
     </div>
 
-    <div class="sectie-titel">Nij Begun & Externe tools</div>
+    <!-- 7. NIJ BEGUN + EXTERNE TOOLS -->
+    <div class="sectie-titel">Nij Begun en Externe tools</div>
     <div class="three-col">
       <div class="card">
-        <div class="card-titel">📰 Nij Begun nieuws</div>
+        <div class="card-titel">Nij Begun nieuws</div>
         <div class="nieuws-item"><div class="nieuws-item-titel">Nij Begun subsidie loopt door tot 2035</div><div class="nieuws-item-datum">Subsidie beschikbaar voor woningen in Groningen</div></div>
         <div class="nieuws-item"><div class="nieuws-item-titel">Triple glas HR+++ — 30% subsidie beschikbaar</div><div class="nieuws-item-datum">V2-4 en V4-1-I regelingen actief</div></div>
         <div class="nieuws-item"><div class="nieuws-item-titel">HR++ glas — tot 100% subsidie mogelijk</div><div class="nieuws-item-datum">Afhankelijk van inkomenssituatie klant</div></div>
-        <a href="https://www.nij-begun.nl" target="_blank" class="ext-link-btn">Naar Nij Begun →</a>
+        <a href="https://www.nij-begun.nl" target="_blank" class="ext-link-btn">Naar Nij Begun</a>
       </div>
       <div class="card">
-        <div class="card-titel">🏛️ Omgevingsloket</div>
+        <div class="card-titel">Omgevingsloket</div>
         <p style="font-size:13px;color:#888;line-height:1.6;margin-bottom:12px">Check direct of een klant een vergunning nodig heeft voor de dakkapel.</p>
         <div style="font-size:12px;color:#555;line-height:2;margin-bottom:12px">
           <div>✅ <strong>Geen vergunning</strong> — achterzijde, max 1,5m diep</div>
           <div>⚠️ <strong>Vergunning nodig</strong> — voorzijde of groter</div>
           <div>📋 <strong>Beschermd gezicht</strong> — altijd vergunning</div>
         </div>
-        <a href="https://www.omgevingsloket.nl" target="_blank" class="ext-link-btn">Naar Omgevingsloket →</a>
+        <a href="https://www.omgevingsloket.nl" target="_blank" class="ext-link-btn">Naar Omgevingsloket</a>
       </div>
       <div class="card">
-        <div class="card-titel">🗺️ BAG Viewer</div>
+        <div class="card-titel">BAG Viewer</div>
         <p style="font-size:13px;color:#888;line-height:1.6;margin-bottom:12px">Bekijk officiële woninginfo. Bouwjaar, oppervlakte en meer per adres.</p>
         <div style="font-size:12px;color:#555;line-height:2;margin-bottom:12px">
           <div>🏠 <strong>Bouwjaar</strong> — asbest check (voor 1994)</div>
           <div>📐 <strong>Oppervlakte</strong> — woninggrootte</div>
           <div>📍 <strong>Adresinfo</strong> — officiële gegevens</div>
         </div>
-        <a href="https://bagviewer.kadaster.nl" target="_blank" class="ext-link-btn">Naar BAG Viewer →</a>
+        <a href="https://bagviewer.kadaster.nl" target="_blank" class="ext-link-btn">Naar BAG Viewer</a>
       </div>
     </div>
 
-    <div class="sectie-titel">Nieuws & Info</div>
+    <!-- 8. NIEUWS -->
+    <div class="sectie-titel">Nieuws en Info</div>
     <div class="nieuws-grid">
       <div class="nieuws-card"><span class="nieuws-tag tag-tip">Tip</span><div class="nieuws-titel">Versienummer verhogen bij wijzigingen</div><div class="nieuws-tekst">Stuur je een aangepaste offerte? Verhoog altijd het versienummer.</div></div>
       <div class="nieuws-card"><span class="nieuws-tag tag-branche">Branche</span><div class="nieuws-titel">Nij Begun subsidie loopt t/m 2035</div><div class="nieuws-tekst">Combineer met triple glas voor maximaal voordeel voor de klant.</div></div>
       <div class="nieuws-card"><span class="nieuws-tag tag-intern">Intern</span><div class="nieuws-titel">Dakkapel tool bespaart 1,5 uur</div><div class="nieuws-tekst">Gemiddeld 1 tot 1,5 uur besparing per offerte!</div></div>
       <div class="nieuws-card"><span class="nieuws-tag tag-tip">Tip</span><div class="nieuws-titel">Asbest checken via BAG Viewer</div><div class="nieuws-tekst">Woningen van voor 1994 kunnen asbest bevatten — altijd navragen.</div></div>
-      <div class="nieuws-card"><span class="nieuws-tag tag-tip">Tip</span><div class="nieuws-titel">Orderbevestiging na akkoord klant</div><div class="nieuws-tekst">Na akkoord selecteer je "Orderbevestiging" in de offerte tool.</div></div>
+      <div class="nieuws-card"><span class="nieuws-tag tag-tip">Tip</span><div class="nieuws-titel">Orderbevestiging na akkoord klant</div><div class="nieuws-tekst">Na akkoord selecteer je Orderbevestiging in de offerte tool.</div></div>
       <div class="nieuws-card"><span class="nieuws-tag tag-branche">Branche</span><div class="nieuws-titel">Triple glas steeds populairder</div><div class="nieuws-tekst">Met Nij Begun subsidie financieel erg aantrekkelijk voor klanten.</div></div>
     </div>
 
@@ -370,9 +378,9 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
 <!-- MODALS -->
 <div class="modal-bg" id="instellingenModal">
   <div class="modal">
-    <h3>⚙️ Instellingen</h3>
+    <h3>Instellingen</h3>
     <div class="modal-desc">Wijzig het wachtwoord van een gebruiker.</div>
-    <div class="modal-success" id="modalSuccess">✓ Wachtwoord succesvol gewijzigd!</div>
+    <div class="modal-success" id="modalSuccess">Wachtwoord succesvol gewijzigd!</div>
     <div class="modal-field"><label>Gebruikersnaam</label><input type="text" id="instGebruiker" placeholder="gebruikersnaam"></div>
     <div class="modal-field"><label>Nieuw wachtwoord</label><input type="password" id="instNieuwWw" placeholder="minimaal 6 tekens"></div>
     <div class="modal-field"><label>Herhaal wachtwoord</label><input type="password" id="instHerhaalWw" placeholder="herhaal wachtwoord"></div>
@@ -386,8 +394,8 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
 
 <div class="modal-bg" id="mededelingModal">
   <div class="modal">
-    <h3>📢 Mededeling plaatsen</h3>
-    <div class="modal-desc">Zichtbaar voor alle medewerkers bovenaan het portaal.</div>
+    <h3>Mededeling plaatsen</h3>
+    <div class="modal-desc">Zichtbaar voor alle medewerkers.</div>
     <div class="modal-field"><label>Mededeling</label><textarea id="mededelingTekst" style="min-height:100px" placeholder="Typ hier de mededeling..."></textarea></div>
     <div class="modal-btns">
       <button class="modal-cancel" onclick="sluitMededeling()">Annuleren</button>
@@ -398,10 +406,10 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
 
 <div class="modal-bg" id="kpiModal">
   <div class="modal">
-    <h3>🎯 Week invullen</h3>
+    <h3>Week invullen</h3>
     <div class="modal-desc">Vul het behaalde bedrag in voor een week.</div>
     <div class="modal-field"><label>Week nummer (19-26)</label><input type="number" id="kpiModalWeek" min="19" max="26" placeholder="bijv. 22"></div>
-    <div class="modal-field"><label>Bedrag incl. BTW (€)</label><input type="number" id="kpiModalBedrag" placeholder="bijv. 85000"></div>
+    <div class="modal-field"><label>Bedrag incl. BTW</label><input type="number" id="kpiModalBedrag" placeholder="bijv. 85000"></div>
     <div class="modal-btns">
       <button class="modal-cancel" onclick="sluitKPI()">Annuleren</button>
       <button class="modal-save" onclick="slaKPIOp()">Opslaan</button>
@@ -411,16 +419,16 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
 
 <div class="modal-bg" id="werknemerModal">
   <div class="modal">
-    <h3>⭐ Werknemer van de week</h3>
-    <div class="modal-desc">Kies de werknemer van de week en upload een foto.</div>
+    <h3>Werknemer van de maand</h3>
+    <div class="modal-desc">Kies de werknemer van de maand en upload een foto.</div>
     <div class="modal-field"><label>Naam</label><input type="text" id="wnNaam" placeholder="Volledige naam"></div>
     <div class="modal-field"><label>Functie</label><input type="text" id="wnFunctie" placeholder="bijv. Binnendienst medewerker"></div>
-    <div class="modal-field"><label>Reden</label><textarea id="wnReden" style="min-height:80px" placeholder="Waarom is deze persoon werknemer van de week?"></textarea></div>
+    <div class="modal-field"><label>Reden</label><textarea id="wnReden" style="min-height:80px" placeholder="Waarom is deze persoon werknemer van de maand?"></textarea></div>
     <div class="modal-field">
       <label>Foto uploaden</label>
       <div class="upload-area" onclick="document.getElementById('wnFotoInput').click()">
         <img id="wnFotoPreview" class="upload-preview" src="" style="display:none">
-        <div id="wnFotoTekst">📷 Klik om foto te uploaden</div>
+        <div id="wnFotoTekst">Klik om foto te uploaden</div>
       </div>
       <input type="file" id="wnFotoInput" accept="image/*" style="display:none" onchange="previewFoto(this)">
     </div>
@@ -450,54 +458,77 @@ const DOELSTELLING = 640000;
 const WEKEN = [19,20,21,22,23,24,25,26];
 
 const TIPS = [
-  "Vraag altijd naar het bouwjaar van de woning — bij woningen voor 1994 is asbest een aandachtspunt.",
+  "Vraag altijd naar het bouwjaar van de woning. Bij woningen voor 1994 is asbest een aandachtspunt.",
   "Combineer altijd triple glas met de Nij Begun subsidie check. Klanten zijn vaak verrast door het voordeel.",
   "Stuur nooit een offerte zonder versienummer. V1, V2, V3 geeft de klant duidelijkheid.",
-  "Benoem bij de offerte altijd de energiebesparing — klanten reageren positief op concrete getallen.",
-  "Bij dakkapellen: check altijd of er zonnepanelen aanwezig zijn. Die moeten verwijderd worden vóór plaatsing.",
-  "Gebruik de Na Inmeten versie na het technisch inmeten — geeft de klant meer vertrouwen.",
+  "Benoem bij de offerte altijd de energiebesparing. Klanten reageren positief op concrete getallen.",
+  "Bij dakkapellen check altijd of er zonnepanelen aanwezig zijn. Die moeten verwijderd worden voor plaatsing.",
+  "Gebruik de Na Inmeten versie na het technisch inmeten. Geeft de klant meer vertrouwen.",
   "Een orderbevestiging sturen na akkoord is professioneel en vermindert miscommunicatie achteraf.",
-  "Vraag bij rolluiken altijd naar de gewenste aansluiting — links of rechts vanuit buitenzijde.",
+  "Vraag bij rolluiken altijd naar de gewenste aansluiting. Links of rechts vanuit buitenzijde.",
   "Kozijnen vervangen tegelijk met de dakkapel bespaart de klant op montagekosten.",
   "Check via het omgevingsloket of de klant een vergunning nodig heeft voor de dakkapel.",
-  "Bij triple glas is de Nij Begun subsidie tot 30% van de materiaalkosten — altijd vermelden!",
-  "Klanten vragen vaak naar levertijd — gemiddeld 6-8 weken na technisch inmeten.",
-  "Een dakkapel achterzijde verhoogt de woningwaarde gemiddeld met 15.000 tot 25.000 euro.",
-  "Noteer altijd de hellingshoek van het dak — dit bepaalt het type dakkapel.",
-  "Stuur bij grotere projecten altijd ook bijlage A mee — klanten waarderen de technische details.",
-  "Check het bouwjaar via BAG Viewer voordat je een bezoek plant — handig voor asbestcheck.",
-  "Vraag altijd of de klant al een subsidiecheck heeft gedaan — dit kan de deal sluiten.",
-  "Bij vergunningsplichtige dakkapellen: de aanvraag kan 8 weken duren — vroeg beginnen!"
+  "Bij triple glas is de Nij Begun subsidie tot 30% van de materiaalkosten. Altijd vermelden!",
+  "Klanten vragen vaak naar levertijd. Gemiddeld 6 tot 8 weken na technisch inmeten.",
+  "Een dakkapel achterzijde verhoogt de woningwaarde gemiddeld met 15000 tot 25000 euro.",
+  "Noteer altijd de hellingshoek van het dak. Dit bepaalt het type dakkapel.",
+  "Stuur bij grotere projecten altijd ook bijlage A mee. Klanten waarderen de technische details.",
+  "Check het bouwjaar via BAG Viewer voordat je een bezoek plant. Handig voor asbestcheck.",
+  "Vraag altijd of de klant al een subsidiecheck heeft gedaan. Dit kan de deal sluiten.",
+  "Bij vergunningsplichtige dakkapellen kan de aanvraag 8 weken duren. Vroeg beginnen!"
 ];
 
 function getGebruikers() {
   try {
     const op = localStorage.getItem("sk_gebruikers");
-    if (op) return Object.assign({}, STANDAARD, JSON.parse(op));
+    if (op) {
+      const parsed = JSON.parse(op);
+      const result = {};
+      const keys = Object.keys(STANDAARD);
+      for (let i = 0; i < keys.length; i++) {
+        result[keys[i]] = STANDAARD[keys[i]];
+      }
+      const pkeys = Object.keys(parsed);
+      for (let i = 0; i < pkeys.length; i++) {
+        result[pkeys[i]] = parsed[pkeys[i]];
+      }
+      return result;
+    }
   } catch(e) {}
-  return Object.assign({}, STANDAARD);
+  const result = {};
+  const keys = Object.keys(STANDAARD);
+  for (let i = 0; i < keys.length; i++) {
+    result[keys[i]] = STANDAARD[keys[i]];
+  }
+  return result;
 }
 
 let huidigUser = null;
+let isAdmin = false;
 
 function login() {
-  const user = document.getElementById("gebruiker").value.toLowerCase().trim();
-  const pass = document.getElementById("wachtwoord").value;
-  const err = document.getElementById("loginError");
+  const userEl = document.getElementById("gebruiker");
+  const passEl = document.getElementById("wachtwoord");
+  const errEl = document.getElementById("loginError");
+  if (!userEl || !passEl) return;
+  const user = userEl.value.toLowerCase().trim();
+  const pass = passEl.value;
   const gebruikers = getGebruikers();
   if (gebruikers[user] && gebruikers[user].wachtwoord === pass) {
-    err.style.display = "none";
+    errEl.style.display = "none";
     sessionStorage.setItem("sk_user", user);
     huidigUser = user;
+    isAdmin = (user === "admin" || user === "thijs");
     toonPortaal(user);
   } else {
-    err.style.display = "block";
-    document.getElementById("wachtwoord").value = "";
+    errEl.style.display = "block";
+    passEl.value = "";
   }
 }
 
 function toonPortaal(user) {
   huidigUser = user;
+  isAdmin = (user === "admin" || user === "thijs");
   const gebruikers = getGebruikers();
   const u = gebruikers[user];
   const nu = new Date();
@@ -509,14 +540,14 @@ function toonPortaal(user) {
   document.getElementById("loginScherm").style.display = "none";
   document.getElementById("portaal").style.display = "block";
   document.getElementById("welkomNaam").textContent = groet + ", " + u.naam.split(" ")[0] + "!";
-  document.getElementById("userBadge").textContent = "Welkom " + u.naam;
+  document.getElementById("userBadge").textContent = u.naam;
   document.getElementById("welkomDatum").innerHTML = datum + "<br><span style='font-size:11px;color:#ccc'>" + nu.toLocaleTimeString("nl-NL",{hour:"2-digit",minute:"2-digit"}) + "</span>";
 
-  if (user === "admin" || user === "thijs") {
+  if (isAdmin) {
     const topbarRight = document.querySelector(".topbar-right");
     const wnBtn = document.createElement("button");
     wnBtn.className = "topbar-btn";
-    wnBtn.textContent = "Werknemer week";
+    wnBtn.textContent = "Werknemer maand";
     wnBtn.onclick = openWerknemer;
     topbarRight.insertBefore(wnBtn, topbarRight.firstChild);
     const medBtn = document.createElement("button");
@@ -538,6 +569,7 @@ function toonPortaal(user) {
 function logout() {
   sessionStorage.removeItem("sk_user");
   huidigUser = null;
+  isAdmin = false;
   document.getElementById("portaal").style.display = "none";
   document.getElementById("loginScherm").style.display = "flex";
   document.getElementById("gebruiker").value = "";
@@ -545,17 +577,16 @@ function logout() {
 }
 
 async function laadWerknemer() {
-  const { data, error } = await sb.from("werknemer_week").select("*").order("datum",{ascending:false}).limit(1);
+  const res = await sb.from("werknemer_week").select("*").order("datum",{ascending:false}).limit(1);
   const el = document.getElementById("werknemerBlok");
-  if (error || !data || data.length === 0) {
-    el.innerHTML = "<div style='background:white;border-radius:16px;padding:32px;text-align:center;color:#bbb;font-size:13px'>Nog geen werknemer van de week ingesteld</div>";
+  if (res.error || !res.data || res.data.length === 0) {
+    el.innerHTML = "<div style='background:white;border-radius:16px;padding:32px;text-align:center;color:#bbb;font-size:13px'>Nog geen werknemer van de maand ingesteld</div>";
     return;
   }
-  const w = data[0];
-  const fotoHTML = w.foto_url
-    ? "<img src='" + w.foto_url + "' class='werknemer-foto'>"
-    : "<div class='werknemer-foto-placeholder'>👤</div>";
-  el.innerHTML = "<div class='werknemer-card'>" + fotoHTML + "<div><div class='werknemer-badge'>Werknemer van de week</div><div class='werknemer-naam'>" + w.naam + "</div><div class='werknemer-functie'>" + (w.functie||"") + "</div><div class='werknemer-reden'>\"" + (w.reden||"") + "\"</div></div></div>";
+  const w = res.data[0];
+  const fotoHTML = w.foto_url ? "<img src='" + w.foto_url + "' class='werknemer-foto'>" : "<div class='werknemer-foto-placeholder'>👤</div>";
+  const adminHTML = isAdmin ? "<div style='margin-top:16px;display:flex;gap:8px'><button onclick='openWerknemer()' style='padding:8px 16px;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);color:white;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600'>Wijzigen</button></div>" : "";
+  el.innerHTML = "<div class='werknemer-card'>" + fotoHTML + "<div><div class='werknemer-badge'>Werknemer van de maand</div><div class='werknemer-naam'>" + w.naam + "</div><div class='werknemer-functie'>" + (w.functie || "") + "</div><div class='werknemer-reden'>\"" + (w.reden || "") + "\"</div>" + adminHTML + "</div></div>";
 }
 
 function previewFoto(input) {
@@ -595,29 +626,33 @@ async function slaWerknemerOp() {
   if (fotoInput.files[0]) {
     const file = fotoInput.files[0];
     const bestandsnaam = Date.now() + "_" + file.name.replace(/\s/g,"_");
-    const uploadResult = await sb.storage.from("fotos").upload(bestandsnaam, file, {cacheControl:"3600",upsert:false});
-    if (!uploadResult.error) {
-      const urlResult = sb.storage.from("fotos").getPublicUrl(bestandsnaam);
-      foto_url = urlResult.data.publicUrl;
+    const uploadRes = await sb.storage.from("fotos").upload(bestandsnaam, file, {cacheControl:"3600",upsert:false});
+    if (!uploadRes.error) {
+      foto_url = sb.storage.from("fotos").getPublicUrl(bestandsnaam).data.publicUrl;
     }
   }
+  await sb.from("werknemer_week").delete().neq("id", 0);
   await sb.from("werknemer_week").insert({naam, functie, reden, foto_url});
   sluitWerknemer();
   laadWerknemer();
 }
-
-async function laadBarometer() {
-  const { data } = await sb.from("kpi_weken").select("*").order("week_nr",{ascending:true});
+  async function laadBarometer() {
+  const res = await sb.from("kpi_weken").select("*").order("week_nr",{ascending:true});
   const weekData = {};
-  if (data) data.forEach(function(r) { weekData[r.week_nr] = parseFloat(r.bedrag) || 0; });
+  if (res.data) {
+    for (let i = 0; i < res.data.length; i++) {
+      weekData[res.data[i].week_nr] = parseFloat(res.data[i].bedrag) || 0;
+    }
+  }
   let totaal = 0;
-  WEKEN.forEach(function(w) { totaal += weekData[w] || 0; });
+  for (let i = 0; i < WEKEN.length; i++) { totaal += weekData[WEKEN[i]] || 0; }
   const pct = Math.min(100, (totaal / DOELSTELLING) * 100);
   document.getElementById("kpiTotaalBedrag").textContent = "€ " + Math.round(totaal).toLocaleString("nl-NL");
   document.getElementById("barometerPct").textContent = Math.round(pct) + "%";
   const fill = document.getElementById("barometerFill");
   fill.innerHTML = "";
-  WEKEN.forEach(function(w) {
+  for (let i = 0; i < WEKEN.length; i++) {
+    const w = WEKEN[i];
     const bedrag = weekData[w] || 0;
     if (bedrag > 0) {
       const seg = document.createElement("div");
@@ -626,14 +661,22 @@ async function laadBarometer() {
       seg.style.background = WEEK_KLEUREN[w];
       fill.appendChild(seg);
     }
-  });
+  }
   setTimeout(function() { fill.style.height = pct + "%"; }, 100);
-  document.getElementById("weekLijst").innerHTML = WEKEN.map(function(w) {
+  let lijstHTML = "";
+  for (let i = 0; i < WEKEN.length; i++) {
+    const w = WEKEN[i];
     const bedrag = weekData[w] || 0;
     const weekPct = bedrag > 0 ? Math.round((bedrag / DOELSTELLING) * 100) : 0;
     const isHuidig = w === 22;
-    return "<div class='week-item' style='background:" + (bedrag>0?WEEK_KLEUREN[w]+"22":"#f8f8f8") + ";border:" + (isHuidig?"2px solid "+WEEK_KLEUREN[w]:"1px solid transparent") + "'><div class='week-kleur' style='background:" + (bedrag>0?WEEK_KLEUREN[w]:"#ddd") + "'></div><div class='week-naam'>Week " + w + (isHuidig?" 📍":"") + "</div><div class='week-bedrag'>" + (bedrag>0?"€ "+Math.round(bedrag).toLocaleString("nl-NL"):"— nog in te vullen") + "</div><div class='week-pct' style='color:" + (bedrag>0?WEEK_KLEUREN[w]:"#ddd") + "'>" + (bedrag>0?weekPct+"%":"") + "</div></div>";
-  }).join("");
+    lijstHTML += "<div class='week-item' style='background:" + (bedrag > 0 ? WEEK_KLEUREN[w] + "22" : "#f8f8f8") + ";border:" + (isHuidig ? "2px solid " + WEEK_KLEUREN[w] : "1px solid transparent") + "'>";
+    lijstHTML += "<div class='week-kleur' style='background:" + (bedrag > 0 ? WEEK_KLEUREN[w] : "#ddd") + "'></div>";
+    lijstHTML += "<div class='week-naam'>Week " + w + (isHuidig ? " nu" : "") + "</div>";
+    lijstHTML += "<div class='week-bedrag'>" + (bedrag > 0 ? "€ " + Math.round(bedrag).toLocaleString("nl-NL") : "nog in te vullen") + "</div>";
+    lijstHTML += "<div class='week-pct' style='color:" + (bedrag > 0 ? WEEK_KLEUREN[w] : "#ddd") + "'>" + (bedrag > 0 ? weekPct + "%" : "") + "</div>";
+    lijstHTML += "</div>";
+  }
+  document.getElementById("weekLijst").innerHTML = lijstHTML;
   if (pct >= 100) setTimeout(startConfetti, 500);
 }
 
@@ -646,7 +689,7 @@ function startConfetti() {
     c.style.cssText = "position:absolute;width:" + (Math.random()*10+5) + "px;height:" + (Math.random()*10+5) + "px;background:" + kleuren[Math.floor(Math.random()*kleuren.length)] + ";left:" + (Math.random()*100) + "%;top:-20px;border-radius:" + (Math.random()>0.5?"50%":"0") + ";animation:confetti-fall " + (Math.random()*3+2) + "s linear " + (Math.random()*3) + "s forwards;";
     container.appendChild(c);
   }
-  setTimeout(function() { container.style.display="none"; container.innerHTML=""; }, 6000);
+  setTimeout(function() { container.style.display = "none"; container.innerHTML = ""; }, 6000);
 }
 
 function openKPI() { document.getElementById("kpiModal").classList.add("open"); }
@@ -656,11 +699,11 @@ async function slaKPIOp() {
   const week = parseInt(document.getElementById("kpiModalWeek").value);
   const bedrag = parseFloat(document.getElementById("kpiModalBedrag").value);
   if (!week || week < 19 || week > 26 || !bedrag) return;
-  const { data } = await sb.from("kpi_weken").select("*").eq("week_nr", week);
-  if (data && data.length > 0) {
-    await sb.from("kpi_weken").update({bedrag}).eq("week_nr", week);
+  const res = await sb.from("kpi_weken").select("*").eq("week_nr", week);
+  if (res.data && res.data.length > 0) {
+    await sb.from("kpi_weken").update({bedrag: bedrag}).eq("week_nr", week);
   } else {
-    await sb.from("kpi_weken").insert({week_nr: week, bedrag});
+    await sb.from("kpi_weken").insert({week_nr: week, bedrag: bedrag});
   }
   sluitKPI();
   laadBarometer();
@@ -708,7 +751,7 @@ function laadTipVanDeDag() {
   let overigeHTML = "";
   for (let i = 1; i <= 3; i++) {
     const idx = (tipIdx + i) % TIPS.length;
-    overigeHTML += "<div style='padding:6px 0;border-bottom:1px solid #f0f0f0;color:#888'>💡 " + TIPS[idx].substring(0,70) + "...</div>";
+    overigeHTML += "<div style='padding:6px 0;border-bottom:1px solid #f0f0f0;color:#888'>" + TIPS[idx].substring(0,70) + "...</div>";
   }
   document.getElementById("overigeTips").innerHTML = overigeHTML;
 }
@@ -729,29 +772,35 @@ function checkSubsidie() {
     el.innerHTML = "Postcode " + pc + " komt waarschijnlijk in aanmerking voor Nij Begun subsidie! Controleer via de Subsidie Adviseur tool voor het exacte subsidiebedrag.";
   } else {
     el.className = "subsidie-result rood";
-    el.innerHTML = "Postcode " + pc + " valt buiten het Nij Begun gebied. Nij Begun subsidie is alleen beschikbaar in Groningen en omstreken.";
+    el.innerHTML = "Postcode " + pc + " valt buiten het Nij Begun gebied.";
   }
 }
 
 async function laadPrikbord() {
-  const { data, error } = await sb.from("berichten").select("*").eq("type","prikbord").order("datum",{ascending:false}).limit(10);
+  const res = await sb.from("berichten").select("*").eq("type","prikbord").order("datum",{ascending:false}).limit(10);
   const el = document.getElementById("prikbordLijst");
-  if (error || !data || data.length === 0) {
+  if (res.error || !res.data || res.data.length === 0) {
     el.innerHTML = "<div class='geen-items'>Nog geen berichten — schrijf het eerste!</div>";
     return;
   }
-  el.innerHTML = data.map(function(b) {
+  let html = "";
+  for (let i = 0; i < res.data.length; i++) {
+    const b = res.data[i];
     const dt = new Date(b.datum).toLocaleString("nl-NL",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"});
     const kanVerwijderen = huidigUser === b.auteur.toLowerCase() || huidigUser === "admin";
-    return "<div class='prikbord-bericht'>" + (kanVerwijderen?"<button class='delete-btn' onclick='verwijderBericht("+b.id+")'>✕</button>":"") + "<div class='prikbord-auteur'>" + b.auteur + "</div><div class='prikbord-tekst'>" + b.tekst + "</div><div class='prikbord-datum'>" + dt + "</div></div>";
-  }).join("");
+    html += "<div class='prikbord-bericht'>";
+    if (kanVerwijderen) html += "<button class='delete-btn' onclick='verwijderBericht(" + b.id + ")'>✕</button>";
+    html += "<div class='prikbord-auteur'>" + b.auteur + "</div><div class='prikbord-tekst'>" + b.tekst + "</div><div class='prikbord-datum'>" + dt + "</div></div>";
+  }
+  el.innerHTML = html;
 }
 
 async function postBericht() {
   const tekst = document.getElementById("prikbordInput").value.trim();
   if (!tekst || !huidigUser) return;
-  const naam = getGebruikers()[huidigUser] ? getGebruikers()[huidigUser].naam : huidigUser;
-  await sb.from("berichten").insert({type:"prikbord", auteur: naam, tekst});
+  const gebruikers = getGebruikers();
+  const naam = gebruikers[huidigUser] ? gebruikers[huidigUser].naam : huidigUser;
+  await sb.from("berichten").insert({type:"prikbord", auteur: naam, tekst: tekst});
   document.getElementById("prikbordInput").value = "";
   laadPrikbord();
 }
@@ -762,16 +811,26 @@ async function verwijderBericht(id) {
 }
 
 async function laadMededelingen() {
-  const { data, error } = await sb.from("berichten").select("*").eq("type","mededeling").order("datum",{ascending:false}).limit(3);
-  if (error || !data || data.length === 0) {
+  const res = await sb.from("berichten").select("*").eq("type","mededeling").order("datum",{ascending:false}).limit(5);
+  if (res.error || !res.data || res.data.length === 0) {
     document.getElementById("mededelingenBlok").style.display = "none";
     return;
   }
   document.getElementById("mededelingenBlok").style.display = "block";
-  document.getElementById("mededelingenLijst").innerHTML = data.map(function(b) {
+  let html = "";
+  for (let i = 0; i < res.data.length; i++) {
+    const b = res.data[i];
     const dt = new Date(b.datum).toLocaleString("nl-NL",{day:"numeric",month:"long",hour:"2-digit",minute:"2-digit"});
-    return "<div class='mededeling'><div class='mededeling-auteur'>" + b.auteur + "</div><div class='mededeling-tekst'>" + b.tekst + "</div><div class='mededeling-datum'>" + dt + "</div></div>";
-  }).join("");
+    html += "<div class='mededeling'>";
+    if (isAdmin) html += "<button class='delete-btn' onclick='verwijderMededeling(" + b.id + ")'>✕</button>";
+    html += "<div class='mededeling-auteur'>" + b.auteur + "</div><div class='mededeling-tekst'>" + b.tekst + "</div><div class='mededeling-datum'>" + dt + "</div></div>";
+  }
+  document.getElementById("mededelingenLijst").innerHTML = html;
+}
+
+async function verwijderMededeling(id) {
+  await sb.from("berichten").delete().eq("id", id);
+  laadMededelingen();
 }
 
 function openMededeling() {
@@ -786,8 +845,9 @@ function sluitMededeling() {
 async function plaatsMededeling() {
   const tekst = document.getElementById("mededelingTekst").value.trim();
   if (!tekst) return;
-  const naam = getGebruikers()[huidigUser] ? getGebruikers()[huidigUser].naam : huidigUser;
-  await sb.from("berichten").insert({type:"mededeling", auteur: naam, tekst});
+  const gebruikers = getGebruikers();
+  const naam = gebruikers[huidigUser] ? gebruikers[huidigUser].naam : huidigUser;
+  await sb.from("berichten").insert({type:"mededeling", auteur: naam, tekst: tekst});
   sluitMededeling();
   laadMededelingen();
 }
@@ -832,9 +892,20 @@ function slaInstellingenOp() {
   const opgeslagen = {};
   try {
     const bestaand = localStorage.getItem("sk_gebruikers");
-    if (bestaand) Object.assign(opgeslagen, JSON.parse(bestaand));
+    if (bestaand) {
+      const parsed = JSON.parse(bestaand);
+      const keys = Object.keys(parsed);
+      for (let i = 0; i < keys.length; i++) {
+        opgeslagen[keys[i]] = parsed[keys[i]];
+      }
+    }
   } catch(e) {}
-  opgeslagen[gebruiker] = Object.assign({}, gebruikers[gebruiker], {wachtwoord: nieuw});
+  opgeslagen[gebruiker] = {};
+  const gkeys = Object.keys(gebruikers[gebruiker]);
+  for (let i = 0; i < gkeys.length; i++) {
+    opgeslagen[gebruiker][gkeys[i]] = gebruikers[gebruiker][gkeys[i]];
+  }
+  opgeslagen[gebruiker].wachtwoord = nieuw;
   localStorage.setItem("sk_gebruikers", JSON.stringify(opgeslagen));
   succ.style.display = "block";
   document.getElementById("instNieuwWw").value = "";
@@ -842,10 +913,17 @@ function slaInstellingenOp() {
   setTimeout(function() { sluitInstellingen(); }, 1500);
 }
 
-const bestaandeUser = sessionStorage.getItem("sk_user");
-if (bestaandeUser && getGebruikers()[bestaandeUser]) {
-  toonPortaal(bestaandeUser);
-}
+(function init() {
+  const bestaandeUser = sessionStorage.getItem("sk_user");
+  if (bestaandeUser) {
+    const gebruikers = getGebruikers();
+    if (gebruikers[bestaandeUser]) {
+      toonPortaal(bestaandeUser);
+      return;
+    }
+  }
+  document.getElementById("loginScherm").style.display = "flex";
+})();
 </script>
 </body>
 </html>
