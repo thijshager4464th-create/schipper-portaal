@@ -837,7 +837,11 @@ function slaInstellingenOp() {
   opgeslagen[gebruiker] = Object.assign({}, gebruikers[gebruiker], {wachtwoord: nieuw});
   localStorage.setItem("sk_gebruikers", JSON.stringify(opgeslagen));
   succ.style.display = "block";
-  document
+  document.getElementById("instNieuwWw").value = "";
+  document.getElementById("instHerhaalWw").value = "";
+  setTimeout(function() { sluitInstellingen(); }, 1500);
+}
+
 const bestaandeUser = sessionStorage.getItem("sk_user");
 if (bestaandeUser && getGebruikers()[bestaandeUser]) {
   toonPortaal(bestaandeUser);
