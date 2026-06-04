@@ -85,12 +85,24 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
 .post-btn:hover{opacity:0.9}
 .delete-btn{float:right;background:none;border:none;color:#ddd;cursor:pointer;font-size:14px;padding:0}
 .delete-btn:hover{color:#E31E24}
-.kpi-bar-bg{background:#f0f0f0;border-radius:20px;height:28px;overflow:hidden;margin:12px 0}
-.kpi-bar-fill{background:linear-gradient(90deg,#B01419,#E31E24);height:100%;border-radius:20px;transition:width 1s ease;display:flex;align-items:center;justify-content:flex-end;padding-right:10px;font-size:12px;font-weight:700;color:white;min-width:40px}
-.kpi-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:16px}
-.kpi-stat{text-align:center;padding:12px;background:#f8f8f8;border-radius:10px}
-.kpi-stat-val{font-size:22px;font-weight:800;color:#E31E24}
-.kpi-stat-label{font-size:11px;color:#888;margin-top:2px}
+.barometer-wrapper{display:flex;gap:24px;align-items:flex-start}
+.barometer-container{display:flex;flex-direction:column;align-items:center;flex-shrink:0}
+.barometer-outer{width:80px;height:400px;background:#f0f0f0;border-radius:40px;overflow:hidden;position:relative;box-shadow:inset 0 4px 12px rgba(0,0,0,0.1)}
+.barometer-fill{position:absolute;bottom:0;left:0;right:0;border-radius:0 0 40px 40px;transition:height 1.5s cubic-bezier(0.4,0,0.2,1);display:flex;flex-direction:column;justify-content:flex-start}
+.barometer-week-segment{width:100%;transition:all 0.3s}
+.barometer-pct{font-size:18px;font-weight:800;color:#E31E24;margin-top:12px}
+.barometer-label{font-size:11px;color:#aaa;text-align:center;margin-top:4px}
+.barometer-info{flex:1}
+.week-lijst{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+.week-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:10px;background:#f8f8f8}
+.week-kleur{width:16px;height:16px;border-radius:4px;flex-shrink:0}
+.week-naam{font-size:13px;font-weight:700;color:#1a1a2e;min-width:70px}
+.week-bedrag{font-size:13px;color:#555;flex:1}
+.week-pct{font-size:12px;font-weight:700;color:#888}
+.kpi-totaal{background:linear-gradient(135deg,#fff0f0,#ffe0e0);border-radius:12px;padding:16px;margin-top:16px;text-align:center}
+.kpi-totaal-val{font-size:28px;font-weight:800;color:#E31E24}
+.kpi-totaal-label{font-size:12px;color:#888;margin-top:2px}
+.confetti-container{position:fixed;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:999;display:none}
 .nieuws-item{padding:12px 0;border-bottom:1px solid #f0f0f0}
 .nieuws-item:last-child{border-bottom:none}
 .nieuws-item-titel{font-size:13px;font-weight:700;color:#1a1a2e;margin-bottom:3px;line-height:1.4}
@@ -126,9 +138,12 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
 .modal-success{background:#f0fff4;border:1px solid #a8e6c0;color:#2D6A4F;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:14px;display:none}
 .modal-error-msg{color:#c0392b;font-size:13px;margin-top:8px;display:none}
 .footer{text-align:center;padding:32px;font-size:12px;color:#bbb}
+@keyframes confetti-fall{0%{transform:translateY(-100px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+@keyframes pulse-glow{0%,100%{box-shadow:0 0 20px rgba(227,30,36,0.4)}50%{box-shadow:0 0 40px rgba(227,30,36,0.8)}}
 </style>
 </head>
 <body>
+<div class="confetti-container" id="confettiContainer"></div>
 
 <div class="login-bg" id="loginScherm">
   <div class="login-card">
@@ -169,7 +184,6 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
   </div>
 
   <div class="content">
-
     <div class="welkom">
       <div>
         <h2 id="welkomNaam">Goedemorgen!</h2>
@@ -178,31 +192,43 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
       <div class="welkom-datum" id="welkomDatum"></div>
     </div>
 
-    <!-- MEDEDELINGEN -->
     <div id="mededelingenBlok" style="display:none">
       <div class="sectie-titel">📢 Mededelingen</div>
       <div id="mededelingenLijst"></div>
     </div>
 
-    <!-- KPI DOELSTELLING -->
-    <div class="sectie-titel">🎯 Doel van de maand</div>
-    <div class="card" id="kpiCard">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:8px">
+    <!-- KPI BAROMETER -->
+    <div class="sectie-titel">🎯 Doelstelling Week 19 — Week 26</div>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px">
         <div>
-          <div class="card-titel" style="margin-bottom:4px" id="kpiTitel">KPI Doelstelling — laden...</div>
-          <div style="font-size:13px;color:#888" id="kpiPeriode"></div>
+          <div style="font-size:18px;font-weight:800;color:#1a1a2e">Omzet doelstelling 2026</div>
+          <div style="font-size:13px;color:#888;margin-top:2px">Week 19 t/m 26 — Doelstelling: <strong style="color:#E31E24">€ 640.000</strong> incl. BTW</div>
         </div>
         <div id="kpiAdminBtn" style="display:none">
-          <button class="topbar-btn" style="background:#E31E24;border-color:#E31E24" onclick="openKPI()">✏️ Bijwerken</button>
+          <button style="padding:9px 18px;background:#E31E24;color:white;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer" onclick="openKPI()">✏️ Week invullen</button>
         </div>
       </div>
-      <div class="kpi-bar-bg">
-        <div class="kpi-bar-fill" id="kpiBar" style="width:0%">0%</div>
-      </div>
-      <div class="kpi-stats">
-        <div class="kpi-stat"><div class="kpi-stat-val" id="kpiHuidig">—</div><div class="kpi-stat-label">Bereikt</div></div>
-        <div class="kpi-stat"><div class="kpi-stat-val" id="kpiDoel">—</div><div class="kpi-stat-label">Doelstelling</div></div>
-        <div class="kpi-stat"><div class="kpi-stat-val" id="kpiPct">—</div><div class="kpi-stat-label">Percentage</div></div>
+      <div class="barometer-wrapper">
+        <div class="barometer-container">
+          <div style="font-size:11px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px">€640k</div>
+          <div class="barometer-outer" id="barometerOuter">
+            <div class="barometer-fill" id="barometerFill"></div>
+          </div>
+          <div style="font-size:11px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:0.08em;margin-top:8px">€0</div>
+          <div class="barometer-pct" id="barometerPct">0%</div>
+          <div class="barometer-label">van doelstelling</div>
+        </div>
+        <div class="barometer-info">
+          <div class="kpi-totaal">
+            <div class="kpi-totaal-val" id="kpiTotaalBedrag">€ 0</div>
+            <div class="kpi-totaal-label">Totaal bereikt incl. BTW</div>
+          </div>
+          <div style="margin-top:16px">
+            <div style="font-size:11px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px">Per week</div>
+            <div class="week-lijst" id="weekLijst"></div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -223,7 +249,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
       </a>
     </div>
 
-    <!-- WEER + SUBSIDIE CHECK -->
+    <!-- WEER + SUBSIDIE -->
     <div class="sectie-titel">Weer & Subsidie Check</div>
     <div class="two-col">
       <div class="card">
@@ -253,7 +279,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
       </div>
     </div>
 
-    <!-- TIP VAN DE DAG + PRIKBORD -->
+    <!-- TIP + PRIKBORD -->
     <div class="sectie-titel">Tip van de dag & Prikbord</div>
     <div class="two-col">
       <div class="card">
@@ -275,30 +301,19 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
       </div>
     </div>
 
-    <!-- NIJ BEGUN NIEUWS + EXTERNE TOOLS -->
+    <!-- NIJ BEGUN + EXTERNE TOOLS -->
     <div class="sectie-titel">Nij Begun & Externe tools</div>
     <div class="three-col">
       <div class="card">
         <div class="card-titel">📰 Nij Begun nieuws</div>
-        <div id="nijBegunNieuws">
-          <div class="nieuws-item">
-            <div class="nieuws-item-titel">Nij Begun subsidie loopt door tot 2035</div>
-            <div class="nieuws-item-datum">Subsidie beschikbaar voor woningen in Groningen</div>
-          </div>
-          <div class="nieuws-item">
-            <div class="nieuws-item-titel">Triple glas HR+++ — 30% subsidie beschikbaar</div>
-            <div class="nieuws-item-datum">V2-4 en V4-1-I regelingen actief</div>
-          </div>
-          <div class="nieuws-item">
-            <div class="nieuws-item-titel">HR++ glas — tot 100% subsidie mogelijk</div>
-            <div class="nieuws-item-datum">Afhankelijk van inkomenssituatie klant</div>
-          </div>
-        </div>
+        <div class="nieuws-item"><div class="nieuws-item-titel">Nij Begun subsidie loopt door tot 2035</div><div class="nieuws-item-datum">Subsidie beschikbaar voor woningen in Groningen</div></div>
+        <div class="nieuws-item"><div class="nieuws-item-titel">Triple glas HR+++ — 30% subsidie beschikbaar</div><div class="nieuws-item-datum">V2-4 en V4-1-I regelingen actief</div></div>
+        <div class="nieuws-item"><div class="nieuws-item-titel">HR++ glas — tot 100% subsidie mogelijk</div><div class="nieuws-item-datum">Afhankelijk van inkomenssituatie klant</div></div>
         <a href="https://www.nij-begun.nl" target="_blank" class="ext-link-btn">Naar Nij Begun →</a>
       </div>
       <div class="card">
         <div class="card-titel">🏛️ Omgevingsloket</div>
-        <p style="font-size:13px;color:#888;line-height:1.6;margin-bottom:12px">Check direct of een klant een vergunning nodig heeft voor de dakkapel. Vul het adres in op het omgevingsloket.</p>
+        <p style="font-size:13px;color:#888;line-height:1.6;margin-bottom:12px">Check direct of een klant een vergunning nodig heeft voor de dakkapel.</p>
         <div style="font-size:12px;color:#555;line-height:2;margin-bottom:12px">
           <div>✅ <strong>Geen vergunning</strong> — achterzijde, max 1,5m diep</div>
           <div>⚠️ <strong>Vergunning nodig</strong> — voorzijde of groter</div>
@@ -308,7 +323,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
       </div>
       <div class="card">
         <div class="card-titel">🗺️ BAG Viewer</div>
-        <p style="font-size:13px;color:#888;line-height:1.6;margin-bottom:12px">Bekijk officiële woninginfo via de BAG Viewer. Bouwjaar, oppervlakte, gebruiksdoel en meer per adres.</p>
+        <p style="font-size:13px;color:#888;line-height:1.6;margin-bottom:12px">Bekijk officiële woninginfo. Bouwjaar, oppervlakte en meer per adres.</p>
         <div style="font-size:12px;color:#555;line-height:2;margin-bottom:12px">
           <div>🏠 <strong>Bouwjaar</strong> — asbest check (voor 1994)</div>
           <div>📐 <strong>Oppervlakte</strong> — woninggrootte</div>
@@ -321,36 +336,12 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
     <!-- NIEUWS -->
     <div class="sectie-titel">Nieuws & Info</div>
     <div class="nieuws-grid">
-      <div class="nieuws-card">
-        <span class="nieuws-tag tag-tip">Tip</span>
-        <div class="nieuws-titel">Versienummer verhogen bij wijzigingen</div>
-        <div class="nieuws-tekst">Stuur je een aangepaste offerte? Verhoog altijd het versienummer. De klant ziet dan meteen welke versie de meest recente is.</div>
-      </div>
-      <div class="nieuws-card">
-        <span class="nieuws-tag tag-branche">Branche</span>
-        <div class="nieuws-titel">Nij Begun subsidie loopt t/m 2035</div>
-        <div class="nieuws-tekst">Klanten kunnen tot 2035 profiteren van de Nij Begun subsidie. Combineer met triple glas voor maximaal voordeel.</div>
-      </div>
-      <div class="nieuws-card">
-        <span class="nieuws-tag tag-intern">Intern</span>
-        <div class="nieuws-titel">Dakkapel tool bespaart 1,5 uur</div>
-        <div class="nieuws-tekst">De dakkapel offerte converter is live. Gemiddeld 1 tot 1,5 uur besparing per offerte!</div>
-      </div>
-      <div class="nieuws-card">
-        <span class="nieuws-tag tag-tip">Tip</span>
-        <div class="nieuws-titel">Asbest checken via BAG Viewer</div>
-        <div class="nieuws-tekst">Check het bouwjaar via de BAG Viewer. Woningen van voor 1994 kunnen asbest bevatten — altijd navragen bij klant.</div>
-      </div>
-      <div class="nieuws-card">
-        <span class="nieuws-tag tag-tip">Tip</span>
-        <div class="nieuws-titel">Orderbevestiging na akkoord klant</div>
-        <div class="nieuws-tekst">Na akkoord selecteer je "Orderbevestiging" in de offerte tool. Zelfde PDF maar met officieel stempel.</div>
-      </div>
-      <div class="nieuws-card">
-        <span class="nieuws-tag tag-branche">Branche</span>
-        <div class="nieuws-titel">Triple glas steeds populairder</div>
-        <div class="nieuws-tekst">Klanten kiezen steeds vaker voor triple glas HR+++. Met Nij Begun subsidie financieel erg aantrekkelijk.</div>
-      </div>
+      <div class="nieuws-card"><span class="nieuws-tag tag-tip">Tip</span><div class="nieuws-titel">Versienummer verhogen bij wijzigingen</div><div class="nieuws-tekst">Stuur je een aangepaste offerte? Verhoog altijd het versienummer. De klant ziet dan meteen welke versie de meest recente is.</div></div>
+      <div class="nieuws-card"><span class="nieuws-tag tag-branche">Branche</span><div class="nieuws-titel">Nij Begun subsidie loopt t/m 2035</div><div class="nieuws-tekst">Klanten kunnen tot 2035 profiteren van de Nij Begun subsidie. Combineer met triple glas voor maximaal voordeel.</div></div>
+      <div class="nieuws-card"><span class="nieuws-tag tag-intern">Intern</span><div class="nieuws-titel">Dakkapel tool bespaart 1,5 uur</div><div class="nieuws-tekst">De dakkapel offerte converter is live. Gemiddeld 1 tot 1,5 uur besparing per offerte!</div></div>
+      <div class="nieuws-card"><span class="nieuws-tag tag-tip">Tip</span><div class="nieuws-titel">Asbest checken via BAG Viewer</div><div class="nieuws-tekst">Check het bouwjaar via de BAG Viewer. Woningen van voor 1994 kunnen asbest bevatten — altijd navragen bij klant.</div></div>
+      <div class="nieuws-card"><span class="nieuws-tag tag-tip">Tip</span><div class="nieuws-titel">Orderbevestiging na akkoord klant</div><div class="nieuws-tekst">Na akkoord selecteer je "Orderbevestiging" in de offerte tool. Zelfde PDF maar met officieel stempel.</div></div>
+      <div class="nieuws-card"><span class="nieuws-tag tag-branche">Branche</span><div class="nieuws-titel">Triple glas steeds populairder</div><div class="nieuws-tekst">Klanten kiezen steeds vaker voor triple glas HR+++. Met Nij Begun subsidie financieel erg aantrekkelijk.</div></div>
     </div>
 
     <div class="sectie-titel">Handige links</div>
@@ -367,24 +358,16 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
   </div>
   <div class="footer">Schipper Kozijnen Intern Portaal — Alleen voor medewerkers</div>
 </div>
-<!-- INSTELLINGEN MODAL -->
+
+<!-- MODALS -->
 <div class="modal-bg" id="instellingenModal">
   <div class="modal">
     <h3>⚙️ Instellingen</h3>
     <div class="modal-desc">Wijzig het wachtwoord van een gebruiker.</div>
     <div class="modal-success" id="modalSuccess">✓ Wachtwoord succesvol gewijzigd!</div>
-    <div class="modal-field">
-      <label>Gebruikersnaam</label>
-      <input type="text" id="instGebruiker" placeholder="gebruikersnaam">
-    </div>
-    <div class="modal-field">
-      <label>Nieuw wachtwoord</label>
-      <input type="password" id="instNieuwWw" placeholder="minimaal 6 tekens">
-    </div>
-    <div class="modal-field">
-      <label>Herhaal wachtwoord</label>
-      <input type="password" id="instHerhaalWw" placeholder="herhaal wachtwoord">
-    </div>
+    <div class="modal-field"><label>Gebruikersnaam</label><input type="text" id="instGebruiker" placeholder="gebruikersnaam"></div>
+    <div class="modal-field"><label>Nieuw wachtwoord</label><input type="password" id="instNieuwWw" placeholder="minimaal 6 tekens"></div>
+    <div class="modal-field"><label>Herhaal wachtwoord</label><input type="password" id="instHerhaalWw" placeholder="herhaal wachtwoord"></div>
     <div class="modal-error-msg" id="modalError"></div>
     <div class="modal-btns">
       <button class="modal-cancel" onclick="sluitInstellingen()">Annuleren</button>
@@ -393,15 +376,11 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
   </div>
 </div>
 
-<!-- MEDEDELING MODAL -->
 <div class="modal-bg" id="mededelingModal">
   <div class="modal">
     <h3>📢 Mededeling plaatsen</h3>
     <div class="modal-desc">Zichtbaar voor alle medewerkers bovenaan het portaal.</div>
-    <div class="modal-field">
-      <label>Mededeling</label>
-      <textarea id="mededelingTekst" style="min-height:100px" placeholder="Typ hier de mededeling..."></textarea>
-    </div>
+    <div class="modal-field"><label>Mededeling</label><textarea id="mededelingTekst" style="min-height:100px" placeholder="Typ hier de mededeling..."></textarea></div>
     <div class="modal-btns">
       <button class="modal-cancel" onclick="sluitMededeling()">Annuleren</button>
       <button class="modal-save" onclick="plaatsMededeling()">Plaatsen</button>
@@ -409,30 +388,17 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
   </div>
 </div>
 
-<!-- KPI MODAL -->
 <div class="modal-bg" id="kpiModal">
   <div class="modal">
-    <h3>🎯 KPI Doelstelling bijwerken</h3>
-    <div class="modal-desc">Stel de maandelijkse doelstelling in voor de vestiging.</div>
+    <h3>🎯 Week invullen</h3>
+    <div class="modal-desc">Vul het behaalde bedrag in voor een week. Wordt opgeslagen voor iedereen.</div>
     <div class="modal-field">
-      <label>Periode (bijv. Juni 2026)</label>
-      <input type="text" id="kpiModalPeriode" placeholder="bijv. Juni 2026">
+      <label>Week nummer (19-26)</label>
+      <input type="number" id="kpiModalWeek" min="19" max="26" placeholder="bijv. 22">
     </div>
     <div class="modal-field">
-      <label>Omschrijving doelstelling</label>
-      <input type="text" id="kpiModalOmschrijving" placeholder="bijv. Dakkapel offertes of Omzet">
-    </div>
-    <div class="modal-field">
-      <label>Doelstelling (getal of bedrag)</label>
-      <input type="text" id="kpiModalDoel" placeholder="bijv. 20 of 150000">
-    </div>
-    <div class="modal-field">
-      <label>Huidige stand</label>
-      <input type="text" id="kpiModalHuidig" placeholder="bijv. 12 of 89000">
-    </div>
-    <div class="modal-field">
-      <label>Eenheid (bijv. offertes of €)</label>
-      <input type="text" id="kpiModalEenheid" placeholder="bijv. offertes">
+      <label>Bedrag incl. BTW (€)</label>
+      <input type="number" id="kpiModalBedrag" placeholder="bijv. 85000">
     </div>
     <div class="modal-btns">
       <button class="modal-cancel" onclick="sluitKPI()">Annuleren</button>
@@ -440,7 +406,6 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
     </div>
   </div>
 </div>
-
 <script>
 const SUPABASE_URL = "https://lhidonubgtrszbuvoutl.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxoaWRvbnViZ3Ryc3pidXZvdXRsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0OTE1OTEsImV4cCI6MjA5NjA2NzU5MX0.XooyKfNCxytzj0DCnEfy3HTuSEfoW7iwojLFLvBOV_c";
@@ -454,6 +419,15 @@ const STANDAARD = {
   "michiel": { wachtwoord: "Schipper2025!", naam: "Michiel" },
   "admin":   { wachtwoord: "SchipperAdmin!", naam: "Admin" }
 };
+
+const WEEK_KLEUREN = {
+  19: "#E31E24", 20: "#e67e22", 21: "#f1c40f",
+  22: "#2ecc71", 23: "#1abc9c", 24: "#3498db",
+  25: "#9b59b6", 26: "#E31E24"
+};
+
+const DOELSTELLING = 640000;
+const WEKEN = [19,20,21,22,23,24,25,26];
 
 const TIPS = [
   "Vraag altijd naar het bouwjaar van de woning — bij woningen voor 1994 is asbest een aandachtspunt.",
@@ -517,7 +491,6 @@ function toonPortaal(user) {
   document.getElementById("welkomNaam").textContent = groet + ", " + u.naam.split(" ")[0] + "!";
   document.getElementById("userBadge").textContent = "👋 " + u.naam;
   document.getElementById("welkomDatum").innerHTML = datum + "<br><span style='font-size:11px;color:#ccc'>" + nu.toLocaleTimeString("nl-NL",{hour:"2-digit",minute:"2-digit"}) + "</span>";
-
   if (user === "admin" || user === "thijs") {
     const topbarRight = document.querySelector(".topbar-right");
     const medBtn = document.createElement("button");
@@ -527,12 +500,11 @@ function toonPortaal(user) {
     topbarRight.insertBefore(medBtn, topbarRight.firstChild);
     document.getElementById("kpiAdminBtn").style.display = "block";
   }
-
   laadWeer();
   laadTipVanDeDag();
   laadPrikbord();
   laadMededelingen();
-  laadKPI();
+  laadBarometer();
 }
 
 function logout() {
@@ -542,6 +514,108 @@ function logout() {
   document.getElementById("loginScherm").style.display = "flex";
   document.getElementById("gebruiker").value = "";
   document.getElementById("wachtwoord").value = "";
+}
+
+async function laadBarometer() {
+  const { data, error } = await sb.from("kpi_weken").select("*").order("week_nr", {ascending:true});
+  const weekData = {};
+  if (data) data.forEach(r => { weekData[r.week_nr] = parseFloat(r.bedrag) || 0; });
+
+  let totaal = 0;
+  WEKEN.forEach(w => { totaal += weekData[w] || 0; });
+  const pct = Math.min(100, (totaal / DOELSTELLING) * 100);
+
+  document.getElementById("kpiTotaalBedrag").textContent = "€ " + Math.round(totaal).toLocaleString("nl-NL");
+  document.getElementById("barometerPct").textContent = Math.round(pct) + "%";
+
+  // Bouw barometer segmenten van onder naar boven
+  const fill = document.getElementById("barometerFill");
+  fill.innerHTML = "";
+  let segmenten = [];
+  WEKEN.forEach(w => {
+    const bedrag = weekData[w] || 0;
+    if (bedrag > 0) {
+      const segPct = (bedrag / DOELSTELLING) * 100;
+      segmenten.push({ week: w, pct: segPct, kleur: WEEK_KLEUREN[w] });
+    }
+  });
+
+  // Van onder naar boven opbouwen
+  segmenten.reverse().forEach(s => {
+    const seg = document.createElement("div");
+    seg.className = "barometer-week-segment";
+    seg.style.height = s.pct + "%";
+    seg.style.background = s.kleur;
+    seg.style.opacity = "0.9";
+    fill.appendChild(seg);
+  });
+
+  // Animeer na kleine vertraging
+  setTimeout(() => {
+    fill.style.height = pct + "%";
+  }, 100);
+
+  // Week lijst
+  const weekLijst = document.getElementById("weekLijst");
+  weekLijst.innerHTML = WEKEN.map(w => {
+    const bedrag = weekData[w] || 0;
+    const weekPct = Math.round((bedrag / DOELSTELLING) * 100);
+    const isHuidig = w === 22;
+    return `<div class="week-item" style="background:${bedrag > 0 ? WEEK_KLEUREN[w] + '22' : '#f8f8f8'};border:${isHuidig ? '2px solid ' + WEEK_KLEUREN[w] : '1px solid transparent'}">
+      <div class="week-kleur" style="background:${bedrag > 0 ? WEEK_KLEUREN[w] : '#ddd'}"></div>
+      <div class="week-naam">Week ${w}${isHuidig ? ' 📍' : ''}</div>
+      <div class="week-bedrag">${bedrag > 0 ? '€ ' + Math.round(bedrag).toLocaleString('nl-NL') : '— nog in te vullen'}</div>
+      <div class="week-pct" style="color:${bedrag > 0 ? WEEK_KLEUREN[w] : '#ddd'}">${bedrag > 0 ? weekPct + '%' : ''}</div>
+    </div>`;
+  }).join("");
+
+  // Confetti animatie als 100% bereikt
+  if (pct >= 100) {
+    setTimeout(() => startConfetti(), 500);
+  }
+}
+
+function startConfetti() {
+  const container = document.getElementById("confettiContainer");
+  container.style.display = "block";
+  const kleuren = ["#E31E24","#f39c12","#2ecc71","#3498db","#9b59b6","#1abc9c"];
+  for (let i = 0; i < 150; i++) {
+    const confetti = document.createElement("div");
+    confetti.style.cssText = `
+      position:absolute;
+      width:${Math.random()*10+5}px;
+      height:${Math.random()*10+5}px;
+      background:${kleuren[Math.floor(Math.random()*kleuren.length)]};
+      left:${Math.random()*100}%;
+      top:-20px;
+      border-radius:${Math.random()>0.5?'50%':'0'};
+      animation:confetti-fall ${Math.random()*3+2}s linear ${Math.random()*3}s forwards;
+    `;
+    container.appendChild(confetti);
+  }
+  setTimeout(() => {
+    container.style.display = "none";
+    container.innerHTML = "";
+  }, 6000);
+}
+
+function openKPI() { document.getElementById("kpiModal").classList.add("open"); }
+function sluitKPI() { document.getElementById("kpiModal").classList.remove("open"); }
+
+async function slaKPIOp() {
+  const week = parseInt(document.getElementById("kpiModalWeek").value);
+  const bedrag = parseFloat(document.getElementById("kpiModalBedrag").value);
+  if (!week || week < 19 || week > 26 || !bedrag) return;
+
+  // Check of week al bestaat en update of insert
+  const { data } = await sb.from("kpi_weken").select("*").eq("week_nr", week);
+  if (data && data.length > 0) {
+    await sb.from("kpi_weken").update({ bedrag }).eq("week_nr", week);
+  } else {
+    await sb.from("kpi_weken").insert({ week_nr: week, bedrag });
+  }
+  sluitKPI();
+  laadBarometer();
 }
 
 async function laadWeer() {
@@ -566,17 +640,15 @@ async function laadWeer() {
 }
 
 function weerIcon(c) {
-  if (c===0) return "☀️"; if (c<=2) return "⛅"; if (c===3) return "☁️";
-  if (c<=49) return "🌫️"; if (c<=59) return "🌦️"; if (c<=69) return "🌧️";
-  if (c<=79) return "❄️"; if (c<=84) return "🌧️"; if (c<=99) return "⛈️";
-  return "🌡️";
+  if(c===0)return"☀️";if(c<=2)return"⛅";if(c===3)return"☁️";
+  if(c<=49)return"🌫️";if(c<=59)return"🌦️";if(c<=69)return"🌧️";
+  if(c<=79)return"❄️";if(c<=84)return"🌧️";if(c<=99)return"⛈️";return"🌡️";
 }
 
 function weerDesc(c) {
-  if (c===0) return "Helder"; if (c<=2) return "Gedeeltelijk bewolkt"; if (c===3) return "Bewolkt";
-  if (c<=49) return "Mistig"; if (c<=59) return "Lichte motregen"; if (c<=69) return "Regen";
-  if (c<=79) return "Sneeuw"; if (c<=84) return "Buien"; if (c<=99) return "Onweer";
-  return "Wisselvallig";
+  if(c===0)return"Helder";if(c<=2)return"Gedeeltelijk bewolkt";if(c===3)return"Bewolkt";
+  if(c<=49)return"Mistig";if(c<=59)return"Lichte motregen";if(c<=69)return"Regen";
+  if(c<=79)return"Sneeuw";if(c<=84)return"Buien";if(c<=99)return"Onweer";return"Wisselvallig";
 }
 
 function laadTipVanDeDag() {
@@ -597,7 +669,7 @@ function laadTipVanDeDag() {
 function checkSubsidie() {
   const pc = document.getElementById("subsidiePostcode").value.trim().toUpperCase();
   const el = document.getElementById("subsidieResult");
-  if (!pc || pc.length < 4) { el.className="subsidie-result rood"; el.style.display="block"; el.innerHTML="❌ Voer een geldige postcode in"; return; }
+  if (!pc || pc.length < 4) { el.className="subsidie-result rood";el.style.display="block";el.innerHTML="❌ Voer een geldige postcode in";return; }
   const cijfers = parseInt(pc.substring(0,4));
   const inNijBegun = cijfers >= 9600 && cijfers <= 9999;
   el.style.display = "block";
@@ -657,48 +729,6 @@ async function plaatsMededeling() {
   laadMededelingen();
 }
 
-async function laadKPI() {
-  const { data, error } = await sb.from("berichten").select("*").eq("type","kpi").order("datum",{ascending:false}).limit(1);
-  if (error || !data || data.length === 0) {
-    document.getElementById("kpiTitel").textContent = "KPI Doelstelling — nog niet ingesteld";
-    document.getElementById("kpiPeriode").textContent = "Admin kan de doelstelling instellen via de knop";
-    return;
-  }
-  const kpi = JSON.parse(data[0].tekst);
-  const pct = Math.min(100, Math.round((parseFloat(kpi.huidig) / parseFloat(kpi.doel)) * 100));
-  const kleur = pct >= 100 ? "#27ae60" : pct >= 70 ? "#f39c12" : "#E31E24";
-  document.getElementById("kpiTitel").textContent = "🎯 " + kpi.omschrijving;
-  document.getElementById("kpiPeriode").textContent = kpi.periode;
-  document.getElementById("kpiBar").style.width = pct + "%";
-  document.getElementById("kpiBar").style.background = `linear-gradient(90deg, ${kleur}dd, ${kleur})`;
-  document.getElementById("kpiBar").textContent = pct + "%";
-  document.getElementById("kpiHuidig").textContent = kpi.eenheid === "€" ? "€" + Number(kpi.huidig).toLocaleString("nl-NL") : kpi.huidig + " " + (kpi.eenheid || "");
-  document.getElementById("kpiDoel").textContent = kpi.eenheid === "€" ? "€" + Number(kpi.doel).toLocaleString("nl-NL") : kpi.doel + " " + (kpi.eenheid || "");
-  document.getElementById("kpiPct").textContent = pct + "%";
-}
-
-function openKPI() {
-  document.getElementById("kpiModal").classList.add("open");
-}
-
-function sluitKPI() {
-  document.getElementById("kpiModal").classList.remove("open");
-}
-
-async function slaKPIOp() {
-  const periode = document.getElementById("kpiModalPeriode").value.trim();
-  const omschrijving = document.getElementById("kpiModalOmschrijving").value.trim();
-  const doel = document.getElementById("kpiModalDoel").value.trim();
-  const huidig = document.getElementById("kpiModalHuidig").value.trim();
-  const eenheid = document.getElementById("kpiModalEenheid").value.trim();
-  if (!periode || !omschrijving || !doel || !huidig) return;
-  const naam = getGebruikers()[huidigUser]?.naam || huidigUser;
-  const kpiData = JSON.stringify({ periode, omschrijving, doel, huidig, eenheid });
-  await sb.from("berichten").insert({ type:"kpi", auteur: naam, tekst: kpiData });
-  sluitKPI();
-  laadKPI();
-}
-
 function openInstellingen() {
   document.getElementById("instGebruiker").value = huidigUser || "";
   document.getElementById("instNieuwWw").value = "";
@@ -708,9 +738,7 @@ function openInstellingen() {
   document.getElementById("instellingenModal").classList.add("open");
 }
 
-function sluitInstellingen() {
-  document.getElementById("instellingenModal").classList.remove("open");
-}
+function sluitInstellingen() { document.getElementById("instellingenModal").classList.remove("open"); }
 
 function slaInstellingenOp() {
   const gebruiker = document.getElementById("instGebruiker").value.toLowerCase().trim();
@@ -718,12 +746,11 @@ function slaInstellingenOp() {
   const herhaal = document.getElementById("instHerhaalWw").value;
   const err = document.getElementById("modalError");
   const succ = document.getElementById("modalSuccess");
-  err.style.display = "none";
-  succ.style.display = "none";
+  err.style.display = "none"; succ.style.display = "none";
   const gebruikers = getGebruikers();
-  if (!gebruikers[gebruiker]) { err.textContent = "Gebruiker niet gevonden"; err.style.display = "block"; return; }
-  if (nieuw.length < 6) { err.textContent = "Wachtwoord minimaal 6 tekens"; err.style.display = "block"; return; }
-  if (nieuw !== herhaal) { err.textContent = "Wachtwoorden komen niet overeen"; err.style.display = "block"; return; }
+  if (!gebruikers[gebruiker]) { err.textContent="Gebruiker niet gevonden"; err.style.display="block"; return; }
+  if (nieuw.length < 6) { err.textContent="Wachtwoord minimaal 6 tekens"; err.style.display="block"; return; }
+  if (nieuw !== herhaal) { err.textContent="Wachtwoorden komen niet overeen"; err.style.display="block"; return; }
   const opgeslagen = {};
   try { Object.assign(opgeslagen, JSON.parse(localStorage.getItem("sk_gebruikers") || "{}")); } catch(e) {}
   opgeslagen[gebruiker] = { ...gebruikers[gebruiker], wachtwoord: nieuw };
