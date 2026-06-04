@@ -704,13 +704,37 @@ function slaKPIOp() {
   if (!week || week < 19 || week > 26 || !bedrag) return;
   sb.from("kpi_weken").select("*").eq("week_nr", week).then(function(res) {
     if (res.data && res.data.length > 0) {
-      sb.from("kpi_weken").update({bedrag:bedrag}).eq("week_nr",week).then(function() { sluitKPI(); laadBarometer(); });
+      sb.from("kpi_weken").update({bedrag:bedrag}).eq("week_nr",week).then(function() {
+        sluitKPI();
+        laadBarometerMetConfetti();
+      });
     } else {
-      sb.from("kpi_weken").insert({week_nr:week, bedrag:bedrag}).then(function() { sluitKPI(); laadBarometer(); });
+      sb.from("kpi_weken").insert({week_nr:week, bedrag:bedrag}).then(function() {
+        sluitKPI();
+        laadBarometerMetConfetti();
+      });
     }
   });
 }
-  function laadWeer() {
+
+function laadBarometerMetConfetti() {
+  sb.from("kpi_weken").select("*").order("week_nr",{ascending:true}).then(function(res) {
+    var weekData = {};
+    if (res.data) {
+      for (var i = 0; i < res.data.length; i++) {
+        weekData[res.data[i].week_nr] = parseFloat(res.data[i].bedrag) || 0;
+      }
+    }
+    var totaal = 0;
+    for (var i = 0; i < WEKEN.length; i++) { totaal += weekData[WEKEN[i]] || 0; }
+    var pct = Math.min(100, (totaal / DOELSTELLING) * 100);
+    var wasNietVol = parseFloat(document.getElementById("barometerPct").textContent) < 100;
+    laadBarometer();
+    if (pct >= 100 && wasNietVol) {
+      setTimeout(startConfetti, 1600);
+    }
+  });
+}  function laadWeer() {
   fetch("https://api.open-meteo.com/v1/forecast?latitude=53.2194&longitude=6.5665&current=temperature_2m,weathercode&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=Europe/Amsterdam&forecast_days=5")
   .then(function(r) { return r.json(); })
   .then(function(d) {
