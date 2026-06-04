@@ -203,7 +203,7 @@ async function genereer() {
     "Geef ALLEEN de berichttekst terug, geen uitleg of commentaar.";
 
   try {
-    var response = await fetch("/api/claude", {
+    var response = await fetch("https://dakkapel-offerte.vercel.app/api/claude", {
       method: "POST",
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify({
