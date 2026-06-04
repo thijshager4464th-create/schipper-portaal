@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Schipper Kozijnen — Aluminium Aanvraag</title>
+<link rel="icon" type="image/png" href="images.png">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:100vh;color:#1a1a2e}
+.topbar{background:linear-gradient(135deg,#B01419,#E31E24);color:white;padding:14px 32px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 4px 20px rgba(227,30,36,0.3);flex-wrap:wrap;gap:10px}
+.topbar-left{display:flex;align-items:center;gap:16px}
+.topbar-logo{background:white;border-radius:8px;padding:4px 10px;display:flex;align-items:center}
+.topbar-logo img{height:36px;object-fit:contain}
+.topbar-title{font-size:16px;font-weight:800}
+.topbar-back{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:white;padding:7px 14px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600;text-decoration:none}
+.topbar-back:hover{background:rgba(255,255,255,0.25)}
+.content{max-width:960px;margin:0 auto;padding:32px 24px}
+.intro{background:white;border-radius:16px;padding:28px 32px;margin-bottom:24px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border-left:5px solid #E31E24}
+.intro h1{font-size:22px;font-weight:800;color:#1a1a2e;margin-bottom:6px}
+.intro p{font-size:14px;color:#888;line-height:1.6}
+.sectie{background:white;border-radius:16px;padding:28px;box-shadow:0 2px 8px rgba(0,0,0,0.06);margin-bottom:16px}
+.sectie-header{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#E31E24;margin-bottom:18px;padding-bottom:10px;border-bottom:2px solid #fff0f0}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:640px){.form-grid{grid-template-columns:1fr}}
+.form-field{display:flex;flex-direction:column;gap:5px}
+.form-field.full{grid-column:1/-1}
+.form-field label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#888}
+.form-field input,.form-field select,.form-field textarea{padding:10px 14px;border:2px solid #eee;border-radius:8px;font-size:13px;outline:none;font-family:inherit;transition:border 0.2s;background:white;color:#1a1a2e}
+.form-field input:focus,.form-field select:focus,.form-field textarea:focus{border-color:#E31E24}
+.form-field select{cursor:pointer}
+.note{font-size:11px;color:#bbb;font-style:italic;margin-top:2px}
+.genereer-btn{width:100%;padding:16px;background:linear-gradient(135deg,#B01419,#E31E24);color:white;border:none;border-radius:12px;font-size:16px;font-weight:800;cursor:pointer;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 4px 16px rgba(227,30,36,0.3)}
+.genereer-btn:hover{opacity:0.9}
+.genereer-btn:disabled{opacity:0.6;cursor:not-allowed}
+.spinner{width:20px;height:20px;border:3px solid rgba(255,255,255,0.4);border-top-color:white;border-radius:50%;animation:spin 0.8s linear infinite;display:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+.succes{background:#f0fff4;border:1px solid #a8e6c0;border-radius:12px;padding:20px 24px;margin-top:16px;display:none;text-align:center}
+.succes-icon{font-size:32px;margin-bottom:8px}
+.succes-titel{font-size:16px;font-weight:800;color:#2D6A4F;margin-bottom:4px}
+.succes-desc{font-size:13px;color:#555}
+.fout{background:#fff0f0;border:1px solid #f5c6c6;border-radius:12px;padding:16px;margin-top:16px;display:none;font-size:13px;color:#c0392b}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="topbar-logo">
+      <img src="images.png" alt="Schipper Kozijnen" height="36" onerror="this.outerHTML='<span style=\'font-size:16px;font-weight:900;color:#E31E24\'>S<span style=\'color:#1a1a2e\'>chipper</span></span>'">
+    </div>
+    <div class="topbar-title">Aluminium Aanvraag</div>
+  </div>
+  <a href="index.html" class="topbar-back">← Terug naar portaal</a>
+</div>
+<div class="content">
+  <div class="intro">
+    <h1>Aluminium Aanvraag Formulier</h1>
+    <p>Vul de gegevens in en download direct het ingevulde Excel aanvraagformulier. Het bestand heeft exact hetzelfde formaat als het originele formulier.</p>
+  </div>
+  <div class="sectie">
+    <div class="sectie-header">Projectgegevens</div>
+    <div class="form-grid">
+      <div class="form-field"><label>Projectnummer</label><input type="text" id="projectnummer" placeholder="bijv. O-196107"></div>
+      <div class="form-field"><label>Relatie</label><input type="text" id="relatie" placeholder="naam klant of bedrijf"></div>
+      <div class="form-field full"><label>Projectomschrijving</label><input type="text" id="projectomschrijving" placeholder="omschrijving van het project"></div>
+      <div class="form-field"><label>Aanvraagdatum</label><input type="date" id="aanvraagdatum"></div>
+      <div class="form-field"><label>Indiendatum</label><input type="date" id="indiendatum"></div>
+    </div>
+  </div>
+  <div class="sectie">
+    <div class="sectie-header">Kleurafwerking</div>
+    <div class="form-grid">
+      <div class="form-field full"><label>Type kleurafwerking</label><select id="kleurafwerking"><option value="Niet van toepassing">Niet van toepassing</option><option value="70% standaard glans, préano">70% standaard glans, préano</option><option value="30% zijdeglans mat, préano">30% zijdeglans mat, préano</option><option value="structuurlak, préano">Structuurlak, préano</option><option value="20mu anodisatie">20mu anodisatie</option><option value="25mu anodisatie">25mu anodisatie</option></select></div>
+      <div class="form-field"><label>Kleur kaders — buitenzijde</label><select id="kleur_kaders_buiten"><option value="Niet van toepassing">Niet van toepassing</option><option value="Blank geanodiseerd (standaard)">Blank geanodiseerd (standaard)</option><option value="In kleur kozijn">In kleur kozijn</option></select></div>
+      <div class="form-field"><label>Kleur kaders — binnenzijde</label><select id="kleur_kaders_binnen"><option value="Niet van toepassing">Niet van toepassing</option><option value="Blank geanodiseerd">Blank geanodiseerd</option><option value="RVS look">RVS look</option><option value="In kleur kozijn">In kleur kozijn</option></select></div>
+      <div class="form-field"><label>Kleur draai-/schuifdelen — buitenzijde</label><select id="kleur_draai_buiten"><option value="Niet van toepassing">Niet van toepassing</option><option value="Grijs gelakt">Grijs gelakt</option><option value="RVS look">RVS look</option><option value="In kleur kozijn">In kleur kozijn</option><option value="Blank geanodiseerd (Reynaers)">Blank geanodiseerd (Reynaers)</option></select></div>
+      <div class="form-field"><label>Kleur draai-/schuifdelen — binnenzijde</label><select id="kleur_draai_binnen"><option value="Niet van toepassing">Niet van toepassing</option><option value="Blank geanodiseerd">Blank geanodiseerd</option><option value="RVS look">RVS look</option><option value="In kleur schuifpui">In kleur schuifpui</option></select></div>
+    </div>
+  </div>
+  <div class="sectie">
+    <div class="sectie-header">Gevelkozijnen</div>
+    <div class="form-grid">
+      <div class="form-field"><label>Serie</label><select id="gevel_serie"><option value="Niet van toepassing">Niet van toepassing</option><option value="GT70S - Modern (vlak)">GT70S - Modern (vlak)</option><option value="GT70S - Authentiek">GT70S - Authentiek</option><option value="GT70S - Industrieel (verdiept)">GT70S - Industrieel (verdiept)</option></select></div>
+      <div class="form-field"><label>Isolatieklasse</label><select id="gevel_isolatieklasse"><option value="Niet van toepassing">Niet van toepassing</option><option value="I (1.6)">I (1.6)</option><option value="I+ (1.4)">I+ (1.4)</option><option value="HI (1.2)">HI (1.2)</option></select></div>
+      <div class="form-field"><label>Voordeurpaneel</label><select id="voordeurpaneel"><option value="Niet van toepassing">Niet van toepassing</option><option value="Standaard ingeklemd paneel">Standaard ingeklemd paneel</option><option value="Vleugeloverlappend paneel">Vleugeloverlappend paneel</option></select></div>
+      <div class="form-field"><label>Onderdorpel deur</label><select id="onderdorpel"><option value="Niet van toepassing">Niet van toepassing</option><option value="Recht">Recht</option><option value="Schuin">Schuin</option></select></div>
+      <div class="form-field"><label>Kleur deurkrukken</label><select id="kleur_deurkrukken"><option value="Niet van toepassing">Niet van toepassing</option><option value="Balkondeur beslag">Balkondeur beslag</option><option value="Kruk/kruk beslag">Kruk/kruk beslag</option></select></div>
+      <div class="form-field"><label>Kleur raamkrukken</label><select id="kleur_raamkrukken"><option value="Niet van toepassing">Niet van toepassing</option><option value="Binnenzijde">Binnenzijde</option><option value="Binnen- + buitenzijde">Binnen- + buitenzijde</option></select></div>
+      <div class="form-field"><label>Kleur scharnieren</label><select id="kleur_scharnieren"><option value="Niet van toepassing">Niet van toepassing</option><option value="Binnenzijde">Binnenzijde</option><option value="Binnen- + buitenzijde">Binnen- + buitenzijde</option></select></div>
+      <div class="form-field"><label>Balkondeuren (kader rondom)</label><select id="balkondeuren"><option value="Niet van toepassing">Niet van toepassing</option><option value="Alleen binnenzijde">Alleen binnenzijde</option><option value="Binnen + buiten (niet bij hef-schuif)">Binnen + buiten</option></select></div>
+      <div class="form-field"><label>Deurkruk</label><select id="deurkruk"><option value="Niet van toepassing">Niet van toepassing</option><option value="Nood">Nood</option><option value="Standaard">Standaard</option><option value="Gelijksluitend">Gelijksluitend</option><option value="Knop">Knop</option></select></div>
+      <div class="form-field"><label>Duwer t.b.v. voordeur</label><select id="duwer"><option value="Niet van toepassing">Niet van toepassing</option><option value="Ja">Ja</option><option value="Nee">Nee</option></select></div>
+      <div class="form-field"><label>Cilinder type</label><select id="cilinder_type_gevel"><option value="Niet van toepassing">Niet van toepassing</option><option value="Standaard Kawneer">Standaard Kawneer</option><option value="Afwijkend type">Afwijkend type</option></select></div>
+      <div class="form-field"><label>T.b.v. merk cilinder type</label><input type="text" id="cilinder_merk_gevel" placeholder="merknaam"></div>
+      <div class="form-field"><label>Cilinder binnen/buiten</label><select id="cilinder_binnenbuitengevel"><option value="Niet van toepassing">Niet van toepassing</option><option value="Binnenzijde">Binnenzijde</option><option value="Binnen- + buitenzijde">Binnen- + buitenzijde</option></select></div>
+      <div class="form-field"><label>T.b.v. merk cilinder binnen/buiten</label><input type="text" id="cilinder_binnenbuitenmerk_gevel" placeholder="merknaam"></div>
+      <div class="form-field full"><label>Knop cilinder i.c.m. inbraakwerend glas</label><input type="text" id="knop_cilinder_gevel" placeholder="T.b.v. merk..."></div>
+    </div>
+  </div>
+  <div class="sectie">
+    <div class="sectie-header">Schuifpuien</div>
+    <div class="form-grid">
+      <div class="form-field"><label>Serie schuifpui</label><select id="schuif_serie"><option value="Niet van toepassing">Niet van toepassing</option><option value="Kawneer AA3110">Kawneer AA3110</option><option value="Kawneer AA4110 schuif">Kawneer AA4110 schuif</option><option value="Kawneer AA4110 hef-schuif">Kawneer AA4110 hef-schuif</option><option value="Kawneer AA5110 (alleen schuif)">Kawneer AA5110 (alleen schuif)</option></select></div>
+      <div class="form-field"><label>Afdekkap 4110 bovenzijde</label><select id="afdekkap_boven"><option value="Niet van toepassing">Niet van toepassing</option><option value="Alleen binnenzijde">Alleen binnenzijde</option><option value="Binnen + buiten">Binnen + buiten</option></select></div>
+      <div class="form-field"><label>Afdekkap 4110 benedenzijde</label><select id="afdekkap_beneden"><option value="Niet van toepassing">Niet van toepassing</option><option value="Alleen binnenzijde">Alleen binnenzijde</option><option value="Binnen + buiten">Binnen + buiten</option></select></div>
+      <div class="form-field"><label>Cilinder type schuifpui</label><select id="cilinder_type_schuif"><option value="Niet van toepassing">Niet van toepassing</option><option value="Standaard Kawneer">Standaard Kawneer</option><option value="Afwijkend type">Afwijkend type</option></select></div>
+      <div class="form-field"><label>T.b.v. merk cilinder schuifpui</label><input type="text" id="cilinder_merk_schuif" placeholder="merknaam"></div>
+      <div class="form-field"><label>Kleur deurgreep</label><select id="kleur_deurgreep"><option value="Niet van toepassing">Niet van toepassing</option><option value="aluminium">Aluminium</option><option value="Colorbel">Colorbel</option></select></div>
+      <div class="form-field"><label>Deurgreep/komgreep</label><select id="deurgreep_komgreep"><option value="Niet van toepassing">Niet van toepassing</option><option value="Schuif (3110/4110) Binnen greep / buiten niets">Schuif - Binnen greep / buiten niets</option><option value="Schuif (3110/4110) Binnen- + buitenzijde greep">Schuif - Binnen- + buitenzijde greep</option><option value="Schuif (3110/4110) Binnen greep / buiten  komgreep">Schuif - Binnen greep / buiten komgreep</option><option value="Hefschuif binnen hefgreep / buiten niets">Hefschuif - Binnen hefgreep / buiten niets</option><option value="Hefschuif binnen hefgreep / buiten opbouw komgreep">Hefschuif - Binnen hefgreep / buiten komgreep</option></select></div>
+      <div class="form-field"><label>Cilinder schuifpui</label><select id="cilinder_schuif"><option value="Niet van toepassing">Niet van toepassing</option><option value="Nood">Nood</option><option value="Standaard">Standaard</option><option value="Gelijksluitend">Gelijksluitend</option><option value="Knop">Knop</option></select></div>
+      <div class="form-field full"><label>Knop cilinder i.c.m. inbraakwerend glas (schuifpui)</label><input type="text" id="knop_cilinder_schuif" placeholder="T.b.v. merk..."></div>
+    </div>
+  </div>
+  <div class="sectie">
+    <div class="sectie-header">Beglazing</div>
+    <div class="form-grid">
+      <div class="form-field"><label>Soort beglazing</label><select id="soort_beglazing"><option value="Niet van toepassing">Niet van toepassing</option><option value="Dubbelglas (HR++)">Dubbelglas (HR++)</option><option value="Triple glas (HR+++) niet mogelijk bij AA3110">Triple glas (HR+++) — niet mogelijk bij AA3110</option></select></div>
+      <div class="form-field"><label>Aanvulling beglazing (warm edge)</label><select id="warm_edge"><option value="Niet van toepassing">Niet van toepassing</option><option value="Warm-Edge">Warm-Edge</option></select></div>
+      <div class="form-field"><label>Zonwerend t.b.v. merk</label><input type="text" id="zonwerend_merk" placeholder="merknaam of leeg laten"></div>
+      <div class="form-field"><label>Zonwerende waarde (indien v.t.)</label><input type="text" id="zonwerend_waarde" placeholder="waarde"></div>
+      <div class="form-field"><label>Geluidwerend t.b.v. merk</label><input type="text" id="geluidwerend_merk" placeholder="merknaam of leeg laten"></div>
+      <div class="form-field"><label>Geluidwerende waarde (indien v.t.)</label><input type="text" id="geluidwerend_waarde" placeholder="waarde"></div>
+      <div class="form-field"><label>NEN3569 t.b.v. merk</label><input type="text" id="nen3569_merk" placeholder="merknaam of leeg laten"></div>
+      <div class="form-field"><label>Doorvalveilig t.b.v. merk</label><input type="text" id="doorvalveilig_merk" placeholder="merknaam of leeg laten"></div>
+      <div class="form-field"><label>Brandwerend 30 min. WBDBO t.b.v. merk</label><input type="text" id="brandwerend_merk" placeholder="merknaam of leeg laten"></div>
+      <div class="form-field"><label>Buitenbeglazing t.b.v. merk</label><input type="text" id="buitenbeglazing_merk" placeholder="merknaam of leeg laten"></div>
+      <div class="form-field full"><label>Paneel</label><select id="paneel"><option value="Niet van toepassing">Niet van toepassing</option><option value="Standaard ingeklemd paneel">Standaard ingeklemd paneel</option><option value="Vleugeloverlappend paneel">Vleugeloverlappend paneel</option></select><div class="note">LET OP: aangeven op tekening in welke kozijnen panelen komen</div></div>
+    </div>
+  </div>
+  <div class="sectie">
+    <div class="sectie-header">Situatie</div>
+    <div class="form-grid">
+      <div class="form-field"><label>Windgebied</label><select id="windgebied"><option value="maak keuze">— maak keuze —</option><option value="I">I</option><option value="II">II</option><option value="III">III</option></select></div>
+      <div class="form-field"><label>Bebouwd / Onbebouwd</label><select id="bebouwd"><option value="maak keuze">— maak keuze —</option><option value="Bebouwd">Bebouwd</option><option value="Onbebouwd">Onbebouwd</option></select></div>
+      <div class="form-field full"><label>Gebouwhoogte</label><input type="text" id="gebouwhoogte" placeholder="bijv. 8 meter"></div>
+    </div>
+  </div>
+  <button class="genereer-btn" id="genereerBtn" onclick="genereer()">
+    <div class="spinner" id="spinner"></div>
+    <span id="btnTekst">📥 Download ingevuld aanvraagformulier</span>
+  </button>
+  <div class="succes" id="succesDiv">
+    <div class="succes-icon">✅</div>
+    <div class="succes-titel">Excel succesvol aangemaakt!</div>
+    <div class="succes-desc">Het aanvraagformulier is ingevuld en gedownload.</div>
+  </div>
+  <div class="fout" id="foutDiv"></div>
+</div>
+<script>
+function v(id){var el=document.getElementById(id);return el?el.value.trim():'';}
+async function genereer(){
+  var btn=document.getElementById("genereerBtn");
+  var spinner=document.getElementById("spinner");
+  var btnTekst=document.getElementById("btnTekst");
+  var succesDiv=document.getElementById("succesDiv");
+  var foutDiv=document.getElementById("foutDiv");
+  btn.disabled=true;spinner.style.display="block";btnTekst.textContent="Excel wordt aangemaakt...";
+  succesDiv.style.display="none";foutDiv.style.display="none";
+  var data={projectnummer:v("projectnummer"),projectomschrijving:v("projectomschrijving"),relatie:v("relatie"),aanvraagdatum:v("aanvraagdatum"),indiendatum:v("indiendatum"),kleurafwerking:v("kleurafwerking"),kleur_kaders_buiten:v("kleur_kaders_buiten"),kleur_kaders_binnen:v("kleur_kaders_binnen"),kleur_draai_buiten:v("kleur_draai_buiten"),kleur_draai_binnen:v("kleur_draai_binnen"),gevel_serie:v("gevel_serie"),gevel_isolatieklasse:v("gevel_isolatieklasse"),voordeurpaneel:v("voordeurpaneel"),onderdorpel:v("onderdorpel"),kleur_deurkrukken:v("kleur_deurkrukken"),kleur_raamkrukken:v("kleur_raamkrukken"),kleur_scharnieren:v("kleur_scharnieren"),balkondeuren:v("balkondeuren"),deurkruk:v("deurkruk"),duwer:v("duwer"),cilinder_type_gevel:v("cilinder_type_gevel"),cilinder_merk_gevel:v("cilinder_merk_gevel"),cilinder_binnenbuitengevel:v("cilinder_binnenbuitengevel"),cilinder_binnenbuitenmerk_gevel:v("cilinder_binnenbuitenmerk_gevel"),knop_cilinder_gevel:v("knop_cilinder_gevel"),schuif_serie:v("schuif_serie"),afdekkap_boven:v("afdekkap_boven"),afdekkap_beneden:v("afdekkap_beneden"),cilinder_type_schuif:v("cilinder_type_schuif"),cilinder_merk_schuif:v("cilinder_merk_schuif"),kleur_deurgreep:v("kleur_deurgreep"),deurgreep_komgreep:v("deurgreep_komgreep"),cilinder_schuif:v("cilinder_schuif"),knop_cilinder_schuif:v("knop_cilinder_schuif"),soort_beglazing:v("soort_beglazing"),warm_edge:v("warm_edge"),zonwerend_merk:v("zonwerend_merk"),zonwerend_waarde:v("zonwerend_waarde"),geluidwerend_merk:v("geluidwerend_merk"),geluidwerend_waarde:v("geluidwerend_waarde"),nen3569_merk:v("nen3569_merk"),doorvalve
