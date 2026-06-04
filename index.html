@@ -185,7 +185,6 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
       </div>
       <div class="topbar-info">
         <div class="topbar-title">Intern Portaal</div>
-        <div class="topbar-sub">Schipper Kozijnen</div>
       </div>
     </div>
     <div class="topbar-right">
@@ -250,11 +249,17 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
 
     <div class="sectie-titel">Tools</div>
     <div class="tools-grid">
+      <a class="tool-card" href="alu-aanvraag.html">
+        <div class="tool-icon">🪟</div>
+        <div class="tool-naam">Aluminium Aanvraag →</div>
+        <div class="tool-desc">Vul het aluminium aanvraagformulier in en download direct het ingevulde Excel bestand.</div>
+        <span class="tool-badge">Excel download</span>
+      </a>
       <a class="tool-card" href="followup.html">
-  <div class="tool-icon">✉️</div>
-  <div class="tool-naam">Follow-up Generator →</div>
-  <div class="tool-desc">Genereer automatisch een professionele WhatsApp of e-mail follow-up op basis van klantgegevens. Kies toon en type.</div>
-  <span class="tool-badge">AI-powered</span>
+        <div class="tool-icon">✉️</div>
+        <div class="tool-naam">Follow-up Generator →</div>
+        <div class="tool-desc">Genereer automatisch een professionele WhatsApp of e-mail follow-up op basis van klantgegevens.</div>
+        <span class="tool-badge">AI-powered</span>
       </a>
       <a class="tool-card" href="https://dakkapel-offerte.vercel.app" target="_blank">
         <div class="tool-icon">🏠</div>
@@ -613,7 +618,6 @@ function slaWerknemerOp() {
   var fotoInput = document.getElementById("wnFotoInput");
   if (!naam) return;
   var foto_url = null;
-
   function doInsert(url) {
     sb.from("werknemer_week").delete().neq("id", 0).then(function() {
       sb.from("werknemer_week").insert({naam:naam, functie:functie, reden:reden, foto_url:url}).then(function() {
@@ -622,7 +626,6 @@ function slaWerknemerOp() {
       });
     });
   }
-
   if (fotoInput.files[0]) {
     var file = fotoInput.files[0];
     var bestandsnaam = Date.now() + "_" + file.name.replace(/\s/g,"_");
@@ -636,8 +639,7 @@ function slaWerknemerOp() {
     doInsert(foto_url);
   }
 }
-
-function laadBarometer() {
+  function laadBarometer() {
   sb.from("kpi_weken").select("*").order("week_nr",{ascending:true}).then(function(res) {
     var weekData = {};
     if (res.data) {
@@ -682,6 +684,23 @@ function laadBarometer() {
   });
 }
 
+function laadBarometerMetConfetti() {
+  sb.from("kpi_weken").select("*").order("week_nr",{ascending:true}).then(function(res) {
+    var weekData = {};
+    if (res.data) {
+      for (var i = 0; i < res.data.length; i++) {
+        weekData[res.data[i].week_nr] = parseFloat(res.data[i].bedrag) || 0;
+      }
+    }
+    var totaal = 0;
+    for (var i = 0; i < WEKEN.length; i++) { totaal += weekData[WEKEN[i]] || 0; }
+    var pct = Math.min(100, (totaal / DOELSTELLING) * 100);
+    var wasNietVol = parseFloat(document.getElementById("barometerPct").textContent) < 100;
+    laadBarometer();
+    if (pct >= 100 && wasNietVol) setTimeout(startConfetti, 1600);
+  });
+}
+
 function startConfetti() {
   var container = document.getElementById("confettiContainer");
   container.style.display = "block";
@@ -704,37 +723,14 @@ function slaKPIOp() {
   if (!week || week < 19 || week > 26 || !bedrag) return;
   sb.from("kpi_weken").select("*").eq("week_nr", week).then(function(res) {
     if (res.data && res.data.length > 0) {
-      sb.from("kpi_weken").update({bedrag:bedrag}).eq("week_nr",week).then(function() {
-        sluitKPI();
-        laadBarometerMetConfetti();
-      });
+      sb.from("kpi_weken").update({bedrag:bedrag}).eq("week_nr",week).then(function() { sluitKPI(); laadBarometerMetConfetti(); });
     } else {
-      sb.from("kpi_weken").insert({week_nr:week, bedrag:bedrag}).then(function() {
-        sluitKPI();
-        laadBarometerMetConfetti();
-      });
+      sb.from("kpi_weken").insert({week_nr:week, bedrag:bedrag}).then(function() { sluitKPI(); laadBarometerMetConfetti(); });
     }
   });
 }
 
-function laadBarometerMetConfetti() {
-  sb.from("kpi_weken").select("*").order("week_nr",{ascending:true}).then(function(res) {
-    var weekData = {};
-    if (res.data) {
-      for (var i = 0; i < res.data.length; i++) {
-        weekData[res.data[i].week_nr] = parseFloat(res.data[i].bedrag) || 0;
-      }
-    }
-    var totaal = 0;
-    for (var i = 0; i < WEKEN.length; i++) { totaal += weekData[WEKEN[i]] || 0; }
-    var pct = Math.min(100, (totaal / DOELSTELLING) * 100);
-    var wasNietVol = parseFloat(document.getElementById("barometerPct").textContent) < 100;
-    laadBarometer();
-    if (pct >= 100 && wasNietVol) {
-      setTimeout(startConfetti, 1600);
-    }
-  });
-}  function laadWeer() {
+function laadWeer() {
   fetch("https://api.open-meteo.com/v1/forecast?latitude=53.2194&longitude=6.5665&current=temperature_2m,weathercode&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=Europe/Amsterdam&forecast_days=5")
   .then(function(r) { return r.json(); })
   .then(function(d) {
@@ -785,12 +781,7 @@ function laadTipVanDeDag() {
 function checkSubsidie() {
   var pc = document.getElementById("subsidiePostcode").value.trim().toUpperCase();
   var el = document.getElementById("subsidieResult");
-  if (!pc || pc.length < 4) {
-    el.className = "subsidie-result rood";
-    el.style.display = "block";
-    el.innerHTML = "Voer een geldige postcode in";
-    return;
-  }
+  if (!pc || pc.length < 4) { el.className="subsidie-result rood";el.style.display="block";el.innerHTML="Voer een geldige postcode in";return; }
   var cijfers = parseInt(pc.substring(0,4));
   el.style.display = "block";
   if (cijfers >= 9600 && cijfers <= 9999) {
@@ -805,10 +796,7 @@ function checkSubsidie() {
 function laadPrikbord() {
   sb.from("berichten").select("*").eq("type","prikbord").order("datum",{ascending:false}).limit(10).then(function(res) {
     var el = document.getElementById("prikbordLijst");
-    if (res.error || !res.data || res.data.length === 0) {
-      el.innerHTML = "<div class='geen-items'>Nog geen berichten — schrijf het eerste!</div>";
-      return;
-    }
+    if (res.error || !res.data || res.data.length === 0) { el.innerHTML = "<div class='geen-items'>Nog geen berichten — schrijf het eerste!</div>"; return; }
     var html = "";
     for (var i = 0; i < res.data.length; i++) {
       var b = res.data[i];
@@ -841,10 +829,7 @@ function verwijderBericht(id) {
 
 function laadMededelingen() {
   sb.from("berichten").select("*").eq("type","mededeling").order("datum",{ascending:false}).limit(5).then(function(res) {
-    if (res.error || !res.data || res.data.length === 0) {
-      document.getElementById("mededelingenBlok").style.display = "none";
-      return;
-    }
+    if (res.error || !res.data || res.data.length === 0) { document.getElementById("mededelingenBlok").style.display = "none"; return; }
     document.getElementById("mededelingenBlok").style.display = "block";
     var html = "";
     for (var i = 0; i < res.data.length; i++) {
@@ -863,15 +848,8 @@ function verwijderMededeling(id) {
   sb.from("berichten").delete().eq("id", id).then(function() { laadMededelingen(); });
 }
 
-function openMededeling() {
-  if (!isAdmin) return;
-  document.getElementById("mededelingTekst").value = "";
-  document.getElementById("mededelingModal").classList.add("open");
-}
-
-function sluitMededeling() {
-  document.getElementById("mededelingModal").classList.remove("open");
-}
+function openMededeling() { if (!isAdmin) return; document.getElementById("mededelingTekst").value=""; document.getElementById("mededelingModal").classList.add("open"); }
+function sluitMededeling() { document.getElementById("mededelingModal").classList.remove("open"); }
 
 function plaatsMededeling() {
   if (!isAdmin) return;
@@ -879,10 +857,7 @@ function plaatsMededeling() {
   if (!tekst) return;
   var gebruikers = getGebruikers();
   var naam = gebruikers[huidigUser] ? gebruikers[huidigUser].naam : huidigUser;
-  sb.from("berichten").insert({type:"mededeling", auteur:naam, tekst:tekst}).then(function() {
-    sluitMededeling();
-    laadMededelingen();
-  });
+  sb.from("berichten").insert({type:"mededeling", auteur:naam, tekst:tekst}).then(function() { sluitMededeling(); laadMededelingen(); });
 }
 
 function openInstellingen() {
@@ -894,9 +869,7 @@ function openInstellingen() {
   document.getElementById("instellingenModal").classList.add("open");
 }
 
-function sluitInstellingen() {
-  document.getElementById("instellingenModal").classList.remove("open");
-}
+function sluitInstellingen() { document.getElementById("instellingenModal").classList.remove("open"); }
 
 function slaInstellingenOp() {
   var gebruiker = document.getElementById("instGebruiker").value.toLowerCase().trim();
@@ -904,20 +877,15 @@ function slaInstellingenOp() {
   var herhaal = document.getElementById("instHerhaalWw").value;
   var err = document.getElementById("modalError");
   var succ = document.getElementById("modalSuccess");
-  err.style.display = "none";
-  succ.style.display = "none";
+  err.style.display = "none"; succ.style.display = "none";
   var gebruikers = getGebruikers();
-  if (!gebruikers[gebruiker]) { err.textContent = "Gebruiker niet gevonden"; err.style.display = "block"; return; }
-  if (nieuw.length < 6) { err.textContent = "Wachtwoord minimaal 6 tekens"; err.style.display = "block"; return; }
-  if (nieuw !== herhaal) { err.textContent = "Wachtwoorden komen niet overeen"; err.style.display = "block"; return; }
+  if (!gebruikers[gebruiker]) { err.textContent="Gebruiker niet gevonden"; err.style.display="block"; return; }
+  if (nieuw.length < 6) { err.textContent="Wachtwoord minimaal 6 tekens"; err.style.display="block"; return; }
+  if (nieuw !== herhaal) { err.textContent="Wachtwoorden komen niet overeen"; err.style.display="block"; return; }
   var opgeslagen = {};
   try {
     var bestaand = localStorage.getItem("sk_gebruikers");
-    if (bestaand) {
-      var parsed = JSON.parse(bestaand);
-      var keys = Object.keys(parsed);
-      for (var i = 0; i < keys.length; i++) { opgeslagen[keys[i]] = parsed[keys[i]]; }
-    }
+    if (bestaand) { var parsed = JSON.parse(bestaand); var keys = Object.keys(parsed); for (var i = 0; i < keys.length; i++) { opgeslagen[keys[i]] = parsed[keys[i]]; } }
   } catch(e) {}
   opgeslagen[gebruiker] = {};
   var gkeys = Object.keys(gebruikers[gebruiker]);
@@ -934,10 +902,7 @@ function slaInstellingenOp() {
   var bestaandeUser = sessionStorage.getItem("sk_user");
   if (bestaandeUser) {
     var gebruikers = getGebruikers();
-    if (gebruikers[bestaandeUser]) {
-      toonPortaal(bestaandeUser);
-      return;
-    }
+    if (gebruikers[bestaandeUser]) { toonPortaal(bestaandeUser); return; }
   }
   document.getElementById("loginScherm").style.display = "flex";
 })();
