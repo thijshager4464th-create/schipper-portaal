@@ -94,12 +94,12 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
 .barometer-label{font-size:11px;color:#aaa;text-align:center;margin-top:4px}
 .barometer-info{flex:1;min-width:200px}
 .week-lijst{display:flex;flex-direction:column;gap:8px;margin-top:8px}
-.week-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;background:#f8f8f8}
+.week-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px}
 .week-kleur{width:14px;height:14px;border-radius:4px;flex-shrink:0}
 .week-naam{font-size:13px;font-weight:700;color:#1a1a2e;min-width:70px}
 .week-bedrag{font-size:13px;color:#555;flex:1}
 .week-pct{font-size:12px;font-weight:700}
-.kpi-totaal{background:linear-gradient(135deg,#fff0f0,#ffe0e0);border-radius:12px;padding:16px;margin-top:0;text-align:center}
+.kpi-totaal{background:linear-gradient(135deg,#fff0f0,#ffe0e0);border-radius:12px;padding:16px;text-align:center}
 .kpi-totaal-val{font-size:28px;font-weight:800;color:#E31E24}
 .kpi-totaal-label{font-size:12px;color:#888;margin-top:2px}
 .werknemer-card{background:linear-gradient(135deg,#1a1a2e,#2d2d4e);border-radius:16px;padding:28px;color:white;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
@@ -147,8 +147,8 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
 .upload-area:hover{border-color:#E31E24;background:#fff5f5}
 .upload-preview{width:80px;height:80px;border-radius:50%;object-fit:cover;margin:8px auto;display:block;border:3px solid #E31E24}
 .footer{text-align:center;padding:32px;font-size:12px;color:#bbb}
-@keyframes confetti-fall{0%{transform:translateY(-100px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
 .confetti-container{position:fixed;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:999;display:none}
+@keyframes confetti-fall{0%{transform:translateY(-100px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
 </style>
 </head>
 <body>
@@ -206,13 +206,11 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
       <div id="mededelingenLijst"></div>
     </div>
 
-    <!-- WERKNEMER VAN DE WEEK -->
     <div class="sectie-titel">⭐ Werknemer van de week</div>
     <div id="werknemerBlok">
       <div class="geen-items" style="background:white;border-radius:16px;padding:32px">Laden...</div>
     </div>
 
-    <!-- KPI BAROMETER -->
     <div class="sectie-titel">🎯 Doelstelling Week 19 — Week 26</div>
     <div class="card">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px">
@@ -247,7 +245,6 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
       </div>
     </div>
 
-    <!-- TOOLS -->
     <div class="sectie-titel">Tools</div>
     <div class="tools-grid">
       <a class="tool-card" href="https://dakkapel-offerte.vercel.app" target="_blank">
@@ -264,7 +261,6 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
       </a>
     </div>
 
-    <!-- WEER + SUBSIDIE -->
     <div class="sectie-titel">Weer & Subsidie Check</div>
     <div class="two-col">
       <div class="card">
@@ -294,7 +290,6 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
       </div>
     </div>
 
-    <!-- TIP + PRIKBORD -->
     <div class="sectie-titel">Tip van de dag & Prikbord</div>
     <div class="two-col">
       <div class="card">
@@ -316,7 +311,6 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
       </div>
     </div>
 
-    <!-- NIJ BEGUN + EXTERNE TOOLS -->
     <div class="sectie-titel">Nij Begun & Externe tools</div>
     <div class="three-col">
       <div class="card">
@@ -348,7 +342,6 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
       </div>
     </div>
 
-    <!-- NIEUWS -->
     <div class="sectie-titel">Nieuws & Info</div>
     <div class="nieuws-grid">
       <div class="nieuws-card"><span class="nieuws-tag tag-tip">Tip</span><div class="nieuws-titel">Versienummer verhogen bij wijzigingen</div><div class="nieuws-tekst">Stuur je een aangepaste offerte? Verhoog altijd het versienummer.</div></div>
@@ -452,11 +445,7 @@ const STANDAARD = {
   "admin":   { wachtwoord: "SchipperAdmin!", naam: "Admin" }
 };
 
-const WEEK_KLEUREN = {
-  19:"#E31E24",20:"#e67e22",21:"#f1c40f",
-  22:"#2ecc71",23:"#1abc9c",24:"#3498db",
-  25:"#9b59b6",26:"#E31E24"
-};
+const WEEK_KLEUREN = {19:"#E31E24",20:"#e67e22",21:"#f1c40f",22:"#2ecc71",23:"#1abc9c",24:"#3498db",25:"#9b59b6",26:"#E31E24"};
 const DOELSTELLING = 640000;
 const WEKEN = [19,20,21,22,23,24,25,26];
 
@@ -466,14 +455,14 @@ const TIPS = [
   "Stuur nooit een offerte zonder versienummer. V1, V2, V3 geeft de klant duidelijkheid.",
   "Benoem bij de offerte altijd de energiebesparing — klanten reageren positief op concrete getallen.",
   "Bij dakkapellen: check altijd of er zonnepanelen aanwezig zijn. Die moeten verwijderd worden vóór plaatsing.",
-  "Gebruik de 'Na Inmeten' versie na het technisch inmeten — geeft de klant meer vertrouwen.",
+  "Gebruik de Na Inmeten versie na het technisch inmeten — geeft de klant meer vertrouwen.",
   "Een orderbevestiging sturen na akkoord is professioneel en vermindert miscommunicatie achteraf.",
   "Vraag bij rolluiken altijd naar de gewenste aansluiting — links of rechts vanuit buitenzijde.",
   "Kozijnen vervangen tegelijk met de dakkapel bespaart de klant op montagekosten.",
   "Check via het omgevingsloket of de klant een vergunning nodig heeft voor de dakkapel.",
   "Bij triple glas is de Nij Begun subsidie tot 30% van de materiaalkosten — altijd vermelden!",
   "Klanten vragen vaak naar levertijd — gemiddeld 6-8 weken na technisch inmeten.",
-  "Een dakkapel achterzijde verhoogt de woningwaarde gemiddeld met €15.000-€25.000.",
+  "Een dakkapel achterzijde verhoogt de woningwaarde gemiddeld met 15.000 tot 25.000 euro.",
   "Noteer altijd de hellingshoek van het dak — dit bepaalt het type dakkapel.",
   "Stuur bij grotere projecten altijd ook bijlage A mee — klanten waarderen de technische details.",
   "Check het bouwjaar via BAG Viewer voordat je een bezoek plant — handig voor asbestcheck.",
@@ -484,9 +473,9 @@ const TIPS = [
 function getGebruikers() {
   try {
     const op = localStorage.getItem("sk_gebruikers");
-    if (op) return { ...STANDAARD, ...JSON.parse(op) };
+    if (op) return Object.assign({}, STANDAARD, JSON.parse(op));
   } catch(e) {}
-  return STANDAARD;
+  return Object.assign({}, STANDAARD);
 }
 
 let huidigUser = null;
@@ -520,21 +509,21 @@ function toonPortaal(user) {
   document.getElementById("loginScherm").style.display = "none";
   document.getElementById("portaal").style.display = "block";
   document.getElementById("welkomNaam").textContent = groet + ", " + u.naam.split(" ")[0] + "!";
-  document.getElementById("userBadge").textContent = "👋 " + u.naam;
+  document.getElementById("userBadge").textContent = "Welkom " + u.naam;
   document.getElementById("welkomDatum").innerHTML = datum + "<br><span style='font-size:11px;color:#ccc'>" + nu.toLocaleTimeString("nl-NL",{hour:"2-digit",minute:"2-digit"}) + "</span>";
 
   if (user === "admin" || user === "thijs") {
     const topbarRight = document.querySelector(".topbar-right");
-    const medBtn = document.createElement("button");
-    medBtn.className = "topbar-btn";
-    medBtn.textContent = "📢 Mededeling";
-    medBtn.onclick = openMededeling;
-    topbarRight.insertBefore(medBtn, topbarRight.firstChild);
     const wnBtn = document.createElement("button");
     wnBtn.className = "topbar-btn";
-    wnBtn.textContent = "⭐ Werknemer week";
+    wnBtn.textContent = "Werknemer week";
     wnBtn.onclick = openWerknemer;
     topbarRight.insertBefore(wnBtn, topbarRight.firstChild);
+    const medBtn = document.createElement("button");
+    medBtn.className = "topbar-btn";
+    medBtn.textContent = "Mededeling";
+    medBtn.onclick = openMededeling;
+    topbarRight.insertBefore(medBtn, topbarRight.firstChild);
     document.getElementById("kpiAdminBtn").style.display = "block";
   }
 
@@ -555,7 +544,6 @@ function logout() {
   document.getElementById("wachtwoord").value = "";
 }
 
-// WERKNEMER VAN DE WEEK
 async function laadWerknemer() {
   const { data, error } = await sb.from("werknemer_week").select("*").order("datum",{ascending:false}).limit(1);
   const el = document.getElementById("werknemerBlok");
@@ -565,28 +553,20 @@ async function laadWerknemer() {
   }
   const w = data[0];
   const fotoHTML = w.foto_url
-    ? `<img src="${w.foto_url}" class="werknemer-foto" onerror="this.outerHTML='<div class=\'werknemer-foto-placeholder\'>👤</div>'">`
-    : `<div class="werknemer-foto-placeholder">👤</div>`;
-  el.innerHTML = `<div class="werknemer-card">
-    ${fotoHTML}
-    <div>
-      <div class="werknemer-badge">⭐ Werknemer van de week</div>
-      <div class="werknemer-naam">${w.naam}</div>
-      <div class="werknemer-functie">${w.functie || ""}</div>
-      <div class="werknemer-reden">"${w.reden || ""}"</div>
-    </div>
-  </div>`;
+    ? "<img src='" + w.foto_url + "' class='werknemer-foto'>"
+    : "<div class='werknemer-foto-placeholder'>👤</div>";
+  el.innerHTML = "<div class='werknemer-card'>" + fotoHTML + "<div><div class='werknemer-badge'>Werknemer van de week</div><div class='werknemer-naam'>" + w.naam + "</div><div class='werknemer-functie'>" + (w.functie||"") + "</div><div class='werknemer-reden'>\"" + (w.reden||"") + "\"</div></div></div>";
 }
 
 function previewFoto(input) {
   const file = input.files[0];
   if (!file) return;
   const reader = new FileReader();
-  reader.onload = e => {
+  reader.onload = function(e) {
     const preview = document.getElementById("wnFotoPreview");
     preview.src = e.target.result;
     preview.style.display = "block";
-    document.getElementById("wnFotoTekst").textContent = "✓ Foto geselecteerd";
+    document.getElementById("wnFotoTekst").textContent = "Foto geselecteerd";
   };
   reader.readAsDataURL(file);
 }
@@ -596,7 +576,7 @@ function openWerknemer() {
   document.getElementById("wnFunctie").value = "";
   document.getElementById("wnReden").value = "";
   document.getElementById("wnFotoPreview").style.display = "none";
-  document.getElementById("wnFotoTekst").textContent = "📷 Klik om foto te uploaden";
+  document.getElementById("wnFotoTekst").textContent = "Klik om foto te uploaden";
   document.getElementById("wnFotoInput").value = "";
   document.getElementById("werknemerModal").classList.add("open");
 }
@@ -611,71 +591,50 @@ async function slaWerknemerOp() {
   const reden = document.getElementById("wnReden").value.trim();
   const fotoInput = document.getElementById("wnFotoInput");
   if (!naam) return;
-
   let foto_url = null;
-
   if (fotoInput.files[0]) {
     const file = fotoInput.files[0];
     const bestandsnaam = Date.now() + "_" + file.name.replace(/\s/g,"_");
-    const { data: uploadData, error: uploadError } = await sb.storage
-      .from("fotos")
-      .upload(bestandsnaam, file, { cacheControl: "3600", upsert: false });
-    if (!uploadError) {
-      const { data: urlData } = sb.storage.from("fotos").getPublicUrl(bestandsnaam);
-      foto_url = urlData.publicUrl;
+    const uploadResult = await sb.storage.from("fotos").upload(bestandsnaam, file, {cacheControl:"3600",upsert:false});
+    if (!uploadResult.error) {
+      const urlResult = sb.storage.from("fotos").getPublicUrl(bestandsnaam);
+      foto_url = urlResult.data.publicUrl;
     }
   }
-
-  await sb.from("werknemer_week").insert({ naam, functie, reden, foto_url });
+  await sb.from("werknemer_week").insert({naam, functie, reden, foto_url});
   sluitWerknemer();
   laadWerknemer();
 }
 
-// BAROMETER
 async function laadBarometer() {
-  const { data, error } = await sb.from("kpi_weken").select("*").order("week_nr",{ascending:true});
+  const { data } = await sb.from("kpi_weken").select("*").order("week_nr",{ascending:true});
   const weekData = {};
-  if (data) data.forEach(r => { weekData[r.week_nr] = parseFloat(r.bedrag) || 0; });
-
+  if (data) data.forEach(function(r) { weekData[r.week_nr] = parseFloat(r.bedrag) || 0; });
   let totaal = 0;
-  WEKEN.forEach(w => { totaal += weekData[w] || 0; });
+  WEKEN.forEach(function(w) { totaal += weekData[w] || 0; });
   const pct = Math.min(100, (totaal / DOELSTELLING) * 100);
-
   document.getElementById("kpiTotaalBedrag").textContent = "€ " + Math.round(totaal).toLocaleString("nl-NL");
   document.getElementById("barometerPct").textContent = Math.round(pct) + "%";
-
   const fill = document.getElementById("barometerFill");
   fill.innerHTML = "";
-
-  // Bouw segmenten van onder naar boven
-  const segmenten = WEKEN
-    .filter(w => (weekData[w] || 0) > 0)
-    .map(w => ({ week: w, pct: (weekData[w] / DOELSTELLING) * 100, kleur: WEEK_KLEUREN[w] }));
-
-  segmenten.forEach(s => {
-    const seg = document.createElement("div");
-    seg.className = "barometer-week-segment";
-    seg.style.height = s.pct + "%";
-    seg.style.background = s.kleur;
-    fill.appendChild(seg);
+  WEKEN.forEach(function(w) {
+    const bedrag = weekData[w] || 0;
+    if (bedrag > 0) {
+      const seg = document.createElement("div");
+      seg.className = "barometer-week-segment";
+      seg.style.height = ((bedrag / DOELSTELLING) * 100) + "%";
+      seg.style.background = WEEK_KLEUREN[w];
+      fill.appendChild(seg);
+    }
   });
-
-  setTimeout(() => { fill.style.height = pct + "%"; }, 100);
-
-  // Week lijst
-  document.getElementById("weekLijst").innerHTML = WEKEN.map(w => {
+  setTimeout(function() { fill.style.height = pct + "%"; }, 100);
+  document.getElementById("weekLijst").innerHTML = WEKEN.map(function(w) {
     const bedrag = weekData[w] || 0;
     const weekPct = bedrag > 0 ? Math.round((bedrag / DOELSTELLING) * 100) : 0;
     const isHuidig = w === 22;
-    return `<div class="week-item" style="background:${bedrag>0?WEEK_KLEUREN[w]+'22':'#f8f8f8'};border:${isHuidig?'2px solid '+WEEK_KLEUREN[w]:'1px solid transparent'}">
-      <div class="week-kleur" style="background:${bedrag>0?WEEK_KLEUREN[w]:'#ddd'}"></div>
-      <div class="week-naam">Week ${w}${isHuidig?' 📍':''}</div>
-      <div class="week-bedrag">${bedrag>0?'€ '+Math.round(bedrag).toLocaleString('nl-NL'):'— nog in te vullen'}</div>
-      <div class="week-pct" style="color:${bedrag>0?WEEK_KLEUREN[w]:'#ddd'}">${bedrag>0?weekPct+'%':''}</div>
-    </div>`;
+    return "<div class='week-item' style='background:" + (bedrag>0?WEEK_KLEUREN[w]+"22":"#f8f8f8") + ";border:" + (isHuidig?"2px solid "+WEEK_KLEUREN[w]:"1px solid transparent") + "'><div class='week-kleur' style='background:" + (bedrag>0?WEEK_KLEUREN[w]:"#ddd") + "'></div><div class='week-naam'>Week " + w + (isHuidig?" 📍":"") + "</div><div class='week-bedrag'>" + (bedrag>0?"€ "+Math.round(bedrag).toLocaleString("nl-NL"):"— nog in te vullen") + "</div><div class='week-pct' style='color:" + (bedrag>0?WEEK_KLEUREN[w]:"#ddd") + "'>" + (bedrag>0?weekPct+"%":"") + "</div></div>";
   }).join("");
-
-  if (pct >= 100) setTimeout(() => startConfetti(), 500);
+  if (pct >= 100) setTimeout(startConfetti, 500);
 }
 
 function startConfetti() {
@@ -684,10 +643,10 @@ function startConfetti() {
   const kleuren = ["#E31E24","#f39c12","#2ecc71","#3498db","#9b59b6","#1abc9c"];
   for (let i = 0; i < 150; i++) {
     const c = document.createElement("div");
-    c.style.cssText = `position:absolute;width:${Math.random()*10+5}px;height:${Math.random()*10+5}px;background:${kleuren[Math.floor(Math.random()*kleuren.length)]};left:${Math.random()*100}%;top:-20px;border-radius:${Math.random()>0.5?'50%':'0'};animation:confetti-fall ${Math.random()*3+2}s linear ${Math.random()*3}s forwards;`;
+    c.style.cssText = "position:absolute;width:" + (Math.random()*10+5) + "px;height:" + (Math.random()*10+5) + "px;background:" + kleuren[Math.floor(Math.random()*kleuren.length)] + ";left:" + (Math.random()*100) + "%;top:-20px;border-radius:" + (Math.random()>0.5?"50%":"0") + ";animation:confetti-fall " + (Math.random()*3+2) + "s linear " + (Math.random()*3) + "s forwards;";
     container.appendChild(c);
   }
-  setTimeout(() => { container.style.display="none"; container.innerHTML=""; }, 6000);
+  setTimeout(function() { container.style.display="none"; container.innerHTML=""; }, 6000);
 }
 
 function openKPI() { document.getElementById("kpiModal").classList.add("open"); }
@@ -699,9 +658,9 @@ async function slaKPIOp() {
   if (!week || week < 19 || week > 26 || !bedrag) return;
   const { data } = await sb.from("kpi_weken").select("*").eq("week_nr", week);
   if (data && data.length > 0) {
-    await sb.from("kpi_weken").update({ bedrag }).eq("week_nr", week);
+    await sb.from("kpi_weken").update({bedrag}).eq("week_nr", week);
   } else {
-    await sb.from("kpi_weken").insert({ week_nr: week, bedrag });
+    await sb.from("kpi_weken").insert({week_nr: week, bedrag});
   }
   sluitKPI();
   laadBarometer();
@@ -712,14 +671,14 @@ async function laadWeer() {
     const r = await fetch("https://api.open-meteo.com/v1/forecast?latitude=53.2194&longitude=6.5665&current=temperature_2m,weathercode&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=Europe/Amsterdam&forecast_days=5");
     const d = await r.json();
     const temp = Math.round(d.current.temperature_2m);
-    document.getElementById("weerVandaag").innerHTML = `<div class="weer-icon">${weerIcon(d.current.weathercode)}</div><div><div class="weer-temp">${temp}°C</div><div class="weer-desc">${weerDesc(d.current.weathercode)}</div></div>`;
+    document.getElementById("weerVandaag").innerHTML = "<div class='weer-icon'>" + weerIcon(d.current.weathercode) + "</div><div><div class='weer-temp'>" + temp + "°C</div><div class='weer-desc'>" + weerDesc(d.current.weathercode) + "</div></div>";
     const weekDagen = ["Zo","Ma","Di","Wo","Do","Vr","Za"];
     let weekHTML = "";
     for (let i = 0; i < 5; i++) {
       const dag = weekDagen[new Date(d.daily.time[i]).getDay()];
       const max = Math.round(d.daily.temperature_2m_max[i]);
       const min = Math.round(d.daily.temperature_2m_min[i]);
-      weekHTML += `<div class="weer-dag"><div class="weer-dag-naam">${dag}</div><div class="weer-dag-icon">${weerIcon(d.daily.weathercode[i])}</div><div class="weer-dag-temp">${max}°<span style="color:#bbb;font-weight:400">/${min}°</span></div></div>`;
+      weekHTML += "<div class='weer-dag'><div class='weer-dag-naam'>" + dag + "</div><div class='weer-dag-icon'>" + weerIcon(d.daily.weathercode[i]) + "</div><div class='weer-dag-temp'>" + max + "°<span style='color:#bbb;font-weight:400'>/" + min + "°</span></div></div>";
     }
     document.getElementById("weerWeek").innerHTML = weekHTML;
   } catch(e) {
@@ -727,8 +686,17 @@ async function laadWeer() {
   }
 }
 
-function weerIcon(c){if(c===0)return"☀️";if(c<=2)return"⛅";if(c===3)return"☁️";if(c<=49)return"🌫️";if(c<=59)return"🌦️";if(c<=69)return"🌧️";if(c<=79)return"❄️";if(c<=84)return"🌧️";if(c<=99)return"⛈️";return"🌡️";}
-function weerDesc(c){if(c===0)return"Helder";if(c<=2)return"Gedeeltelijk bewolkt";if(c===3)return"Bewolkt";if(c<=49)return"Mistig";if(c<=59)return"Lichte motregen";if(c<=69)return"Regen";if(c<=79)return"Sneeuw";if(c<=84)return"Buien";if(c<=99)return"Onweer";return"Wisselvallig";}
+function weerIcon(c) {
+  if(c===0)return"☀️";if(c<=2)return"⛅";if(c===3)return"☁️";
+  if(c<=49)return"🌫️";if(c<=59)return"🌦️";if(c<=69)return"🌧️";
+  if(c<=79)return"❄️";if(c<=84)return"🌧️";if(c<=99)return"⛈️";return"🌡️";
+}
+
+function weerDesc(c) {
+  if(c===0)return"Helder";if(c<=2)return"Gedeeltelijk bewolkt";if(c===3)return"Bewolkt";
+  if(c<=49)return"Mistig";if(c<=59)return"Lichte motregen";if(c<=69)return"Regen";
+  if(c<=79)return"Sneeuw";if(c<=84)return"Buien";if(c<=99)return"Onweer";return"Wisselvallig";
+}
 
 function laadTipVanDeDag() {
   const nu = new Date();
@@ -740,7 +708,7 @@ function laadTipVanDeDag() {
   let overigeHTML = "";
   for (let i = 1; i <= 3; i++) {
     const idx = (tipIdx + i) % TIPS.length;
-    overigeHTML += `<div style="padding:6px 0;border-bottom:1px solid #f0f0f0;color:#888">💡 ${TIPS[idx].substring(0,70)}...</div>`;
+    overigeHTML += "<div style='padding:6px 0;border-bottom:1px solid #f0f0f0;color:#888'>💡 " + TIPS[idx].substring(0,70) + "...</div>";
   }
   document.getElementById("overigeTips").innerHTML = overigeHTML;
 }
@@ -748,34 +716,42 @@ function laadTipVanDeDag() {
 function checkSubsidie() {
   const pc = document.getElementById("subsidiePostcode").value.trim().toUpperCase();
   const el = document.getElementById("subsidieResult");
-  if (!pc || pc.length < 4) { el.className="subsidie-result rood";el.style.display="block";el.innerHTML="❌ Voer een geldige postcode in";return; }
+  if (!pc || pc.length < 4) {
+    el.className = "subsidie-result rood";
+    el.style.display = "block";
+    el.innerHTML = "Voer een geldige postcode in";
+    return;
+  }
   const cijfers = parseInt(pc.substring(0,4));
   el.style.display = "block";
   if (cijfers >= 9600 && cijfers <= 9999) {
     el.className = "subsidie-result";
-    el.innerHTML = `✅ <strong>Postcode ${pc} komt waarschijnlijk in aanmerking voor Nij Begun subsidie!</strong><br><br><span style="font-size:12px;color:#555">Controleer via de <a href="https://subsidie-adviseur.vercel.app" target="_blank" style="color:#E31E24">Subsidie Adviseur tool</a> voor het exacte subsidiebedrag.</span>`;
+    el.innerHTML = "Postcode " + pc + " komt waarschijnlijk in aanmerking voor Nij Begun subsidie! Controleer via de Subsidie Adviseur tool voor het exacte subsidiebedrag.";
   } else {
     el.className = "subsidie-result rood";
-    el.innerHTML = `❌ <strong>Postcode ${pc} valt buiten het Nij Begun gebied.</strong><br><span style="font-size:12px;color:#888">Nij Begun subsidie is alleen beschikbaar in Groningen en omstreken.</span>`;
+    el.innerHTML = "Postcode " + pc + " valt buiten het Nij Begun gebied. Nij Begun subsidie is alleen beschikbaar in Groningen en omstreken.";
   }
 }
 
 async function laadPrikbord() {
   const { data, error } = await sb.from("berichten").select("*").eq("type","prikbord").order("datum",{ascending:false}).limit(10);
   const el = document.getElementById("prikbordLijst");
-  if (error || !data || data.length === 0) { el.innerHTML = "<div class='geen-items'>Nog geen berichten — schrijf het eerste!</div>"; return; }
-  el.innerHTML = data.map(b => {
+  if (error || !data || data.length === 0) {
+    el.innerHTML = "<div class='geen-items'>Nog geen berichten — schrijf het eerste!</div>";
+    return;
+  }
+  el.innerHTML = data.map(function(b) {
     const dt = new Date(b.datum).toLocaleString("nl-NL",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"});
     const kanVerwijderen = huidigUser === b.auteur.toLowerCase() || huidigUser === "admin";
-    return `<div class="prikbord-bericht">${kanVerwijderen?`<button class="delete-btn" onclick="verwijderBericht(${b.id})">✕</button>`:""}<div class="prikbord-auteur">${b.auteur}</div><div class="prikbord-tekst">${b.tekst}</div><div class="prikbord-datum">${dt}</div></div>`;
+    return "<div class='prikbord-bericht'>" + (kanVerwijderen?"<button class='delete-btn' onclick='verwijderBericht("+b.id+")'>✕</button>":"") + "<div class='prikbord-auteur'>" + b.auteur + "</div><div class='prikbord-tekst'>" + b.tekst + "</div><div class='prikbord-datum'>" + dt + "</div></div>";
   }).join("");
 }
 
 async function postBericht() {
   const tekst = document.getElementById("prikbordInput").value.trim();
   if (!tekst || !huidigUser) return;
-  const naam = getGebruikers()[huidigUser]?.naam || huidigUser;
-  await sb.from("berichten").insert({ type:"prikbord", auteur: naam, tekst });
+  const naam = getGebruikers()[huidigUser] ? getGebruikers()[huidigUser].naam : huidigUser;
+  await sb.from("berichten").insert({type:"prikbord", auteur: naam, tekst});
   document.getElementById("prikbordInput").value = "";
   laadPrikbord();
 }
@@ -787,22 +763,31 @@ async function verwijderBericht(id) {
 
 async function laadMededelingen() {
   const { data, error } = await sb.from("berichten").select("*").eq("type","mededeling").order("datum",{ascending:false}).limit(3);
-  if (error || !data || data.length === 0) { document.getElementById("mededelingenBlok").style.display = "none"; return; }
+  if (error || !data || data.length === 0) {
+    document.getElementById("mededelingenBlok").style.display = "none";
+    return;
+  }
   document.getElementById("mededelingenBlok").style.display = "block";
-  document.getElementById("mededelingenLijst").innerHTML = data.map(b => {
+  document.getElementById("mededelingenLijst").innerHTML = data.map(function(b) {
     const dt = new Date(b.datum).toLocaleString("nl-NL",{day:"numeric",month:"long",hour:"2-digit",minute:"2-digit"});
-    return `<div class="mededeling"><div class="mededeling-auteur">📢 ${b.auteur}</div><div class="mededeling-tekst">${b.tekst}</div><div class="mededeling-datum">${dt}</div></div>`;
+    return "<div class='mededeling'><div class='mededeling-auteur'>" + b.auteur + "</div><div class='mededeling-tekst'>" + b.tekst + "</div><div class='mededeling-datum'>" + dt + "</div></div>";
   }).join("");
 }
 
-function openMededeling() { document.getElementById("mededelingTekst").value=""; document.getElementById("mededelingModal").classList.add("open"); }
-function sluitMededeling() { document.getElementById("mededelingModal").classList.remove("open"); }
+function openMededeling() {
+  document.getElementById("mededelingTekst").value = "";
+  document.getElementById("mededelingModal").classList.add("open");
+}
+
+function sluitMededeling() {
+  document.getElementById("mededelingModal").classList.remove("open");
+}
 
 async function plaatsMededeling() {
   const tekst = document.getElementById("mededelingTekst").value.trim();
   if (!tekst) return;
-  const naam = getGebruikers()[huidigUser]?.naam || huidigUser;
-  await sb.from("berichten").insert({ type:"mededeling", auteur: naam, tekst });
+  const naam = getGebruikers()[huidigUser] ? getGebruikers()[huidigUser].naam : huidigUser;
+  await sb.from("berichten").insert({type:"mededeling", auteur: naam, tekst});
   sluitMededeling();
   laadMededelingen();
 }
@@ -816,7 +801,9 @@ function openInstellingen() {
   document.getElementById("instellingenModal").classList.add("open");
 }
 
-function sluitInstellingen() { document.getElementById("instellingenModal").classList.remove("open"); }
+function sluitInstellingen() {
+  document.getElementById("instellingenModal").classList.remove("open");
+}
 
 function slaInstellingenOp() {
   const gebruiker = document.getElementById("instGebruiker").value.toLowerCase().trim();
@@ -824,12 +811,30 @@ function slaInstellingenOp() {
   const herhaal = document.getElementById("instHerhaalWw").value;
   const err = document.getElementById("modalError");
   const succ = document.getElementById("modalSuccess");
-  err.style.display="none"; succ.style.display="none";
+  err.style.display = "none";
+  succ.style.display = "none";
   const gebruikers = getGebruikers();
-  if (!gebruikers[gebruiker]) { err.textContent="Gebruiker niet gevonden"; err.style.display="block"; return; }
-  if (nieuw.length < 6) { err.textContent="Wachtwoord minimaal 6 tekens"; err.style.display="block"; return; }
-  if (nieuw !== herhaal) { err.textContent="Wachtwoorden komen niet overeen"; err.style.display="block"; return; }
+  if (!gebruikers[gebruiker]) {
+    err.textContent = "Gebruiker niet gevonden";
+    err.style.display = "block";
+    return;
+  }
+  if (nieuw.length < 6) {
+    err.textContent = "Wachtwoord minimaal 6 tekens";
+    err.style.display = "block";
+    return;
+  }
+  if (nieuw !== herhaal) {
+    err.textContent = "Wachtwoorden komen niet overeen";
+    err.style.display = "block";
+    return;
+  }
   const opgeslagen = {};
-  try { Object.assign(opgeslagen, JSON.parse(localStorage.getItem("sk_gebruikers") || "{}")); } catch(e) {}
-  opgeslagen[gebruiker] = { ...gebruikers[gebruiker], wachtwoord: nieuw };
-  localStorage.setItem("sk_g
+  try {
+    const bestaand = localStorage.getItem("sk_gebruikers");
+    if (bestaand) Object.assign(opgeslagen, JSON.parse(bestaand));
+  } catch(e) {}
+  opgeslagen[gebruiker] = Object.assign({}, gebruikers[gebruiker], {wachtwoord: nieuw});
+  localStorage.setItem("sk_gebruikers", JSON.stringify(opgeslagen));
+  succ.style.display = "block";
+  document
