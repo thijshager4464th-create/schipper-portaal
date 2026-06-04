@@ -838,3 +838,10 @@ function slaInstellingenOp() {
   localStorage.setItem("sk_gebruikers", JSON.stringify(opgeslagen));
   succ.style.display = "block";
   document
+const bestaandeUser = sessionStorage.getItem("sk_user");
+if (bestaandeUser && getGebruikers()[bestaandeUser]) {
+  toonPortaal(bestaandeUser);
+}
+</script>
+</body>
+</html>
