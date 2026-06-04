@@ -14,7 +14,7 @@ module.exports = async function handler(req, res) {
     }
 
     // Check if Excel file exists
-    const templatePath = path.join(process.cwd(), "alu_aanvraag_excel_sheet_xltx.xlsx");
+    const templatePath = path.join(process.cwd(), "alu aanvraag excel sheet.xltx.xlsx");
     if (!fs.existsSync(templatePath)) {
       // List files in root to debug
       const files = fs.readdirSync(process.cwd());
