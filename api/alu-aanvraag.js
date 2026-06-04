@@ -85,6 +85,12 @@ module.exports = async function handler(req, res) {
     set("B55", d.bebouwd);
     set("B56", d.gebouwhoogte || "…");
 
+    // Herstel kolombreedte
+  ws['!cols'] = [
+    { wch: 45 },
+    { wch: 23 },
+    { wch: 29 }
+  ];
     const outBuffer = XLSX.write(wb, { type: "buffer", bookType: "xlsx" });
 
     res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
