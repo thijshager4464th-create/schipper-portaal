@@ -52,11 +52,13 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
   </div>
   <a href="index.html" class="topbar-back">← Terug naar portaal</a>
 </div>
+
 <div class="content">
   <div class="intro">
     <h1>Aluminium Aanvraag Formulier</h1>
-    <p>Vul de gegevens in en download direct het ingevulde Excel aanvraagformulier. Het bestand heeft exact hetzelfde formaat als het originele formulier.</p>
+    <p>Vul de gegevens in en download direct het ingevulde Excel aanvraagformulier. Exact hetzelfde formaat als het originele formulier.</p>
   </div>
+
   <div class="sectie">
     <div class="sectie-header">Projectgegevens</div>
     <div class="form-grid">
@@ -67,16 +69,30 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
       <div class="form-field"><label>Indiendatum</label><input type="date" id="indiendatum"></div>
     </div>
   </div>
+
   <div class="sectie">
     <div class="sectie-header">Kleurafwerking</div>
     <div class="form-grid">
-      <div class="form-field full"><label>Type kleurafwerking</label><select id="kleurafwerking"><option value="Niet van toepassing">Niet van toepassing</option><option value="70% standaard glans, préano">70% standaard glans, préano</option><option value="30% zijdeglans mat, préano">30% zijdeglans mat, préano</option><option value="structuurlak, préano">Structuurlak, préano</option><option value="20mu anodisatie">20mu anodisatie</option><option value="25mu anodisatie">25mu anodisatie</option></select></div>
+      <div class="form-field full">
+        <label>Type kleurafwerking</label>
+        <select id="kleurafwerking" onchange="document.getElementById('ral_veld').style.display=this.value==='ral'?'block':'none'">
+          <option value="Niet van toepassing">Niet van toepassing</option>
+          <option value="70% standaard glans, préano">70% standaard glans, préano</option>
+          <option value="30% zijdeglans mat, préano">30% zijdeglans mat, préano</option>
+          <option value="structuurlak, préano">Structuurlak, préano</option>
+          <option value="20mu anodisatie">20mu anodisatie</option>
+          <option value="25mu anodisatie">25mu anodisatie</option>
+          <option value="ral">RAL kleur (zelf invullen)</option>
+        </select>
+        <input type="text" id="ral_veld" placeholder="bijv. RAL 9010 of RAL 7016" style="display:none;margin-top:8px;padding:10px 14px;border:2px solid #E31E24;border-radius:8px;font-size:13px;outline:none;width:100%">
+      </div>
       <div class="form-field"><label>Kleur kaders — buitenzijde</label><select id="kleur_kaders_buiten"><option value="Niet van toepassing">Niet van toepassing</option><option value="Blank geanodiseerd (standaard)">Blank geanodiseerd (standaard)</option><option value="In kleur kozijn">In kleur kozijn</option></select></div>
       <div class="form-field"><label>Kleur kaders — binnenzijde</label><select id="kleur_kaders_binnen"><option value="Niet van toepassing">Niet van toepassing</option><option value="Blank geanodiseerd">Blank geanodiseerd</option><option value="RVS look">RVS look</option><option value="In kleur kozijn">In kleur kozijn</option></select></div>
       <div class="form-field"><label>Kleur draai-/schuifdelen — buitenzijde</label><select id="kleur_draai_buiten"><option value="Niet van toepassing">Niet van toepassing</option><option value="Grijs gelakt">Grijs gelakt</option><option value="RVS look">RVS look</option><option value="In kleur kozijn">In kleur kozijn</option><option value="Blank geanodiseerd (Reynaers)">Blank geanodiseerd (Reynaers)</option></select></div>
       <div class="form-field"><label>Kleur draai-/schuifdelen — binnenzijde</label><select id="kleur_draai_binnen"><option value="Niet van toepassing">Niet van toepassing</option><option value="Blank geanodiseerd">Blank geanodiseerd</option><option value="RVS look">RVS look</option><option value="In kleur schuifpui">In kleur schuifpui</option></select></div>
     </div>
   </div>
+
   <div class="sectie">
     <div class="sectie-header">Gevelkozijnen</div>
     <div class="form-grid">
@@ -97,6 +113,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
       <div class="form-field full"><label>Knop cilinder i.c.m. inbraakwerend glas</label><input type="text" id="knop_cilinder_gevel" placeholder="T.b.v. merk..."></div>
     </div>
   </div>
+
   <div class="sectie">
     <div class="sectie-header">Schuifpuien</div>
     <div class="form-grid">
@@ -111,6 +128,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
       <div class="form-field full"><label>Knop cilinder i.c.m. inbraakwerend glas (schuifpui)</label><input type="text" id="knop_cilinder_schuif" placeholder="T.b.v. merk..."></div>
     </div>
   </div>
+
   <div class="sectie">
     <div class="sectie-header">Beglazing</div>
     <div class="form-grid">
@@ -127,6 +145,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
       <div class="form-field full"><label>Paneel</label><select id="paneel"><option value="Niet van toepassing">Niet van toepassing</option><option value="Standaard ingeklemd paneel">Standaard ingeklemd paneel</option><option value="Vleugeloverlappend paneel">Vleugeloverlappend paneel</option></select><div class="note">LET OP: aangeven op tekening in welke kozijnen panelen komen</div></div>
     </div>
   </div>
+
   <div class="sectie">
     <div class="sectie-header">Situatie</div>
     <div class="form-grid">
@@ -135,10 +154,12 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
       <div class="form-field full"><label>Gebouwhoogte</label><input type="text" id="gebouwhoogte" placeholder="bijv. 8 meter"></div>
     </div>
   </div>
-  <button class="genereer-btn" id="genereerBtn" onclick="genereer()">
+
+  <button class="genereer-btn" id="genereerBtn">
     <div class="spinner" id="spinner"></div>
     <span id="btnTekst">📥 Download ingevuld aanvraagformulier</span>
   </button>
+
   <div class="succes" id="succesDiv">
     <div class="succes-icon">✅</div>
     <div class="succes-titel">Excel succesvol aangemaakt!</div>
@@ -147,13 +168,116 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
   <div class="fout" id="foutDiv"></div>
 </div>
 <script>
-function v(id){var el=document.getElementById(id);return el?el.value.trim():'';}
-async function genereer(){
-  var btn=document.getElementById("genereerBtn");
-  var spinner=document.getElementById("spinner");
-  var btnTekst=document.getElementById("btnTekst");
-  var succesDiv=document.getElementById("succesDiv");
-  var foutDiv=document.getElementById("foutDiv");
-  btn.disabled=true;spinner.style.display="block";btnTekst.textContent="Excel wordt aangemaakt...";
-  succesDiv.style.display="none";foutDiv.style.display="none";
-  var data={projectnummer:v("projectnummer"),projectomschrijving:v("projectomschrijving"),relatie:v("relatie"),aanvraagdatum:v("aanvraagdatum"),indiendatum:v("indiendatum"),kleurafwerking:v("kleurafwerking"),kleur_kaders_buiten:v("kleur_kaders_buiten"),kleur_kaders_binnen:v("kleur_kaders_binnen"),kleur_draai_buiten:v("kleur_draai_buiten"),kleur_draai_binnen:v("kleur_draai_binnen"),gevel_serie:v("gevel_serie"),gevel_isolatieklasse:v("gevel_isolatieklasse"),voordeurpaneel:v("voordeurpaneel"),onderdorpel:v("onderdorpel"),kleur_deurkrukken:v("kleur_deurkrukken"),kleur_raamkrukken:v("kleur_raamkrukken"),kleur_scharnieren:v("kleur_scharnieren"),balkondeuren:v("balkondeuren"),deurkruk:v("deurkruk"),duwer:v("duwer"),cilinder_type_gevel:v("cilinder_type_gevel"),cilinder_merk_gevel:v("cilinder_merk_gevel"),cilinder_binnenbuitengevel:v("cilinder_binnenbuitengevel"),cilinder_binnenbuitenmerk_gevel:v("cilinder_binnenbuitenmerk_gevel"),knop_cilinder_gevel:v("knop_cilinder_gevel"),schuif_serie:v("schuif_serie"),afdekkap_boven:v("afdekkap_boven"),afdekkap_beneden:v("afdekkap_beneden"),cilinder_type_schuif:v("cilinder_type_schuif"),cilinder_merk_schuif:v("cilinder_merk_schuif"),kleur_deurgreep:v("kleur_deurgreep"),deurgreep_komgreep:v("deurgreep_komgreep"),cilinder_schuif:v("cilinder_schuif"),knop_cilinder_schuif:v("knop_cilinder_schuif"),soort_beglazing:v("soort_beglazing"),warm_edge:v("warm_edge"),zonwerend_merk:v("zonwerend_merk"),zonwerend_waarde:v("zonwerend_waarde"),geluidwerend_merk:v("geluidwerend_merk"),geluidwerend_waarde:v("geluidwerend_waarde"),nen3569_merk:v("nen3569_merk"),doorvalve
+function v(id) {
+  var el = document.getElementById(id);
+  if (!el) return '';
+  if (id === 'kleurafwerking') {
+    if (el.value === 'ral') {
+      var ral = document.getElementById('ral_veld');
+      return ral ? ral.value.trim() : '';
+    }
+  }
+  return el.value.trim();
+}
+
+async function genereer() {
+  var btn = document.getElementById("genereerBtn");
+  var spinner = document.getElementById("spinner");
+  var btnTekst = document.getElementById("btnTekst");
+  var succesDiv = document.getElementById("succesDiv");
+  var foutDiv = document.getElementById("foutDiv");
+
+  btn.disabled = true;
+  spinner.style.display = "block";
+  btnTekst.textContent = "Excel wordt aangemaakt...";
+  succesDiv.style.display = "none";
+  foutDiv.style.display = "none";
+
+  var data = {
+    projectnummer: v("projectnummer"),
+    projectomschrijving: v("projectomschrijving"),
+    relatie: v("relatie"),
+    aanvraagdatum: v("aanvraagdatum"),
+    indiendatum: v("indiendatum"),
+    kleurafwerking: v("kleurafwerking"),
+    kleur_kaders_buiten: v("kleur_kaders_buiten"),
+    kleur_kaders_binnen: v("kleur_kaders_binnen"),
+    kleur_draai_buiten: v("kleur_draai_buiten"),
+    kleur_draai_binnen: v("kleur_draai_binnen"),
+    gevel_serie: v("gevel_serie"),
+    gevel_isolatieklasse: v("gevel_isolatieklasse"),
+    voordeurpaneel: v("voordeurpaneel"),
+    onderdorpel: v("onderdorpel"),
+    kleur_deurkrukken: v("kleur_deurkrukken"),
+    kleur_raamkrukken: v("kleur_raamkrukken"),
+    kleur_scharnieren: v("kleur_scharnieren"),
+    balkondeuren: v("balkondeuren"),
+    deurkruk: v("deurkruk"),
+    duwer: v("duwer"),
+    cilinder_type_gevel: v("cilinder_type_gevel"),
+    cilinder_merk_gevel: v("cilinder_merk_gevel"),
+    cilinder_binnenbuitengevel: v("cilinder_binnenbuitengevel"),
+    cilinder_binnenbuitenmerk_gevel: v("cilinder_binnenbuitenmerk_gevel"),
+    knop_cilinder_gevel: v("knop_cilinder_gevel"),
+    schuif_serie: v("schuif_serie"),
+    afdekkap_boven: v("afdekkap_boven"),
+    afdekkap_beneden: v("afdekkap_beneden"),
+    cilinder_type_schuif: v("cilinder_type_schuif"),
+    cilinder_merk_schuif: v("cilinder_merk_schuif"),
+    kleur_deurgreep: v("kleur_deurgreep"),
+    deurgreep_komgreep: v("deurgreep_komgreep"),
+    cilinder_schuif: v("cilinder_schuif"),
+    knop_cilinder_schuif: v("knop_cilinder_schuif"),
+    soort_beglazing: v("soort_beglazing"),
+    warm_edge: v("warm_edge"),
+    zonwerend_merk: v("zonwerend_merk"),
+    zonwerend_waarde: v("zonwerend_waarde"),
+    geluidwerend_merk: v("geluidwerend_merk"),
+    geluidwerend_waarde: v("geluidwerend_waarde"),
+    nen3569_merk: v("nen3569_merk"),
+    doorvalveilig_merk: v("doorvalveilig_merk"),
+    brandwerend_merk: v("brandwerend_merk"),
+    buitenbeglazing_merk: v("buitenbeglazing_merk"),
+    paneel: v("paneel"),
+    windgebied: v("windgebied"),
+    bebouwd: v("bebouwd"),
+    gebouwhoogte: v("gebouwhoogte")
+  };
+
+  try {
+    var response = await fetch("/api/alu-aanvraag", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(data)
+    });
+
+    if (!response.ok) throw new Error("Server error: " + response.status);
+
+    var blob = await response.blob();
+    var url = URL.createObjectURL(blob);
+    var projectnr = data.projectnummer || "aanvraag";
+    var filename = "alu_aanvraag_" + projectnr.replace(/[^a-z0-9]/gi, '_') + ".xlsx";
+
+    var link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    succesDiv.style.display = "block";
+  } catch(e) {
+    foutDiv.style.display = "block";
+    foutDiv.textContent = "Er ging iets mis: " + e.message;
+  }
+
+  spinner.style.display = "none";
+  btnTekst.textContent = "📥 Download ingevuld aanvraagformulier";
+  btn.disabled = false;
+}
+
+document.getElementById("genereerBtn").addEventListener("click", genereer);
+</script>
+</body>
+</html>
