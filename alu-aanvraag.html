@@ -75,7 +75,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
     <div class="form-grid">
       <div class="form-field full">
         <label>Type kleurafwerking</label>
-        <input type="text" id="kleurafwerking" placeholder="bijv. RAL 9010, 70% standaard glans, 20mu anodisatie">
+        <select id="kleurafwerking" onchange="document.getElementById('ral_veld').style.display=this.value==='ral'?'block':'none'">
           <option value="Niet van toepassing">Niet van toepassing</option>
           <option value="70% standaard glans, préano">70% standaard glans, préano</option>
           <option value="30% zijdeglans mat, préano">30% zijdeglans mat, préano</option>
