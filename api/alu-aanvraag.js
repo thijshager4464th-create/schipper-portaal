@@ -9,7 +9,7 @@ module.exports = async function handler(req, res) {
     const d = req.body;
 
     // Use the formatted template
-    const templatePath = path.join(process.cwd(), "alu_aanvraag_formatted.xlsx");
+    const templatePath = path.join(process.cwd(), "alu_aanvraag_clean_template.xlsx");
     if (!fs.existsSync(templatePath)) {
       const files = fs.readdirSync(process.cwd());
       return res.status(500).json({ error: "Template not found", files: files });
