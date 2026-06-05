@@ -2,6 +2,7 @@
   "name": "schipper-portaal",
   "version": "1.0.0",
   "dependencies": {
-    "xlsx": "^0.18.5"
+    "xlsx": "^0.18.5",
+    "exceljs": "^4.4.0"
   }
 }
