@@ -71,23 +71,8 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f5f5f5;min-height:1
   </div>
 
   <div class="sectie">
-    <div class="sectie-header">Kleurafwerking</div>
-    <div class="form-grid">
-      <div class="form-field full">
-        <label>Type kleurafwerking</label>
-        <select id="kleurafwerking" onchange="document.getElementById('ral_veld').style.display=this.value==='ral'?'block':'none'">
-          <option value="Niet van toepassing">Niet van toepassing</option>
-          <option value="70% standaard glans, préano">70% standaard glans, préano</option>
-          <option value="30% zijdeglans mat, préano">30% zijdeglans mat, préano</option>
-          <option value="structuurlak, préano">Structuurlak, préano</option>
-          <option value="20mu anodisatie">20mu anodisatie</option>
-          <option value="25mu anodisatie">25mu anodisatie</option>
-          <option value="ral">RAL kleur (zelf invullen)</option>
-        </select>
-        <input type="text" id="ral_veld" placeholder="bijv. RAL 9010 of RAL 7016" style="display:none;margin-top:8px;padding:10px 14px;border:2px solid #E31E24;border-radius:8px;font-size:13px;outline:none;width:100%">
-      </div>
-      <div class="form-field"><label>Kleur kaders — buitenzijde</label><select id="kleur_kaders_buiten"><option value="Niet van toepassing">Niet van toepassing</option><option value="Blank geanodiseerd (standaard)">Blank geanodiseerd (standaard)</option><option value="In kleur kozijn">In kleur kozijn</option></select></div>
-      <div class="form-field"><label>Kleur kaders — binnenzijde</label><select id="kleur_kaders_binnen"><option value="Niet van toepassing">Niet van toepassing</option><option value="Blank geanodiseerd">Blank geanodiseerd</option><option value="RVS look">RVS look</option><option value="In kleur kozijn">In kleur kozijn</option></select></div>
+    <div class="sectie-header">Kleurafwerking</div><div class="form-field"><label>Kleur kaders — buitenzijde</label><input type="text" id="kleur_kaders_buiten" placeholder="bijv. Blank geanodiseerd, In kleur kozijn"></div>
+<div class="form-field"><label>Kleur kaders — binnenzijde</label><input type="text" id="kleur_kaders_binnen" placeholder="bijv. Blank geanodiseerd, RVS look"></div>
       <div class="form-field"><label>Kleur draai-/schuifdelen — buitenzijde</label><select id="kleur_draai_buiten"><option value="Niet van toepassing">Niet van toepassing</option><option value="Grijs gelakt">Grijs gelakt</option><option value="RVS look">RVS look</option><option value="In kleur kozijn">In kleur kozijn</option><option value="Blank geanodiseerd (Reynaers)">Blank geanodiseerd (Reynaers)</option></select></div>
       <div class="form-field"><label>Kleur draai-/schuifdelen — binnenzijde</label><select id="kleur_draai_binnen"><option value="Niet van toepassing">Niet van toepassing</option><option value="Blank geanodiseerd">Blank geanodiseerd</option><option value="RVS look">RVS look</option><option value="In kleur schuifpui">In kleur schuifpui</option></select></div>
     </div>
