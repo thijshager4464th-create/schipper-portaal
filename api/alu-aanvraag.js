@@ -5,29 +5,22 @@ module.exports = async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).end();
 
   try {
-    // Check if xlsx is available
-    let XLSX;
-    try {
-      XLSX = require("xlsx");
-    } catch(e) {
-      return res.status(500).json({ error: "xlsx not found", detail: e.message });
-    }
-
-    // Check if Excel file exists
-    const templatePath = path.join(process.cwd(), "alu aanvraag excel sheet.xltx.xlsx");
-    if (!fs.existsSync(templatePath)) {
-      // List files in root to debug
-      const files = fs.readdirSync(process.cwd());
-      return res.status(500).json({ error: "Excel file not found", path: templatePath, files: files });
-    }
-
+    const XLSX = require("xlsx");
     const d = req.body;
+
+    // Use the formatted template
+    const templatePath = path.join(process.cwd(), "alu_aanvraag_formatted.xlsx");
+    if (!fs.existsSync(templatePath)) {
+      const files = fs.readdirSync(process.cwd());
+      return res.status(500).json({ error: "Template not found", files: files });
+    }
+
     const templateBuffer = fs.readFileSync(templatePath);
     const wb = XLSX.read(templateBuffer, { type: "buffer" });
     const ws = wb.Sheets["Invulblad"];
 
     function set(coord, value) {
-      if (!value || value === "") return;
+      if (!value || value === "" || value === "maak keuze") return;
       if (!ws[coord]) ws[coord] = { t: "s" };
       ws[coord].v = value;
       ws[coord].w = value;
@@ -55,42 +48,36 @@ module.exports = async function handler(req, res) {
     set("B22", d.deurkruk);
     set("B23", d.duwer);
     set("B24", d.cilinder_type_gevel);
-    set("C24", d.cilinder_merk_gevel ? "T.b.v merk " + d.cilinder_merk_gevel : "T.b.v merk …");
+    set("C24", d.cilinder_merk_gevel ? "T.b.v merk " + d.cilinder_merk_gevel : null);
     set("B25", d.cilinder_binnenbuitengevel);
-    set("C25", d.cilinder_binnenbuitenmerk_gevel ? "T.b.v merk " + d.cilinder_binnenbuitenmerk_gevel : "T.b.v merk …");
-    set("B26", d.knop_cilinder_gevel || "T.b.v merk …");
+    set("C25", d.cilinder_binnenbuitenmerk_gevel ? "T.b.v merk " + d.cilinder_binnenbuitenmerk_gevel : null);
+    set("B26", d.knop_cilinder_gevel);
     set("B28", d.schuif_serie);
     set("B29", d.afdekkap_boven);
     set("B30", d.afdekkap_beneden);
     set("B31", d.cilinder_type_schuif);
-    set("C31", d.cilinder_merk_schuif ? "T.b.v merk " + d.cilinder_merk_schuif : "T.b.v merk …");
+    set("C31", d.cilinder_merk_schuif ? "T.b.v merk " + d.cilinder_merk_schuif : null);
     set("B33", d.kleur_deurgreep);
     set("B34", d.deurgreep_komgreep);
     set("B35", d.cilinder_schuif);
     set("B36", d.cilinder_type_schuif);
-    set("C36", d.cilinder_merk_schuif ? "T.b.v merk " + d.cilinder_merk_schuif : "T.b.v merk …");
-    set("B37", d.knop_cilinder_schuif || "T.b.v merk …");
+    set("C36", d.cilinder_merk_schuif ? "T.b.v merk " + d.cilinder_merk_schuif : null);
+    set("B37", d.knop_cilinder_schuif);
     set("B39", d.soort_beglazing);
     set("B40", d.warm_edge);
-    set("B41", d.zonwerend_merk || "…");
-    set("B42", d.zonwerend_waarde || "...");
-    set("B43", d.geluidwerend_merk || "…");
-    set("B44", d.geluidwerend_waarde || "…");
-    set("B45", d.nen3569_merk || "…");
-    set("B46", d.doorvalveilig_merk || "…");
-    set("B47", d.brandwerend_merk || "…");
-    set("B48", d.buitenbeglazing_merk || "…");
+    set("B41", d.zonwerend_merk);
+    set("B42", d.zonwerend_waarde);
+    set("B43", d.geluidwerend_merk);
+    set("B44", d.geluidwerend_waarde);
+    set("B45", d.nen3569_merk);
+    set("B46", d.doorvalveilig_merk);
+    set("B47", d.brandwerend_merk);
+    set("B48", d.buitenbeglazing_merk);
     set("B49", d.paneel);
     set("B54", d.windgebied);
     set("B55", d.bebouwd);
-    set("B56", d.gebouwhoogte || "…");
+    set("B56", d.gebouwhoogte);
 
-    // Herstel kolombreedte
-  ws['!cols'] = [
-    { wch: 45 },
-    { wch: 23 },
-    { wch: 29 }
-  ];
     const outBuffer = XLSX.write(wb, { type: "buffer", bookType: "xlsx" });
 
     res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
