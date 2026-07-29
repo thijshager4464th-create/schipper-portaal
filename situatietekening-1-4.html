@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Situatietekening — Schipper Kozijnen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{
+  --rood:#D2232A;
+  --rood-donker:#A81B21;
+  --inkt:#2B2B2A;
+  --grijs:#6B6B68;
+  --lijn:#DEDCD6;
+  --papier:#FFFFFF;
+  --vloer:#F1F0EC;
+  --blauw:#3D8BD4;
+  --geel-frame:#F2E5C4;
+  --ok:#2E7D45;
+  --r:10px;
+  --schaduw:0 1px 2px rgba(43,43,42,.06),0 6px 20px rgba(43,43,42,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:'Barlow',system-ui,sans-serif;
+  background:var(--vloer);
+  color:var(--inkt);
+  font-size:15px;
+  display:flex;flex-direction:column;
+}
+button{font-family:inherit;cursor:pointer}
+input,select,textarea{font-family:inherit;font-size:14px}
+
+/* ---------- topbar ---------- */
+header.topbar{
+  background:var(--papier);
+  border-bottom:1px solid var(--lijn);
+  display:flex;align-items:center;gap:20px;
+  padding:10px 22px;flex:0 0 auto;
+}
+.merkblok{display:flex;align-items:center;gap:10px;text-decoration:none}
+.merkblok .logo-s{
+  width:34px;height:34px;border-radius:9px;overflow:hidden;
+  display:grid;place-items:center;flex:0 0 auto;
+}
+.merkblok .logo-s img{width:100%;height:100%;object-fit:contain}
+.merkblok .logo-s svg{width:20px;height:20px}
+.merkblok .naam{line-height:1}
+.merkblok .naam b{font-size:19px;font-weight:800;letter-spacing:-.3px;color:var(--inkt);display:block}
+.merkblok .naam span{font-size:10.5px;letter-spacing:3.5px;color:var(--grijs);text-transform:lowercase}
+.tool-titel{
+  font-family:'Barlow Condensed';font-weight:700;font-size:17px;
+  text-transform:uppercase;letter-spacing:1.5px;color:var(--grijs);
+  border-left:1px solid var(--lijn);padding-left:20px;
+}
+.topbar .spacer{flex:1}
+.projectinfo{display:flex;gap:14px;font-family:'IBM Plex Mono';font-size:12.5px;color:var(--grijs)}
+.projectinfo b{color:var(--inkt);font-weight:600}
+
+/* ---------- stappen als maatlijn ---------- */
+nav.stappen{
+  background:var(--papier);border-bottom:1px solid var(--lijn);
+  padding:14px 22px 12px;flex:0 0 auto;display:flex;justify-content:center;
+}
+.maatlijn{display:flex;align-items:center;max-width:760px;width:100%}
+.stap{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;background:none;border:none;min-width:120px}
+.stap .punt{
+  width:13px;height:13px;border-radius:50%;
+  border:2.5px solid var(--lijn);background:var(--papier);transition:.2s;
+}
+.stap .lbl{font-family:'Barlow Condensed';font-weight:600;font-size:14px;letter-spacing:1.2px;text-transform:uppercase;color:var(--grijs)}
+.stap.actief .punt{border-color:var(--rood);background:var(--rood);box-shadow:0 0 0 4px rgba(210,35,42,.14)}
+.stap.actief .lbl{color:var(--rood)}
+.stap.klaar .punt{border-color:var(--inkt);background:var(--inkt)}
+.stap.klaar .lbl{color:var(--inkt)}
+.maat-tussen{flex:1;height:2px;background:var(--lijn);position:relative;top:-11px;margin:0 -34px}
+.maat-tussen.klaar{background:var(--inkt)}
+
+/* ---------- panelen ---------- */
+main{flex:1;min-height:0;display:flex;flex-direction:column}
+.paneel{flex:1;min-height:0;display:none;flex-direction:column}
+.paneel.actief{display:flex}
+.paneel-scroll{flex:1;overflow:auto;padding:26px 22px 40px}
+.midden{max-width:1060px;margin:0 auto}
+
+h2.kop{font-family:'Barlow Condensed';font-weight:700;font-size:24px;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px}
+p.sub{color:var(--grijs);margin-bottom:20px;max-width:640px}
+
+/* upload */
+.dropzone{
+  border:2px dashed var(--lijn);border-radius:var(--r);
+  background:var(--papier);padding:46px 30px;text-align:center;
+  transition:.2s;cursor:pointer;
+}
+.dropzone:hover,.dropzone.over{border-color:var(--rood);background:#FFF8F8}
+.dropzone .groot{font-weight:700;font-size:17px;margin-bottom:5px}
+.dropzone .klein{color:var(--grijs);font-size:13.5px}
+.dropzone input{display:none}
+.upload-rij{display:grid;grid-template-columns:1.4fr 1fr;gap:18px}
+@media(max-width:820px){.upload-rij{grid-template-columns:1fr}}
+.kaart{background:var(--papier);border:1px solid var(--lijn);border-radius:var(--r);box-shadow:var(--schaduw);padding:20px}
+.kaart h3{font-family:'Barlow Condensed';font-weight:700;font-size:16px;letter-spacing:1.2px;text-transform:uppercase;color:var(--grijs);margin-bottom:12px}
+.status-regel{display:flex;align-items:center;gap:10px;font-size:14px;padding:7px 0;border-bottom:1px dashed var(--lijn)}
+.status-regel:last-child{border:none}
+.status-regel .dot{width:8px;height:8px;border-radius:50%;background:var(--lijn);flex:0 0 auto}
+.status-regel.ok .dot{background:var(--ok)}
+.status-regel.bezig .dot{background:var(--rood);animation:pols 1s infinite}
+@keyframes pols{50%{opacity:.3}}
+.fotomini{max-width:100%;max-height:170px;border-radius:6px;border:1px solid var(--lijn);display:block;margin-top:10px}
+
+/* kozijn kaarten */
+.kozijn-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(235px,1fr));gap:16px;margin-top:6px}
+.kozijn-kaart{background:var(--papier);border:1px solid var(--lijn);border-radius:var(--r);box-shadow:var(--schaduw);overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.kozijn-kaart .beeld{
+  height:190px;min-height:190px;max-height:190px;display:flex;align-items:center;justify-content:center;
+  background:repeating-conic-gradient(#FAFAF8 0 25%,#F3F2EE 0 50%) 0 0/18px 18px;
+  border-bottom:1px solid var(--lijn);position:relative;overflow:hidden;
+}
+.kozijn-kaart .beeld img{
+  width:auto;height:auto;max-width:88%;max-height:168px;object-fit:contain;
+  filter:drop-shadow(0 2px 6px rgba(0,0,0,.14));
+}
+.kozijn-kaart .merk-badge{
+  position:absolute;top:9px;left:9px;background:var(--inkt);color:#fff;
+  font-family:'Barlow Condensed';font-weight:700;font-size:15px;letter-spacing:1px;
+  padding:2px 10px;border-radius:5px;
+}
+.kozijn-kaart .info{padding:11px 13px 13px;display:flex;flex-direction:column;gap:8px}
+.kozijn-kaart .plaats{font-size:13px;color:var(--grijs);min-height:16px}
+.maten-rij{display:flex;align-items:center;gap:6px;font-family:'IBM Plex Mono';font-size:13px}
+.maten-rij input{
+  width:64px;min-width:56px;flex:0 0 auto;border:1px solid var(--lijn);border-radius:6px;padding:5px 6px;
+  font-family:'IBM Plex Mono';font-size:13px;text-align:right;
+}
+.maten-rij input:focus{outline:none;border-color:var(--rood)}
+.maten-rij .mm{color:var(--grijs);font-size:11.5px}
+.kozijn-kaart .acties{display:flex;gap:8px}
+.knopje{
+  flex:1;border:1px solid var(--lijn);background:var(--papier);border-radius:7px;
+  padding:6px 8px;font-size:12.5px;font-weight:600;color:var(--inkt);transition:.15s;
+}
+.knopje:hover{border-color:var(--inkt)}
+.knopje.uit{opacity:.45}
+
+/* crop dialoog */
+dialog{border:none;border-radius:14px;box-shadow:0 24px 70px rgba(0,0,0,.3);padding:0;max-width:min(860px,94vw)}
+dialog::backdrop{background:rgba(30,30,29,.5)}
+.dlg-kop{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--lijn)}
+.dlg-kop h3{font-family:'Barlow Condensed';font-weight:700;font-size:18px;letter-spacing:1px;text-transform:uppercase}
+.dlg-body{padding:16px 18px;overflow:auto}
+#cropWrap{position:relative;display:inline-block;max-width:100%}
+#cropCanvas{max-width:100%;display:block;border:1px solid var(--lijn)}
+#cropBox{position:absolute;border:2px solid var(--rood);background:rgba(210,35,42,.07);cursor:move}
+#cropBox .h{position:absolute;width:13px;height:13px;background:#fff;border:2px solid var(--rood);border-radius:3px}
+#cropBox .h.nw{left:-8px;top:-8px;cursor:nwse-resize}
+#cropBox .h.ne{right:-8px;top:-8px;cursor:nesw-resize}
+#cropBox .h.sw{left:-8px;bottom:-8px;cursor:nesw-resize}
+#cropBox .h.se{right:-8px;bottom:-8px;cursor:nwse-resize}
+.dlg-voet{display:flex;justify-content:flex-end;gap:10px;padding:13px 18px;border-top:1px solid var(--lijn)}
+
+.knop{
+  border:none;border-radius:8px;padding:10px 20px;font-weight:700;font-size:14px;
+  background:var(--rood);color:#fff;transition:.15s;letter-spacing:.2px;
+}
+.knop:hover{background:var(--rood-donker)}
+.knop.stil{background:var(--papier);color:var(--inkt);border:1px solid var(--lijn)}
+.knop.stil:hover{border-color:var(--inkt);background:var(--papier)}
+.knop:disabled{opacity:.45;cursor:not-allowed}
+.voetbalk{
+  flex:0 0 auto;background:var(--papier);border-top:1px solid var(--lijn);
+  padding:12px 22px;display:flex;justify-content:space-between;align-items:center;gap:12px;
+}
+.voetbalk .hint{color:var(--grijs);font-size:13px}
+
+/* ---------- editor ---------- */
+.editor{flex:1;min-height:0;display:flex}
+.zijbalk{
+  width:272px;flex:0 0 auto;background:var(--papier);border-right:1px solid var(--lijn);
+  display:flex;flex-direction:column;min-height:0;
+}
+.zijbalk .tabs{display:flex;border-bottom:1px solid var(--lijn)}
+.zijbalk .tabs button{
+  flex:1;background:none;border:none;padding:11px 4px;
+  font-family:'Barlow Condensed';font-weight:700;font-size:14px;letter-spacing:1.2px;
+  text-transform:uppercase;color:var(--grijs);border-bottom:2.5px solid transparent;
+}
+.zijbalk .tabs button.actief{color:var(--rood);border-bottom-color:var(--rood)}
+.zijbalk .inhoud{flex:1;overflow:auto;padding:14px}
+.zb-sectie{display:none}
+.zb-sectie.actief{display:block}
+.mini-kozijn{
+  display:flex;align-items:center;gap:11px;border:1px solid var(--lijn);border-radius:9px;
+  padding:8px 10px;margin-bottom:9px;background:var(--papier);cursor:pointer;transition:.15s;
+}
+.mini-kozijn:hover{border-color:var(--rood)}
+.mini-kozijn img{width:44px;height:52px;object-fit:contain}
+.mini-kozijn .t b{font-family:'Barlow Condensed';font-size:15px;letter-spacing:.5px}
+.mini-kozijn .t div{font-family:'IBM Plex Mono';font-size:11px;color:var(--grijs)}
+.mini-kozijn .plus{margin-left:auto;color:var(--rood);font-weight:800;font-size:18px}
+.rz-item{
+  display:flex;align-items:center;gap:10px;border:1px solid var(--lijn);border-radius:9px;
+  padding:8px 10px;margin-bottom:8px;cursor:pointer;transition:.15s;background:var(--papier);
+}
+.rz-item:hover{border-color:var(--rood)}
+.rz-item .sw{width:34px;height:20px;border:1px solid #bbb;flex:0 0 auto;border-radius:3px;background:#fff}
+.rz-item .nm{font-size:13.5px;font-weight:600;flex:1;line-height:1.15}
+.rz-item .del{border:none;background:none;color:var(--grijs);font-size:15px;padding:2px 5px;border-radius:5px}
+.rz-item .del:hover{color:var(--rood);background:#FDEEEE}
+.zb-voegtoe{margin-top:12px;border-top:1px dashed var(--lijn);padding-top:12px}
+.zb-voegtoe .veld{margin-bottom:8px}
+.zb-voegtoe label{font-size:11.5px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--grijs);display:block;margin-bottom:3px}
+.zb-voegtoe input,.zb-voegtoe select{width:100%;border:1px solid var(--lijn);border-radius:7px;padding:7px 9px}
+.zb-voegtoe input[type=color]{padding:2px;height:34px}
+.veld-duo{display:flex;gap:8px}
+.veld-duo>*{flex:1}
+
+.tekengebied{flex:1;min-width:0;display:flex;flex-direction:column;background:#E9E8E3}
+.werkbalk{
+  display:flex;align-items:center;gap:8px;padding:8px 14px;
+  background:var(--papier);border-bottom:1px solid var(--lijn);flex-wrap:wrap;
+}
+.wb-knop{
+  border:1px solid var(--lijn);background:var(--papier);border-radius:7px;
+  padding:6px 11px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px;
+}
+.wb-knop:hover{border-color:var(--inkt)}
+.wb-knop.rood{color:var(--rood);border-color:#F2C7C9}
+.wb-knop.rood:hover{border-color:var(--rood)}
+.wb-scheiding{width:1px;height:22px;background:var(--lijn)}
+.wb-schaal{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--grijs)}
+.wb-schaal input[type=range]{width:120px;accent-color:var(--rood)}
+.wb-schaal .waarde{font-family:'IBM Plex Mono';font-size:12px;color:var(--inkt);min-width:44px}
+.canvas-scroll{flex:1;overflow:auto;display:grid;place-items:center;padding:24px}
+#blad{background:#fff;box-shadow:0 3px 14px rgba(0,0,0,.16);cursor:default}
+.sel-info{margin-left:auto;font-size:12.5px;color:var(--grijs);font-family:'IBM Plex Mono'}
+
+/* export */
+.export-vlak{display:grid;grid-template-columns:1fr 300px;gap:18px}
+@media(max-width:900px){.export-vlak{grid-template-columns:1fr}}
+#exportPreview{width:100%;border:1px solid var(--lijn);border-radius:8px;background:#fff;box-shadow:var(--schaduw)}
+.dl-lijst{display:flex;flex-direction:column;gap:10px}
+.dl-lijst .knop{width:100%;text-align:center}
+.leeg{
+  text-align:center;color:var(--grijs);padding:60px 20px;border:2px dashed var(--lijn);
+  border-radius:var(--r);font-size:14px;
+}
+.toast{
+  position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:var(--inkt);color:#fff;padding:10px 20px;border-radius:9px;font-size:14px;
+  transition:.25s;opacity:0;pointer-events:none;z-index:99;
+}
+.toast.zien{transform:translateX(-50%) translateY(0);opacity:1}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <span class="merkblok">
+    <span class="logo-s"><img src="data:image/png;base64,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" alt="Schipper Kozijnen"></span>
+    <span class="naam"><b>Schipper</b><span>kozijnen</span></span>
+  </span>
+  <span class="tool-titel">Situatietekening</span>
+  <span class="spacer"></span>
+  <span class="projectinfo">
+    <span>Project <b id="piProject">—</b></span>
+    <span>Klant <b id="piKlant">—</b></span>
+  </span>
+</header>
+
+<nav class="stappen">
+  <div class="maatlijn">
+    <button class="stap actief" data-stap="1"><span class="punt"></span><span class="lbl">1 · Uploaden</span></button>
+    <div class="maat-tussen" id="mt1"></div>
+    <button class="stap" data-stap="2"><span class="punt"></span><span class="lbl">2 · Kozijnen</span></button>
+    <div class="maat-tussen" id="mt2"></div>
+    <button class="stap" data-stap="3"><span class="punt"></span><span class="lbl">3 · Tekening</span></button>
+    <div class="maat-tussen" id="mt3"></div>
+    <button class="stap" data-stap="4"><span class="punt"></span><span class="lbl">4 · Export</span></button>
+  </div>
+</nav>
+
+<main>
+
+<!-- ========= STAP 1 ========= -->
+<section class="paneel actief" id="paneel1">
+  <div class="paneel-scroll"><div class="midden">
+    <h2 class="kop">Kozijnomschrijving uploaden</h2>
+    <p class="sub">Upload de kozijnomschrijving (PDF). De tool leest per merk de tekening, de maten en de plaats automatisch uit. Voeg daarnaast een gevelfoto toe als referentie op de tekening.</p>
+    <div class="upload-rij">
+      <div>
+        <div class="dropzone" id="dzPdf">
+          <div class="groot">Sleep de kozijnomschrijving hierheen</div>
+          <div class="klein">of klik om een PDF te kiezen</div>
+          <input type="file" id="inpPdf" accept="application/pdf">
+        </div>
+        <div class="kaart" style="margin-top:16px">
+          <h3>Verwerking</h3>
+          <div id="pdfStatus"><div class="status-regel"><span class="dot"></span><span>Nog geen PDF gekozen</span></div></div>
+        </div>
+      </div>
+      <div>
+        <div class="dropzone" id="dzFoto" style="padding:30px 20px">
+          <div class="groot">Gevelfoto</div>
+          <div class="klein">optioneel · klik of sleep (JPG/PNG)</div>
+          <input type="file" id="inpFoto" accept="image/*">
+        </div>
+        <div class="kaart" style="margin-top:16px" id="fotoKaart" hidden>
+          <h3>Foto van bestaande situatie</h3>
+          <img class="fotomini" id="fotoMini" alt="Gevelfoto">
+        </div>
+      </div>
+    </div>
+  </div></div>
+  <div class="voetbalk">
+    <span class="hint">De maten (mm) uit de PDF bepalen de schaal — controleer ze in stap 2.</span>
+    <button class="knop" id="naarStap2" disabled>Naar kozijnen →</button>
+  </div>
+</section>
+
+<!-- ========= STAP 2 ========= -->
+<section class="paneel" id="paneel2">
+  <div class="paneel-scroll"><div class="midden">
+    <h2 class="kop">Gevonden kozijnen</h2>
+    <p class="sub">Per merk is de tekening uitgeknipt en zijn de maten uit de tekst gelezen. Controleer de b × h (mm) — die bepalen de onderlinge schaal — en pas het uitsnijkader aan als er te veel of te weinig is meegeknipt.</p>
+    <div class="kozijn-grid" id="kozijnGrid"></div>
+  </div></div>
+  <div class="voetbalk">
+    <span class="hint">Zet een merk uit als het niet op deze gevel hoort.</span>
+    <button class="knop" id="naarStap3">Naar tekening →</button>
+  </div>
+</section>
+
+<!-- ========= STAP 3 ========= -->
+<section class="paneel" id="paneel3">
+  <div class="editor">
+    <aside class="zijbalk">
+      <div class="tabs">
+        <button class="actief" data-zb="kozijnen">Kozijnen</button>
+        <button data-zb="randzaken">Randzaken</button>
+        <button data-zb="extra">Extra</button>
+      </div>
+      <div class="inhoud">
+        <div class="zb-sectie actief" id="zbKozijnen"></div>
+        <div class="zb-sectie" id="zbRandzaken">
+          <div id="rzLijst"></div>
+          <div class="zb-voegtoe">
+            <label style="font-size:11.5px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--grijs);margin-bottom:8px;display:block">Eigen randzaak toevoegen</label>
+            <div class="veld"><label>Naam</label><input id="rzNaam" placeholder="bijv. Radiator demonteren"></div>
+            <div class="veld-duo">
+              <div class="veld"><label>Stijl</label>
+                <select id="rzStijl">
+                  <option value="hlijnen">Vlak · horizontale delen</option>
+                  <option value="vlijnen">Vlak · verticale delen</option>
+                  <option value="diagonaal">Vlak · diagonale arcering</option>
+                  <option value="kruis">Vlak · kruis-arcering</option>
+                  <option value="stippen">Vlak · stippen</option>
+                  <option value="steen">Vlak · metselwerk</option>
+                  <option value="vlak">Vlak · egaal gevuld</option>
+                  <option value="kader">Vlak · alleen kader</option>
+                  <option value="lijn">Lijn · doorgetrokken</option>
+                  <option value="stippel">Lijn · gestippeld</option>
+                  <option value="dubbellijn">Lijn · dubbel</option>
+                  <option value="zigzag">Lijn · zigzag</option>
+                  <option value="cirkel">Vorm · cirkel/ovaal</option>
+                  <option value="driehoek">Vorm · driehoek</option>
+                  <option value="ruit">Vorm · ruit</option>
+                  <option value="vijfhoek">Vorm · vijfhoek</option>
+                  <option value="zeshoek">Vorm · zeshoek</option>
+                  <option value="ster">Vorm · ster</option>
+                  <option value="pijl-rechts">Vorm · pijl rechts</option>
+                  <option value="pijl-links">Vorm · pijl links</option>
+                  <option value="pijl-boven">Vorm · pijl boven</option>
+                  <option value="pijl-onder">Vorm · pijl onder</option>
+                  <option value="notitie">Notitie met pijl</option>
+                </select>
+              </div>
+              <div class="veld"><label>Kleur</label><input type="color" id="rzKleur" value="#D2232A"></div>
+            </div>
+            <div class="veld-duo">
+              <div class="veld"><label>Vulkleur (vlakken)</label><input type="color" id="rzVul" value="#FFFFFF"></div>
+              <div class="veld"><label>Lijndikte</label>
+                <select id="rzDikte"><option value="dun">Dun</option><option value="normaal" selected>Normaal</option><option value="dik">Dik</option></select>
+              </div>
+            </div>
+            <button class="knop stil" style="width:100%" id="rzToevoegen">+ Toevoegen aan bibliotheek</button>
+          </div>
+        </div>
+        <div class="zb-sectie" id="zbExtra">
+          <div class="rz-item" id="exFoto"><div class="sw" style="background:linear-gradient(135deg,#cfe3f5,#8fb6d8)"></div><div class="nm">Gevelfoto plaatsen</div></div>
+          <div class="rz-item" id="exLabel"><div class="sw" style="display:grid;place-items:center;font-family:'Barlow Condensed';font-weight:700">A</div><div class="nm">Merk-letter (label)</div></div>
+          <div class="rz-item" id="exTekst"><div class="sw" style="display:grid;place-items:center;font-size:11px">Tt</div><div class="nm">Losse tekst</div></div>
+          <p class="sub" style="font-size:12.5px;margin-top:14px">De legenda en het titelblok staan altijd op de tekening en vullen zichzelf. Versleep ze gerust.</p>
+        </div>
+      </div>
+    </aside>
+    <div class="tekengebied">
+      <div class="werkbalk">
+        <button class="wb-knop" id="wbAchter">↧ Naar achtergrond</button>
+        <button class="wb-knop" id="wbVoor">↥ Naar voorgrond</button>
+        <button class="wb-knop" id="wbDup">⧉ Dupliceren</button>
+        <button class="wb-knop rood" id="wbDel">✕ Verwijderen</button>
+        <div class="wb-scheiding"></div>
+        <div class="wb-schaal">
+          <span>Schaal</span>
+          <input type="range" id="wbSchaal" min="15" max="120" value="45">
+          <span class="waarde" id="wbSchaalWaarde">1:50</span>
+        </div>
+        <span class="sel-info" id="selInfo"></span>
+      </div>
+      <div class="canvas-scroll"><canvas id="blad" width="1188" height="840"></canvas></div>
+    </div>
+  </div>
+  <div class="voetbalk">
+    <span class="hint">Slepen = verplaatsen · hoekgreep = formaat · Delete = verwijderen · dubbelklik notitie/tekst = bewerken</span>
+    <button class="knop" id="naarStap4">Naar export →</button>
+  </div>
+</section>
+
+<!-- ========= STAP 4 ========= -->
+<section class="paneel" id="paneel4">
+  <div class="paneel-scroll"><div class="midden">
+    <h2 class="kop">Export</h2>
+    <p class="sub">Controleer de tekening en download hem als PDF (voor in het dossier) of PNG (voor in een mail of offerte).</p>
+    <div class="export-vlak">
+      <img id="exportPreview" alt="Voorbeeld situatietekening">
+      <div class="dl-lijst">
+        <div class="kaart">
+          <h3>Downloaden</h3>
+          <div class="dl-lijst">
+            <button class="knop" id="dlPdf">Download PDF (A4 liggend)</button>
+            <button class="knop stil" id="dlPng">Download PNG</button>
+          </div>
+        </div>
+        <div class="kaart">
+          <h3>Titelblok</h3>
+          <div class="veld" style="margin-bottom:8px"><label style="font-size:11.5px;font-weight:700;color:var(--grijs)">NAAM</label><input id="tbNaam" style="width:100%;border:1px solid var(--lijn);border-radius:7px;padding:7px 9px"></div>
+          <div class="veld" style="margin-bottom:8px"><label style="font-size:11.5px;font-weight:700;color:var(--grijs)">PROJECTNUMMER</label><input id="tbProject" style="width:100%;border:1px solid var(--lijn);border-radius:7px;padding:7px 9px"></div>
+          <div class="veld"><label style="font-size:11.5px;font-weight:700;color:var(--grijs)">VOORLOPIG DD</label><input id="tbDatum" style="width:100%;border:1px solid var(--lijn);border-radius:7px;padding:7px 9px"></div>
+        </div>
+      </div>
+    </div>
+  </div></div>
+  <div class="voetbalk">
+    <span class="hint">Aan deze tekening kunnen geen rechten worden ontleend.</span>
+    <button class="knop stil" id="terugNaar3">← Terug naar tekening</button>
+  </div>
+</section>
+
+</main>
+
+<!-- crop dialoog -->
+<dialog id="cropDlg">
+  <div class="dlg-kop"><h3 id="cropTitel">Uitsnede aanpassen</h3><button class="knopje" style="flex:0" onclick="cropDlg.close()">✕</button></div>
+  <div class="dlg-body">
+    <div id="cropWrap">
+      <canvas id="cropCanvas"></canvas>
+      <div id="cropBox"><span class="h nw"></span><span class="h ne"></span><span class="h sw"></span><span class="h se"></span></div>
+    </div>
+  </div>
+  <div class="dlg-voet">
+    <button class="knop stil" onclick="cropDlg.close()">Annuleren</button>
+    <button class="knop" id="cropOpslaan">Uitsnede opslaan</button>
+  </div>
+</dialog>
+
+<div class="toast" id="toast"></div>
+<script>
+/* ============================================================
+   Situatietekening-tool — Schipper Kozijnen
+   Stap 1-2: PDF inlezen, maten parsen, kozijnen auto-uitknippen
+   ============================================================ */
+pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+const state = {
+  kozijnen: [],          // {merk, plaats, wmm, hmm, dataURL, imgEl, pageCanvas, crop:{x,y,w,h}, actief}
+  foto: null,            // {dataURL, el}
+  project: "", klant: "",
+  objs: [],              // canvas-objecten
+  sel: null,
+  ppm: 4/50,             // px per echte mm (schaal 1:50 op 4px/papier-mm)
+  schaalX: 50,
+  editorGestart: false
+};
+
+const $  = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const toast = t => { const el=$("#toast"); el.textContent=t; el.classList.add("zien"); clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove("zien"),2600); };
+const vandaag = () => { const d=new Date(); return `${d.getDate()}-${d.getMonth()+1}-${d.getFullYear()}`; };
+
+/* ---------- stappen-navigatie ---------- */
+let huidigeStap = 1;
+function gaNaarStap(n){
+  if(n>=2 && !state.kozijnen.length){ toast("Upload eerst een kozijnomschrijving"); return; }
+  huidigeStap = n;
+  $$(".paneel").forEach((p,i)=>p.classList.toggle("actief", i===n-1));
+  $$(".stap").forEach((s,i)=>{ s.classList.toggle("actief", i===n-1); s.classList.toggle("klaar", i<n-1); });
+  [1,2,3].forEach(i=>$("#mt"+i).classList.toggle("klaar", i<n));
+  if(n===2) bouwKozijnKaarten();
+  if(n===3) startEditor();
+  if(n===4){ if(!state.editorGestart) startEditor(); bouwExport(); }
+}
+$$(".stap").forEach(s=>s.addEventListener("click",()=>gaNaarStap(+s.dataset.stap)));
+$("#naarStap2").onclick = ()=>gaNaarStap(2);
+$("#naarStap3").onclick = ()=>gaNaarStap(3);
+$("#naarStap4").onclick = ()=>gaNaarStap(4);
+$("#terugNaar3").onclick = ()=>gaNaarStap(3);
+
+/* ---------- uploads ---------- */
+function koppelDropzone(zone, input, handler){
+  zone.addEventListener("click", ()=>input.click());
+  input.addEventListener("change", ()=>input.files[0] && handler(input.files[0]));
+  ["dragover","dragenter"].forEach(ev=>zone.addEventListener(ev,e=>{e.preventDefault();zone.classList.add("over");}));
+  ["dragleave","drop"].forEach(ev=>zone.addEventListener(ev,e=>{e.preventDefault();zone.classList.remove("over");}));
+  zone.addEventListener("drop", e=>e.dataTransfer.files[0] && handler(e.dataTransfer.files[0]));
+}
+koppelDropzone($("#dzPdf"), $("#inpPdf"), verwerkPdf);
+koppelDropzone($("#dzFoto"), $("#inpFoto"), f=>{
+  const r=new FileReader();
+  r.onload=()=>{ const img=new Image(); img.onload=()=>{ state.foto={dataURL:r.result, el:img}; $("#fotoMini").src=r.result; $("#fotoKaart").hidden=false; toast("Gevelfoto toegevoegd"); }; img.src=r.result; };
+  r.readAsDataURL(f);
+});
+
+function zetStatus(regels){
+  $("#pdfStatus").innerHTML = regels.map(r=>`<div class="status-regel ${r.s||""}"><span class="dot"></span><span>${r.t}</span></div>`).join("");
+}
+
+/* ---------- PDF verwerken ---------- */
+async function verwerkPdf(file){
+  zetStatus([{t:"PDF openen…",s:"bezig"}]);
+  try{
+    const buf = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({data:buf}).promise;
+    state.kozijnen = [];
+    const regels = [{t:`PDF geopend — ${pdf.numPages} pagina's`,s:"ok"}];
+
+    for(let p=1; p<=pdf.numPages; p++){
+      zetStatus([...regels,{t:`Pagina ${p} van ${pdf.numPages} verwerken…`,s:"bezig"}]);
+      const page = await pdf.getPage(p);
+      const tc = await page.getTextContent();
+      const items = tc.items.filter(i=>i.str && i.str.trim());
+      const alles = items.map(i=>i.str).join(" ");
+
+      // projectgegevens (eenmalig)
+      if(!state.project){ const m = alles.match(/O\d{5,7}/); if(m) state.project = m[0]; }
+      if(!state.klant){
+        const ix = items.findIndex(i=>/Naam\s*klant/i.test(i.str));
+        if(ix>-1){ const v = items[ix].str.replace(/Naam\s*klant:?/i,"").trim();
+          state.klant = v || (items[ix+1] ? items[ix+1].str.trim() : ""); }
+      }
+
+      // merk-letter: "A, 1 stuks"
+      const merkM = alles.match(/\b([A-Z]),\s*\d+\s*stuks/);
+      if(!merkM) continue;
+      const merk = merkM[1];
+
+      // plaats
+      let plaats = "";
+      const pi = items.findIndex(i=>i.str.trim()==="Plaats");
+      if(pi>-1 && items[pi+1]) plaats = items[pi+1].str.trim();
+      else { const pm = alles.match(/Plaats\s+([^]+?)\s+Kozijnprofiel/); if(pm) plaats = pm[1].trim(); }
+
+      // maatvoering: losse 3-4-cijferige items; horizontaal vs verticaal via transform
+      const vp0 = page.getViewport({scale:1});
+      const doelBreedte = 1700;
+      const vp = page.getViewport({scale: doelBreedte/vp0.width});
+      let wmm = 0, hmm = 0;
+      let maatY = Infinity, maatX = Infinity; // grens (canvas-px) waar de maatvoering-tekst begint
+      for(const it of items){
+        const s = it.str.trim();
+        if(!/^\d{3,4}$/.test(s)) continue;
+        const n = +s; if(n<250 || n>9000) continue;
+        const y = it.transform[5];
+        if(y < vp0.height*0.30) continue;               // onderin: paginanummers e.d. overslaan
+        const horizontaal = Math.abs(it.transform[1]) < 0.01;
+        if(horizontaal) wmm = Math.max(wmm, n); else hmm = Math.max(hmm, n);
+        const [cx, cy] = vp.convertToViewportPoint(it.transform[4], it.transform[5]);
+        if(horizontaal) maatY = Math.min(maatY, cy);   // breedtemaat staat onder de tekening
+        else            maatX = Math.min(maatX, cx);   // hoogtemaat staat naast de tekening
+      }
+
+      // pagina hoog renderen voor de uitsnede
+      const cv = document.createElement("canvas");
+      cv.width = vp.width; cv.height = vp.height;
+      await page.render({canvasContext: cv.getContext("2d"), viewport: vp}).promise;
+
+      const crop = autoCrop(cv, {maatY: isFinite(maatY)?maatY:null, maatX: isFinite(maatX)?maatX:null});
+      const koz = { merk, plaats, wmm, hmm, pageCanvas: cv, crop, actief:true, dataURL:null, imgEl:null };
+      maakUitsnede(koz);
+      state.kozijnen.push(koz);
+      regels.push({t:`Merk ${merk} — ${wmm||"?"} × ${hmm||"?"} mm — ${plaats||"plaats onbekend"}`,s:"ok"});
+    }
+
+    if(!state.kozijnen.length){
+      zetStatus([...regels,{t:"Geen merken gevonden — is dit een kozijnomschrijving?",s:""}]);
+      return;
+    }
+    $("#piProject").textContent = state.project || "—";
+    $("#piKlant").textContent = state.klant || "—";
+    zetStatus([...regels,{t:`Klaar: ${state.kozijnen.length} kozijn(en) uitgeknipt`,s:"ok"}]);
+    $("#naarStap2").disabled = false;
+    toast(`${state.kozijnen.length} kozijnen gevonden`);
+  }catch(err){
+    console.error(err);
+    zetStatus([{t:"Lezen mislukt: "+err.message,s:""}]);
+  }
+}
+
+/* ---------- automatische uitsnede ----------
+   Zoekt het kozijn in het tekengedeelte van de pagina via
+   dichtheid per kolom/rij, zodat losse maatgetallen wegvallen. */
+function autoCrop(cv, maatGrens){
+  const ctx = cv.getContext("2d");
+  const W = cv.width, H = cv.height;
+  const d = ctx.getImageData(0,0,W,H).data;
+  const px = (x,y)=>{ const i=(y*W+x)*4; return [d[i],d[i+1],d[i+2]]; };
+
+  // 1) glas zoeken: onmiskenbaar blauw
+  let bx0=W,bx1=0,by0=H,by1=0,blauw=0;
+  for(let y=Math.floor(H*0.08); y<Math.floor(H*0.68); y+=2){
+    for(let x=0; x<Math.floor(W*0.82); x+=2){
+      const [r,g,b]=px(x,y);
+      if(b>135 && b>r+25 && b>=g-8){
+        blauw++;
+        if(x<bx0)bx0=x; if(x>bx1)bx1=x; if(y<by0)by0=y; if(y>by1)by1=y;
+      }
+    }
+  }
+  if(blauw<300) return {x:40,y:Math.floor(H*0.15),w:Math.floor(W*0.5),h:Math.floor(H*0.35)}; // niets gevonden: ruim kader, handmatig bijstellen
+
+  // 2) vanaf het glas naar buiten lopen tot voorbij de buitenste lijn.
+  //    "Inkt" = een lijn of kleuraccent, ongeacht de vulkleur van het kader —
+  //    zo blijft een wit/crème kozijn herkenbaar aan de contourlijn zelf,
+  //    in plaats van te moeten gokken wat "achtergrond" is.
+  const inktig = (r,g,b)=>{
+    const helder = Math.max(r,g,b), donker = Math.min(r,g,b);
+    return helder < 145 || (helder - donker) > 55;
+  };
+  const GAP = Math.max(18, Math.round(W*0.012));
+  // Uitloopruimte is gekoppeld aan de PAGINA, niet aan het glasvlak —
+  // zo blokkeert een klein glasvlak (bijv. een deur naast een raam) niet
+  // langer het meepakken van een breder buurkozijn op dezelfde pagina.
+  const maxUit = dim => Math.max(160, Math.round(dim*0.46));
+  const kolInhoud = x=>{ for(let y=Math.max(0,by0-10); y<=Math.min(H-1,by1+10); y+=2){ const [r,g,b]=px(x,y); if(inktig(r,g,b)) return true; } return false; };
+  const rijInhoud = y=>{ for(let x=Math.max(0,bx0-10); x<=Math.min(W-1,bx1+10); x+=2){ const [r,g,b]=px(x,y); if(inktig(r,g,b)) return true; } return false; };
+  const loop = (van, richting, max, test, limiet)=>{
+    let laatste = van, gat = 0, afstand = 0;
+    for(let p=van; p!==max && afstand<limiet; p+=richting, afstand++){
+      if(test(p)){ laatste = p; gat = 0; }
+      else if(++gat >= GAP) break;
+    }
+    return laatste;
+  };
+  const links  = loop(bx0, -1, -1, kolInhoud, maxUit(W));
+  let rechts = loop(bx1, +1, W,  kolInhoud, maxUit(W));
+  const boven  = loop(by0, -1, -1, rijInhoud, maxUit(H));
+  let onder  = loop(by1, +1, H,  rijInhoud, maxUit(H));
+  // niet over de bijschriften met de maatvoering heen knippen —
+  // die posities kennen we al exact uit de tekst-laag van de PDF.
+  if(maatGrens){
+    if(maatGrens.maatY!=null) onder  = Math.max(boven+20, Math.min(onder,  maatGrens.maatY-6));
+    if(maatGrens.maatX!=null) rechts = Math.max(links+20, Math.min(rechts, maatGrens.maatX-6));
+  }
+  const pad = 6;
+  return { x: Math.max(0,links-pad), y: Math.max(0,boven-pad),
+           w: Math.min(W,rechts+pad)-Math.max(0,links-pad),
+           h: Math.min(H,onder+pad)-Math.max(0,boven-pad) };
+}
+
+function maakUitsnede(koz){
+  const {x,y,w,h} = koz.crop;
+  const out = document.createElement("canvas");
+  out.width = w; out.height = h;
+  out.getContext("2d").drawImage(koz.pageCanvas, x,y,w,h, 0,0,w,h);
+  koz.dataURL = out.toDataURL("image/png");
+  const img = new Image(); img.src = koz.dataURL; koz.imgEl = img;
+}
+
+/* ---------- stap 2: kaarten ---------- */
+function bouwKozijnKaarten(){
+  const grid = $("#kozijnGrid");
+  grid.innerHTML = "";
+  state.kozijnen.forEach((k,i)=>{
+    const kaart = document.createElement("div");
+    kaart.className = "kozijn-kaart";
+    kaart.innerHTML = `
+      <div class="beeld"><span class="merk-badge">Merk ${k.merk}</span><img src="${k.dataURL}" alt="Kozijn ${k.merk}"></div>
+      <div class="info">
+        <div class="plaats">${k.plaats||"—"}</div>
+        <div class="maten-rij">
+          <input type="number" value="${k.wmm||""}" data-i="${i}" data-v="wmm" placeholder="b">
+          <span>×</span>
+          <input type="number" value="${k.hmm||""}" data-i="${i}" data-v="hmm" placeholder="h">
+          <span class="mm">mm</span>
+        </div>
+        <div class="acties">
+          <button class="knopje" data-crop="${i}">Uitsnede</button>
+          <button class="knopje ${k.actief?"":"uit"}" data-aan="${i}">${k.actief?"Op gevel ✓":"Uitgezet"}</button>
+        </div>
+      </div>`;
+    grid.appendChild(kaart);
+  });
+  grid.querySelectorAll("input").forEach(inp=>inp.addEventListener("change",()=>{
+    state.kozijnen[+inp.dataset.i][inp.dataset.v] = +inp.value || 0;
+  }));
+  grid.querySelectorAll("[data-crop]").forEach(b=>b.onclick=()=>openCrop(+b.dataset.crop));
+  grid.querySelectorAll("[data-aan]").forEach(b=>b.onclick=()=>{
+    const k = state.kozijnen[+b.dataset.aan]; k.actief=!k.actief; bouwKozijnKaarten();
+  });
+}
+
+/* ---------- crop-dialoog ---------- */
+const cropDlg = $("#cropDlg");
+let cropIndex = 0, cropSchaal = 1;
+function openCrop(i){
+  cropIndex = i;
+  const k = state.kozijnen[i];
+  $("#cropTitel").textContent = `Uitsnede — merk ${k.merk}`;
+  const cv = $("#cropCanvas");
+  const maxW = Math.min(780, innerWidth*0.86);
+  cropSchaal = maxW / k.pageCanvas.width;
+  cv.width = k.pageCanvas.width*cropSchaal;
+  cv.height = k.pageCanvas.height*cropSchaal;
+  cv.getContext("2d").drawImage(k.pageCanvas,0,0,cv.width,cv.height);
+  zetCropBox(k.crop);
+  cropDlg.showModal();
+}
+function zetCropBox(c){
+  const b = $("#cropBox");
+  b.style.left = c.x*cropSchaal+"px"; b.style.top = c.y*cropSchaal+"px";
+  b.style.width = c.w*cropSchaal+"px"; b.style.height = c.h*cropSchaal+"px";
+}
+(function(){
+  const box = $("#cropBox");
+  let modus=null, sx,sy, start;
+  const pak = e=>{ 
+    sx=e.clientX; sy=e.clientY;
+    const k=state.kozijnen[cropIndex]; start={...k.crop};
+    e.preventDefault(); e.stopPropagation();
+  };
+  box.addEventListener("pointerdown",e=>{ modus = e.target.classList.contains("h") ? [...e.target.classList].find(c=>c!=="h") : "move"; pak(e); box.setPointerCapture(e.pointerId); });
+  box.addEventListener("pointermove",e=>{
+    if(!modus) return;
+    const dx=(e.clientX-sx)/cropSchaal, dy=(e.clientY-sy)/cropSchaal;
+    const k=state.kozijnen[cropIndex]; const c={...start};
+    if(modus==="move"){ c.x+=dx; c.y+=dy; }
+    if(modus==="nw"){ c.x+=dx;c.y+=dy;c.w-=dx;c.h-=dy; }
+    if(modus==="ne"){ c.y+=dy;c.w+=dx;c.h-=dy; }
+    if(modus==="sw"){ c.x+=dx;c.w-=dx;c.h+=dy; }
+    if(modus==="se"){ c.w+=dx;c.h+=dy; }
+    c.w=Math.max(30,c.w); c.h=Math.max(30,c.h);
+    k.crop=c; zetCropBox(c);
+  });
+  box.addEventListener("pointerup",()=>modus=null);
+})();
+$("#cropOpslaan").onclick = ()=>{
+  const k = state.kozijnen[cropIndex];
+  maakUitsnede(k);
+  k.imgEl.onload = ()=>{ bouwKozijnKaarten(); tekenBlad && tekenBlad(); };
+  cropDlg.close();
+  toast("Uitsnede bijgewerkt");
+};
+</script>
+<script>
+/* ============================================================
+   Stap 3-4: tekening-editor, randzaken, legenda, titelblok, export
+   ============================================================ */
+
+/* ---------- randzaken-bibliotheek (modulair) ---------- */
+const RZ_STANDAARD = [
+  {id:"waterslag",  naam:"Waterslag",                       stijl:"lijn",    kleur:"#C1272D", dikte:"dik"},
+  {id:"borstw",     naam:"Bouwkundige borstwering",         stijl:"hlijnen", kleur:"#4A4A48", vul:"#DBDBD8"},
+  {id:"halfborstw", naam:"Halfbouwkundige borstwering",     stijl:"hlijnen", kleur:"#4A4A48", vul:"#FFFFFF"},
+  {id:"trespa",     naam:"Trespa paneel",                   stijl:"vlijnen", kleur:"#5A5A58", vul:"#EDEDEB"},
+  {id:"gevelbekl",  naam:"Gevelbekleding (Keralit)",        stijl:"hlijnen", kleur:"#6E6E6B", vul:"#F6F6F4"},
+  {id:"boeideel",   naam:"Boeideel",                        stijl:"vlak",    kleur:"#3A3A38", vul:"#FFFFFF"},
+  {id:"lood",       naam:"Lood",                            stijl:"lijn",    kleur:"#7D7D7A", dikte:"dun"},
+  {id:"lekdorpel",  naam:"Lekdorpel stenen vervangen",      stijl:"stippel", kleur:"#C1272D"},
+  {id:"uitlijnen",  naam:"Uitlijnen stijlen",               stijl:"stippel", kleur:"#C1272D"},
+  {id:"inzagen",    naam:"Inzagen muur",                    stijl:"stippel", kleur:"#2B6CB0"},
+  {id:"metselwerk", naam:"Metselwerk (bestaand)",           stijl:"steen",   kleur:"#9C9C99", vul:"#FFFFFF"},
+  {id:"radiator",   naam:"Radiator demonteren",             stijl:"notitie", kleur:"#C1272D"}
+];
+let rzBieb = ladenRz();
+function ladenRz(){
+  try{
+    const eigen = JSON.parse(localStorage.getItem("sk_randzaken")||"[]");
+    return [...RZ_STANDAARD, ...eigen];
+  }catch(e){ return [...RZ_STANDAARD]; }
+}
+function bewaarEigenRz(){
+  localStorage.setItem("sk_randzaken", JSON.stringify(rzBieb.filter(r=>r.eigen)));
+}
+const rzOp = id => rzBieb.find(r=>r.id===id) || {naam:id,stijl:"vlak",kleur:"#999"};
+
+/* ---------- editor-objecten ---------- */
+const blad = $("#blad");
+const bctx = blad.getContext("2d");
+let volgendeId = 1;
+
+function startEditor(){
+  bouwZijbalk();
+  if(!state.editorGestart){
+    state.editorGestart = true;
+    // titelblok + legenda staan er altijd
+    state.objs.push({id:volgendeId++, type:"titelblok", x:blad.width-478, y:blad.height-150});
+    state.objs.push({id:volgendeId++, type:"legenda", x:blad.width-330, y:26});
+    // actieve kozijnen automatisch op een rij, onderkant gelijk
+    const actief = state.kozijnen.filter(k=>k.actief && k.wmm && k.hmm);
+    let x = 60; const grondlijn = 560;
+    actief.forEach(k=>{
+      const w = k.wmm*state.ppm, h = k.hmm*state.ppm;
+      state.objs.push({id:volgendeId++, type:"kozijn", merk:k.merk, x, y:grondlijn-h});
+      state.objs.push({id:volgendeId++, type:"label", tekst:k.merk, x:x+w/2-11, y:grondlijn-h/2-11});
+      x += w + 34;
+    });
+  }
+  tekenBlad();
+}
+
+/* ---------- zijbalk ---------- */
+$$(".zijbalk .tabs button").forEach(b=>b.onclick=()=>{
+  $$(".zijbalk .tabs button").forEach(x=>x.classList.toggle("actief",x===b));
+  $$(".zb-sectie").forEach(s=>s.classList.remove("actief"));
+  $("#zb"+b.dataset.zb[0].toUpperCase()+b.dataset.zb.slice(1)).classList.add("actief");
+});
+
+function bouwZijbalk(){
+  const zk = $("#zbKozijnen");
+  zk.innerHTML = "";
+  const bruikbaar = state.kozijnen.filter(k=>k.actief);
+  if(!bruikbaar.length) zk.innerHTML = `<div class="leeg" style="padding:26px 12px">Geen actieve kozijnen.<br>Zet ze aan in stap 2.</div>`;
+  bruikbaar.forEach(k=>{
+    const el = document.createElement("div");
+    el.className = "mini-kozijn";
+    el.innerHTML = `<img src="${k.dataURL}"><div class="t"><b>Merk ${k.merk}</b><div>${k.wmm||"?"} × ${k.hmm||"?"} mm</div></div><span class="plus">+</span>`;
+    el.onclick = ()=>{
+      if(!k.wmm || !k.hmm){ toast("Vul eerst de maten in (stap 2)"); return; }
+      const o = {id:volgendeId++, type:"kozijn", merk:k.merk, x:80+Math.random()*60, y:120+Math.random()*60};
+      state.objs.push(o); state.sel=o; tekenBlad();
+    };
+    zk.appendChild(el);
+  });
+
+  const rl = $("#rzLijst");
+  rl.innerHTML = "";
+  rzBieb.forEach(rz=>{
+    const el = document.createElement("div");
+    el.className = "rz-item";
+    const sw = document.createElement("canvas"); sw.width=34; sw.height=20; sw.className="sw";
+    tekenSwatch(sw.getContext("2d"), rz, 34, 20, true);
+    el.appendChild(sw);
+    el.insertAdjacentHTML("beforeend", `<div class="nm">${rz.naam}</div>${rz.eigen?'<button class="del" title="Verwijderen uit bibliotheek">✕</button>':""}`);
+    el.onclick = e=>{
+      if(e.target.classList.contains("del")){ rzBieb = rzBieb.filter(r=>r!==rz); bewaarEigenRz(); bouwZijbalk(); return; }
+      plaatsRandzaak(rz);
+    };
+    rl.appendChild(el);
+  });
+}
+
+function plaatsRandzaak(rz){
+  let o;
+  if(["lijn","stippel","dubbellijn","zigzag"].includes(rz.stijl))
+    o = {id:volgendeId++, type:"rzlijn", rz:rz.id, x:120, y:200, w:220, h:14};
+  else if(rz.stijl==="notitie")
+    o = {id:volgendeId++, type:"notitie", rz:rz.id, tekst:rz.naam, x:420, y:180};
+  else
+    o = {id:volgendeId++, type:"rzvlak", rz:rz.id, x:120, y:200, w:200, h:110};
+  state.objs.push(o); state.sel = o; tekenBlad();
+  toast(rz.naam + " geplaatst — versleep en pas formaat aan");
+}
+
+$("#rzToevoegen").onclick = ()=>{
+  const naam = $("#rzNaam").value.trim();
+  if(!naam){ toast("Geef de randzaak een naam"); return; }
+  const rz = {id:"eigen_"+Date.now(), naam, stijl:$("#rzStijl").value, kleur:$("#rzKleur").value,
+              vul:$("#rzVul").value, dikte:$("#rzDikte").value, eigen:true};
+  rzBieb.push(rz); bewaarEigenRz(); bouwZijbalk();
+  $("#rzNaam").value = "";
+  toast(`"${naam}" toegevoegd aan de bibliotheek`);
+};
+
+$("#exFoto").onclick = ()=>{
+  if(!state.foto){ toast("Geen gevelfoto — upload die in stap 1"); return; }
+  const b = 240, h = b*state.foto.el.height/state.foto.el.width;
+  state.objs.push({id:volgendeId++, type:"foto", x:blad.width-b-40, y:250, w:b, h});
+  tekenBlad();
+};
+$("#exLabel").onclick = ()=>{
+  const t = prompt("Letter voor het label:","A"); if(!t) return;
+  const o = {id:volgendeId++, type:"label", tekst:t.trim().slice(0,3), x:blad.width/2-12, y:blad.height/2-11};
+  state.objs.push(o); state.sel = o; tekenBlad();
+};
+$("#exTekst").onclick = ()=>{
+  const t = prompt("Tekst:",""); if(!t) return;
+  const o = {id:volgendeId++, type:"tekst", tekst:t, x:blad.width/2-60, y:blad.height/2-10};
+  state.objs.push(o); state.sel = o; tekenBlad();
+  toast("Tekst geplaatst — versleep hem, dubbelklik om te bewerken");
+};
+
+/* ---------- tekenen ---------- */
+function maatVan(o){
+  if(o.type==="kozijn"){
+    const k = state.kozijnen.find(k=>k.merk===o.merk);
+    if(!k) return {w:40,h:40};
+    return {w:Math.max(8,k.wmm*state.ppm), h:Math.max(8,k.hmm*state.ppm)};
+  }
+  if(o.type==="label") return {w:24,h:22};
+  if(o.type==="tekst"){ bctx.font="500 13px Barlow"; return {w:bctx.measureText(o.tekst).width+12, h:20}; }
+  if(o.type==="notitie"){ bctx.font="12px Barlow"; return {w:bctx.measureText(o.tekst).width+14, h:20}; }
+  if(o.type==="legenda"){ return maatLegenda(); }
+  if(o.type==="titelblok") return {w:462,h:128};
+  return {w:o.w, h:o.h};
+}
+
+function gebruikteRz(){
+  const ids = [...new Set(state.objs.filter(o=>o.rz && o.type!=="notitie").map(o=>o.rz))];
+  return ids.map(rzOp);
+}
+function maatLegenda(){
+  const n = gebruikteRz().length;
+  return {w:300, h: n? n*26+14 : 0};
+}
+
+function tekenSwatch(g, rz, w, h, klein=false){
+  g.clearRect(0,0,w,h);
+  const dik = {dun:1.6, normaal:3, dik:5}[rz.dikte||"normaal"];
+  const y2 = h/2 + .5;
+  if(rz.stijl==="lijn"){ g.strokeStyle=rz.kleur; g.lineWidth=klein?3:dik; g.lineCap="round"; g.beginPath(); g.moveTo(3,y2); g.lineTo(w-3,y2); g.stroke(); g.lineCap="butt"; return; }
+  if(rz.stijl==="stippel"){ g.strokeStyle=rz.kleur; g.lineWidth=klein?2:Math.max(1.6,dik*0.7); g.setLineDash([7,5]); g.beginPath(); g.moveTo(3,y2); g.lineTo(w-3,y2); g.stroke(); g.setLineDash([]); return; }
+  if(rz.stijl==="dubbellijn"){ g.strokeStyle=rz.kleur; g.lineWidth=klein?1.5:2;
+    g.beginPath(); g.moveTo(3,y2-3); g.lineTo(w-3,y2-3); g.moveTo(3,y2+3); g.lineTo(w-3,y2+3); g.stroke(); return; }
+  if(rz.stijl==="zigzag"){ g.strokeStyle=rz.kleur; g.lineWidth=klein?1.5:2; g.lineJoin="round";
+    const s=klein?5:9; g.beginPath(); g.moveTo(3,y2+s/2);
+    for(let x=3,i=0;x<w-3;x+=s,i++) g.lineTo(Math.min(x+s,w-3), y2+(i%2? s/2 : -s/2));
+    g.stroke(); g.lineJoin="miter"; return; }
+  if(rz.stijl==="notitie"){ g.fillStyle=rz.kleur; g.font="10px Barlow"; g.fillText("→ tekst",3,h/2+3); return; }
+  if(rz.stijl==="cirkel"){
+    g.fillStyle=rz.vul||"#fff"; g.strokeStyle=rz.kleur; g.lineWidth=klein?1.5:2.2;
+    g.beginPath(); g.ellipse(w/2,h/2,w/2-g.lineWidth,h/2-g.lineWidth,0,0,7); g.fill(); g.stroke(); return;
+  }
+  if(rz.stijl==="driehoek"){
+    g.fillStyle=rz.vul||"#fff"; g.strokeStyle=rz.kleur; g.lineWidth=klein?1.5:2.2;
+    g.beginPath(); g.moveTo(w/2,2); g.lineTo(w-2,h-2); g.lineTo(2,h-2); g.closePath(); g.fill(); g.stroke(); return;
+  }
+  if(rz.stijl==="ruit"){
+    g.fillStyle=rz.vul||"#fff"; g.strokeStyle=rz.kleur; g.lineWidth=klein?1.5:2.2;
+    g.beginPath(); g.moveTo(w/2,2); g.lineTo(w-2,h/2); g.lineTo(w/2,h-2); g.lineTo(2,h/2); g.closePath(); g.fill(); g.stroke(); return;
+  }
+  if(rz.stijl==="vijfhoek"||rz.stijl==="zeshoek"||rz.stijl==="ster"){
+    const n = rz.stijl==="vijfhoek"?5:(rz.stijl==="zeshoek"?6:10);
+    const ster = rz.stijl==="ster";
+    g.fillStyle=rz.vul||"#fff"; g.strokeStyle=rz.kleur; g.lineWidth=klein?1.5:2.2;
+    g.beginPath();
+    const cx=w/2, cy=h/2, rx=w/2-3, ry=h/2-3;
+    for(let i=0;i<n;i++){
+      const straal = ster ? (i%2===0?1:0.42) : 1;
+      const hoek = -Math.PI/2 + i*2*Math.PI/n;
+      const x = cx+Math.cos(hoek)*rx*straal, y = cy+Math.sin(hoek)*ry*straal;
+      i===0? g.moveTo(x,y) : g.lineTo(x,y);
+    }
+    g.closePath(); g.fill(); g.stroke(); return;
+  }
+  if(rz.stijl.startsWith("pijl-")){
+    g.fillStyle=rz.vul||rz.kleur; g.strokeStyle=rz.kleur; g.lineWidth=klein?1:1.4;
+    const kop = Math.min(w,h)*0.42, schacht = h*0.32, schachtB = w*0.32;
+    g.beginPath();
+    if(rz.stijl==="pijl-rechts"){ g.moveTo(2,h/2-schacht/2); g.lineTo(w-kop,h/2-schacht/2); g.lineTo(w-kop,2); g.lineTo(w-2,h/2); g.lineTo(w-kop,h-2); g.lineTo(w-kop,h/2+schacht/2); g.lineTo(2,h/2+schacht/2); }
+    else if(rz.stijl==="pijl-links"){ g.moveTo(w-2,h/2-schacht/2); g.lineTo(kop,h/2-schacht/2); g.lineTo(kop,2); g.lineTo(2,h/2); g.lineTo(kop,h-2); g.lineTo(kop,h/2+schacht/2); g.lineTo(w-2,h/2+schacht/2); }
+    else if(rz.stijl==="pijl-boven"){ g.moveTo(w/2-schachtB/2,h-2); g.lineTo(w/2-schachtB/2,kop); g.lineTo(2,kop); g.lineTo(w/2,2); g.lineTo(w-2,kop); g.lineTo(w/2+schachtB/2,kop); g.lineTo(w/2+schachtB/2,h-2); }
+    else { g.moveTo(w/2-schachtB/2,2); g.lineTo(w/2-schachtB/2,h-kop); g.lineTo(2,h-kop); g.lineTo(w/2,h-2); g.lineTo(w-2,h-kop); g.lineTo(w/2+schachtB/2,h-kop); g.lineTo(w/2+schachtB/2,2); }
+    g.closePath(); g.fill(); g.stroke(); return;
+  }
+
+  // vlak-stijlen
+  const stap = klein ? 5 : 11;
+  g.fillStyle = rz.vul || "#fff"; g.fillRect(0,0,w,h);
+  g.save(); g.beginPath(); g.rect(0,0,w,h); g.clip();
+  g.strokeStyle = rz.kleur; g.lineWidth = 1;
+  if(rz.stijl==="hlijnen"){ for(let y=stap;y<h;y+=stap){ g.beginPath(); g.moveTo(0,y+.5); g.lineTo(w,y+.5); g.stroke(); } }
+  else if(rz.stijl==="vlijnen"){ for(let x=stap;x<w;x+=stap){ g.beginPath(); g.moveTo(x+.5,0); g.lineTo(x+.5,h); g.stroke(); } }
+  else if(rz.stijl==="diagonaal"){ for(let x=-h;x<w;x+=stap){ g.beginPath(); g.moveTo(x,h); g.lineTo(x+h,0); g.stroke(); } }
+  else if(rz.stijl==="kruis"){
+    for(let x=-h;x<w;x+=stap){ g.beginPath(); g.moveTo(x,h); g.lineTo(x+h,0); g.stroke();
+      g.beginPath(); g.moveTo(x,0); g.lineTo(x+h,h); g.stroke(); } }
+  else if(rz.stijl==="stippen"){
+    g.fillStyle=rz.kleur;
+    for(let y=stap/2,rij=0;y<h;y+=stap,rij++)
+      for(let x=(rij%2? stap : stap/2);x<w;x+=stap){ g.beginPath(); g.arc(x,y,klein?1:1.6,0,7); g.fill(); } }
+  else if(rz.stijl==="steen"){
+    const bh=klein?6:13, bw=klein?11:26;
+    for(let y=0,rij=0;y<h;y+=bh,rij++){ g.beginPath(); g.moveTo(0,y+.5); g.lineTo(w,y+.5); g.stroke();
+      for(let x=(rij%2? bw/2 : bw);x<w;x+=bw){ g.beginPath(); g.moveTo(x+.5,y); g.lineTo(x+.5,Math.min(y+bh,h)); g.stroke(); } } }
+  // 'vlak' en 'kader': geen patroon
+  g.restore();
+  g.strokeStyle = rz.kleur;
+  g.lineWidth = rz.stijl==="kader" ? (klein?2:2.5) : 1.4;
+  g.strokeRect(g.lineWidth/2, g.lineWidth/2, w-g.lineWidth, h-g.lineWidth);
+}
+
+function tekenObject(g, o, exporteren){
+  const m = maatVan(o);
+  if(o.type==="kozijn"){
+    const k = state.kozijnen.find(k=>k.merk===o.merk);
+    if(k && k.imgEl && k.imgEl.complete) g.drawImage(k.imgEl, o.x, o.y, m.w, m.h);
+    else { g.strokeStyle="#999"; g.strokeRect(o.x,o.y,m.w,m.h); }
+  }
+  else if(o.type==="rzvlak"){
+    const rz = rzOp(o.rz);
+    g.save(); g.translate(o.x,o.y);
+    tekenSwatch(g, rz, o.w, o.h);
+    g.restore();
+  }
+  else if(o.type==="rzlijn"){
+    const rz = rzOp(o.rz);
+    const verticaal = o.h > o.w;
+    g.save();
+    if(verticaal){ g.translate(o.x+o.w, o.y); g.rotate(Math.PI/2); tekenSwatch(g, rz, o.h, o.w); }
+    else { g.translate(o.x, o.y); tekenSwatch(g, rz, o.w, o.h); }
+    g.restore();
+  }
+  else if(o.type==="notitie"){
+    const rz = rzOp(o.rz);
+    g.font="12px Barlow"; g.fillStyle="#2B2B2A";
+    g.fillText(o.tekst, o.x+12, o.y+14);
+    g.strokeStyle = rz.kleur; g.lineWidth=1.4;
+    g.beginPath(); g.moveTo(o.x+8, o.y+10); g.lineTo(o.x-42, o.y+10); g.stroke();
+    g.beginPath(); g.moveTo(o.x-42, o.y+10); g.lineTo(o.x-34, o.y+6); g.moveTo(o.x-42, o.y+10); g.lineTo(o.x-34, o.y+14); g.stroke();
+  }
+  else if(o.type==="foto"){
+    if(state.foto){ g.drawImage(state.foto.el, o.x,o.y,o.w,o.h); g.strokeStyle="#C9C7C1"; g.strokeRect(o.x+.5,o.y+.5,o.w-1,o.h-1); }
+  }
+  else if(o.type==="label"){
+    g.fillStyle="#fff"; g.strokeStyle="#2B2B2A"; g.lineWidth=1;
+    g.fillRect(o.x,o.y,24,22); g.strokeRect(o.x+.5,o.y+.5,23,21);
+    g.fillStyle="#2B2B2A"; g.font="600 13px Barlow"; g.textAlign="center";
+    g.fillText(o.tekst, o.x+12, o.y+15); g.textAlign="left";
+  }
+  else if(o.type==="tekst"){
+    g.fillStyle="#2B2B2A"; g.font="500 13px Barlow"; g.fillText(o.tekst, o.x+6, o.y+14);
+  }
+  else if(o.type==="legenda") tekenLegenda(g,o);
+  else if(o.type==="titelblok") tekenTitelblok(g,o);
+}
+
+function tekenLegenda(g,o){
+  const rzs = gebruikteRz();
+  if(!rzs.length) return;
+  let y = o.y;
+  rzs.forEach(rz=>{
+    g.save(); g.translate(o.x, y);
+    tekenSwatch(g, rz, 46, 20, true);
+    g.restore();
+    g.fillStyle="#2B2B2A"; g.font="12px Barlow";
+    g.fillText("= "+rz.naam, o.x+56, y+14);
+    y += 26;
+  });
+}
+
+function tekenTitelblok(g,o){
+  const w=462, rijH=17, x=o.x, y=o.y;
+  g.strokeStyle="#2B2B2A"; g.lineWidth=1; g.fillStyle="#fff";
+  g.fillRect(x,y,w,rijH*3); g.strokeRect(x+.5,y+.5,w,rijH*3);
+  g.beginPath();
+  g.moveTo(x+w*0.48,y); g.lineTo(x+w*0.48,y+rijH*2);
+  g.moveTo(x,y+rijH); g.lineTo(x+w,y+rijH);
+  g.moveTo(x,y+rijH*2); g.lineTo(x+w,y+rijH*2);
+  g.stroke();
+  g.fillStyle="#2B2B2A";
+  g.font="700 11px Barlow"; g.fillText("Naam:", x+5, y+12);
+  g.font="600 11px Barlow"; g.fillText(state.klant||"", x+58, y+12);
+  g.font="700 11px Barlow"; g.fillText("Projectnummer:", x+w*0.48+5, y+12);
+  g.fillText(state.project||"", x+w*0.48+98, y+12);
+  g.font="400 10.5px Barlow";
+  g.fillText("VOORLOPIG DD:", x+5, y+rijH+12);
+  g.fillText(state.datum||vandaag(), x+92, y+rijH+12);
+  g.fillText("DEFINITIEF DD:", x+w*0.48+5, y+rijH+12);
+  g.fillText("ALLE KOZIJNEN ZIJN BUITENAANZICHT", x+5, y+rijH*2+12);
+  // draairichting-regel
+  const y3 = y+rijH*3+13;
+  g.strokeStyle="#C1272D"; g.lineWidth=1.4; g.setLineDash([4,3]);
+  g.beginPath(); g.moveTo(x+5,y3-4); g.lineTo(x+40,y3-4); g.stroke(); g.setLineDash([]);
+  g.fillText("= binnendraaiend", x+46, y3);
+  g.strokeStyle="#2B2B2A"; g.beginPath(); g.moveTo(x+185,y3-4); g.lineTo(x+220,y3-4); g.stroke();
+  g.fillText("= buitendraaiend", x+226, y3);
+  // logo
+  const ly = y+rijH*3+26, lx = x+w/2-96;
+  g.fillStyle="#D2232A";
+  g.beginPath(); g.roundRect(lx, ly, 40, 40, 10); g.fill();
+  g.fillStyle="#fff"; g.font="800 27px Barlow"; g.textAlign="center";
+  g.fillText("S", lx+20, ly+30); g.textAlign="left";
+  g.fillStyle="#2B2B2A"; g.font="800 30px Barlow";
+  g.fillText("Schipper", lx+50, ly+26);
+  g.fillStyle="#8A8A87"; g.font="500 11px Barlow";
+  const koz="kozijnen"; let kx=lx+52;
+  for(const ch of koz){ g.fillText(ch,kx,ly+40); kx+=11; }
+}
+
+function tekenBlad(exporteren=false, g=bctx, f=1){
+  g.save();
+  g.setTransform(f,0,0,f,0,0);
+  g.clearRect(0,0,blad.width,blad.height);
+  g.fillStyle="#fff"; g.fillRect(0,0,blad.width,blad.height);
+  g.strokeStyle="#2B2B2A"; g.lineWidth=1.2;
+  g.strokeRect(14.5,14.5,blad.width-29,blad.height-29);
+  state.objs.forEach(o=>tekenObject(g,o,exporteren));
+  if(!exporteren && state.sel){
+    const m = maatVan(state.sel);
+    g.strokeStyle="#D2232A"; g.lineWidth=1.4; g.setLineDash([5,4]);
+    g.strokeRect(state.sel.x-3, state.sel.y-3, m.w+6, m.h+6);
+    g.setLineDash([]);
+    if(kanFormaat(state.sel)){
+      g.fillStyle="#fff"; g.strokeStyle="#D2232A";
+      g.fillRect(state.sel.x+m.w-5, state.sel.y+m.h-5, 11, 11);
+      g.strokeRect(state.sel.x+m.w-5, state.sel.y+m.h-5, 11, 11);
+    }
+  }
+  g.restore();
+  if(!exporteren) zetSelInfo();
+}
+const kanFormaat = o => ["rzvlak","rzlijn","foto"].includes(o.type);
+const kanWeg = o => o.type!=="titelblok" && o.type!=="legenda";
+
+function zetSelInfo(){
+  const o = state.sel;
+  if(!o){ $("#selInfo").textContent=""; return; }
+  if(o.type==="kozijn"){
+    const k = state.kozijnen.find(k=>k.merk===o.merk);
+    $("#selInfo").textContent = `merk ${o.merk} · ${k.wmm}×${k.hmm} mm`;
+  } else if(o.rz) $("#selInfo").textContent = rzOp(o.rz).naam;
+  else $("#selInfo").textContent = o.type;
+}
+
+/* ---------- interactie ---------- */
+let sleep=null;
+function bladPos(e){
+  const r = blad.getBoundingClientRect();
+  return { x:(e.clientX-r.left)*blad.width/r.width, y:(e.clientY-r.top)*blad.height/r.height };
+}
+blad.addEventListener("pointerdown", e=>{
+  const p = bladPos(e);
+  // formaatgreep?
+  if(state.sel && kanFormaat(state.sel)){
+    const m = maatVan(state.sel);
+    if(Math.abs(p.x-(state.sel.x+m.w))<10 && Math.abs(p.y-(state.sel.y+m.h))<10){
+      sleep = {o:state.sel, modus:"formaat", sx:p.x, sy:p.y, w0:state.sel.w, h0:state.sel.h};
+      blad.setPointerCapture(e.pointerId); return;
+    }
+  }
+  // object pakken (bovenste eerst)
+  let raak=null;
+  for(let i=state.objs.length-1;i>=0;i--){
+    const o=state.objs[i], m=maatVan(o);
+    if(p.x>=o.x-4 && p.x<=o.x+m.w+4 && p.y>=o.y-4 && p.y<=o.y+m.h+4){ raak=o; break; }
+  }
+  state.sel = raak;
+  if(raak){ sleep={o:raak, modus:"verplaats", sx:p.x, sy:p.y, x0:raak.x, y0:raak.y}; blad.setPointerCapture(e.pointerId); }
+  tekenBlad();
+});
+blad.addEventListener("pointermove", e=>{
+  if(!sleep) return;
+  const p = bladPos(e), o=sleep.o;
+  if(sleep.modus==="formaat"){
+    o.w = Math.max(14, sleep.w0 + p.x - sleep.sx);
+    o.h = Math.max(6,  sleep.h0 + p.y - sleep.sy);
+  }else{
+    o.x = sleep.x0 + p.x - sleep.sx;
+    o.y = sleep.y0 + p.y - sleep.sy;
+    // magnetisch uitlijnen op andere objecten
+    const m = maatVan(o), S=6;
+    for(const a of state.objs){
+      if(a===o) continue;
+      const am = maatVan(a);
+      for(const [mijn,zijn] of [[o.x,a.x],[o.x,a.x+am.w],[o.x+m.w,a.x+am.w],[o.x+m.w,a.x]])
+        if(Math.abs(mijn-zijn)<S){ o.x += zijn-mijn; break; }
+      for(const [mijn,zijn] of [[o.y,a.y],[o.y,a.y+am.h],[o.y+m.h,a.y+am.h],[o.y+m.h,a.y]])
+        if(Math.abs(mijn-zijn)<S){ o.y += zijn-mijn; break; }
+    }
+  }
+  tekenBlad();
+});
+blad.addEventListener("pointerup", ()=>sleep=null);
+blad.addEventListener("dblclick", e=>{
+  const o = state.sel;
+  if(o && (o.type==="notitie"||o.type==="tekst"||o.type==="label")){
+    const t = prompt("Tekst:", o.tekst);
+    if(t!==null && t.trim()){ o.tekst=t; tekenBlad(); }
+    return;
+  }
+  if(!o){ // lege plek: nieuwe tekst op de klikpositie
+    const p = bladPos(e);
+    const t = prompt("Tekst op deze plek:",""); if(!t) return;
+    const n = {id:volgendeId++, type:"tekst", tekst:t, x:p.x, y:p.y-10};
+    state.objs.push(n); state.sel = n; tekenBlad();
+  }
+});
+document.addEventListener("keydown", e=>{
+  if(huidigeStap!==3 || !state.sel) return;
+  if(e.target.matches("input,textarea,select")) return;
+  if(e.key==="Delete"||e.key==="Backspace"){
+    if(!kanWeg(state.sel)) return;
+    state.objs = state.objs.filter(o=>o!==state.sel); state.sel=null; tekenBlad(); e.preventDefault();
+  }
+  const stap = e.shiftKey?10:2;
+  if(e.key==="ArrowLeft"){state.sel.x-=stap;tekenBlad();e.preventDefault();}
+  if(e.key==="ArrowRight"){state.sel.x+=stap;tekenBlad();e.preventDefault();}
+  if(e.key==="ArrowUp"){state.sel.y-=stap;tekenBlad();e.preventDefault();}
+  if(e.key==="ArrowDown"){state.sel.y+=stap;tekenBlad();e.preventDefault();}
+});
+
+/* ---------- werkbalk ---------- */
+$("#wbDel").onclick = ()=>{ if(state.sel && kanWeg(state.sel)){ state.objs=state.objs.filter(o=>o!==state.sel); state.sel=null; tekenBlad(); } };
+$("#wbDup").onclick = ()=>{ if(state.sel && kanWeg(state.sel)){ const k={...state.sel, id:volgendeId++, x:state.sel.x+18, y:state.sel.y+18}; state.objs.push(k); state.sel=k; tekenBlad(); } };
+$("#wbAchter").onclick = ()=>{ if(state.sel){ state.objs = [state.sel, ...state.objs.filter(o=>o!==state.sel)]; tekenBlad(); } };
+$("#wbVoor").onclick = ()=>{ if(state.sel){ state.objs = [...state.objs.filter(o=>o!==state.sel), state.sel]; tekenBlad(); } };
+$("#wbSchaal").oninput = e=>{
+  state.schaalX = +e.target.value;
+  state.ppm = 4/state.schaalX;
+  $("#wbSchaalWaarde").textContent = "1:"+state.schaalX;
+  tekenBlad();
+};
+
+/* ---------- export ---------- */
+function renderHoog(){
+  const f = 2.2;
+  const cv = document.createElement("canvas");
+  cv.width = blad.width*f; cv.height = blad.height*f;
+  const g = cv.getContext("2d");
+  const selOnthoud = state.sel; state.sel = null;
+  tekenBlad(true, g, f);
+  state.sel = selOnthoud;
+  return cv;
+}
+function bouwExport(){
+  $("#tbNaam").value = state.klant||"";
+  $("#tbProject").value = state.project||"";
+  $("#tbDatum").value = state.datum||vandaag();
+  $("#exportPreview").src = renderHoog().toDataURL("image/png");
+}
+["tbNaam","tbProject","tbDatum"].forEach(id=>$("#"+id).addEventListener("input",e=>{
+  if(id==="tbNaam") state.klant = e.target.value;
+  if(id==="tbProject") state.project = e.target.value;
+  if(id==="tbDatum") state.datum = e.target.value;
+  $("#piProject").textContent = state.project||"—";
+  $("#piKlant").textContent = state.klant||"—";
+  $("#exportPreview").src = renderHoog().toDataURL("image/png");
+}));
+$("#dlPng").onclick = ()=>{
+  const a = document.createElement("a");
+  a.href = renderHoog().toDataURL("image/png");
+  a.download = `situatietekening_${state.project||"project"}.png`;
+  a.click();
+};
+$("#dlPdf").onclick = ()=>{
+  const cv = renderHoog();
+  const pdf = new jspdf.jsPDF({orientation:"landscape", unit:"mm", format:"a4"});
+  pdf.addImage(cv.toDataURL("image/jpeg",0.94), "JPEG", 0, 0, 297, 210);
+  pdf.save(`situatietekening_${state.project||"project"}.pdf`);
+};
+</script>
+</body>
+</html>
